@@ -1,4 +1,5 @@
 * text=auto !eol
+channel-page-event/pom.xml -text svneol=unset#text/plain
 document-management-service/pom.xml -text
 document-management-service/src/main/java/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementService.java -text svneol=unset#text/plain
 document-management-service/src/main/java/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementServiceDaemonModule.java -text svneol=unset#text/plain

@@ -29,6 +29,7 @@
     <jcr.version>2.0</jcr.version>
     <hippo.repository.version>3.1.0</hippo.repository.version>
     <hippo.services.version>2.1.0</hippo.services.version>
+    <hippo.hst.version>3.1.0</hippo.hst.version>
 
     <commons-lang.version>2.6</commons-lang.version>
 
@@ -132,6 +133,20 @@
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-services</artifactId>
         <version>${hippo.services.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.onehippo.cms7.hst</groupId>
+        <artifactId>hst-api</artifactId>
+        <version>${hippo.hst.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.onehippo.cms7.hst</groupId>
+        <artifactId>hst-commons</artifactId>
+        <version>${hippo.hst.version}</version>
         <scope>provided</scope>
       </dependency>
 
@@ -248,6 +263,7 @@
 
   <modules>
     <module>document-management-service</module>
+    <module>channel-page-event</module>
   </modules>
 
   <build>
