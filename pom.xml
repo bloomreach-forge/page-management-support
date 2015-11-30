@@ -28,6 +28,9 @@
 
     <jcr.version>2.0</jcr.version>
     <hippo.repository.version>3.1.0</hippo.repository.version>
+    <hippo.services.version>2.1.0</hippo.services.version>
+
+    <commons-lang.version>2.6</commons-lang.version>
 
     <lib.junit.version>4.8.2</lib.junit.version>
     <lib.easymock.version>3.0</lib.easymock.version>
@@ -67,17 +70,6 @@
       <name>Woonsan Ko</name>
       <id>wko</id>
       <email>w.ko @ onehippo . com</email>
-      <organization>Hippo</organization>
-      <roles>
-        <role>Project Lead</role>
-        <role>Java Developer</role>
-      </roles>
-      <timezone>-5</timezone>
-    </developer>
-    <developer>
-      <name>William Borg Barthet</name>
-      <id>wko</id>
-      <email>w.borgbarthet @ onehippo . com></email>
       <organization>Hippo</organization>
       <roles>
         <role>Project Lead</role>
@@ -137,10 +129,23 @@
       </dependency>
 
       <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-services</artifactId>
+        <version>${hippo.services.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>${lib.slf4j.version}</version>
         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>${commons-lang.version}</version>
       </dependency>
 
       <!-- TEST DEPENDENCIES -->
