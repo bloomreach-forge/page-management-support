@@ -18,8 +18,12 @@ package org.onehippo.forge.channelmanager.pagesupport.document.management.impl;
 import javax.jcr.Session;
 
 import org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DocumentWorkflowDocumentManagementService implements DocumentManagementService {
+
+    private static Logger log = LoggerFactory.getLogger(DocumentWorkflowDocumentManagementService.class);
 
     private Session session;
 
@@ -35,27 +39,32 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
 
     @Override
     public boolean lockDocument(String documentLocation) throws RuntimeException {
+        log.debug("##### lockDocument('{}')", documentLocation);
         return false;
     }
 
     @Override
     public boolean unlockDocument(String documentLocation) throws RuntimeException {
+        log.debug("##### unlockDocument('{}')", documentLocation);
         return false;
     }
 
     @Override
     public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName)
             throws RuntimeException {
+        log.debug("##### copyDocument('{}', '{}', '{}')", sourceDocumentLocation, targetFolderLocation, targetDocumentName);
         return null;
     }
 
     @Override
     public boolean depublishDocument(String documentLocation) throws RuntimeException {
+        log.debug("##### depublishDocument('{}')", documentLocation);
         return false;
     }
 
     @Override
     public boolean publishDocument(String documentLocation) throws RuntimeException {
+        log.debug("##### publishDocument('{}')", documentLocation);
         return false;
     }
 

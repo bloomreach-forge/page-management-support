@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.channelmanager.pagesupport.document.management;
+package org.onehippo.forge.channelmanager.pagesupport.document.management.impl;
 
 import java.lang.management.ManagementFactory;
 
@@ -26,7 +26,8 @@ import javax.management.ObjectName;
 import org.apache.commons.lang.StringUtils;
 import org.hippoecm.repository.util.JcrUtils;
 import org.onehippo.cms7.services.HippoServiceRegistry;
-import org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentWorkflowDocumentManagementService;
+import org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementService;
+import org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementServiceMBean;
 import org.onehippo.repository.modules.AbstractReconfigurableDaemonModule;
 import org.onehippo.repository.modules.ProvidesService;
 import org.slf4j.Logger;
