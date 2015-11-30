@@ -33,7 +33,7 @@ public class PageCopyEventListener implements ComponentManagerAware {
 
     private static final Logger log = LoggerFactory.getLogger(PageCopyEventListener.class);
 
-    private static final String DOCUMENT_MANAGEMENT_SERVICE_NAME = "org.onehippo.forge.channelmanager.pagesupport.document.management:type=DocumentManagementServiceMBean";
+    private static final String DOCUMENT_MANAGEMENT_SERVICE_NAME = "org.onehippo.forge.channelmanager.pagesupport.document.management:type=DocumentManagementServiceMXBean";
 
     private ComponentManager componentManager;
 

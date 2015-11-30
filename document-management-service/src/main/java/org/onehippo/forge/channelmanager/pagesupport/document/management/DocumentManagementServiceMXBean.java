@@ -15,19 +15,18 @@
  */
 package org.onehippo.forge.channelmanager.pagesupport.document.management;
 
-public interface DocumentManagementServiceMBean {
+public interface DocumentManagementServiceMXBean {
 
-    String NAME = "org.onehippo.forge.channelmanager.pagesupport.document.management:type=DocumentManagementServiceMBean";
+    String NAME = "org.onehippo.forge.channelmanager.pagesupport.document.management:type=DocumentManagementServiceMXBean";
 
-    public boolean lockDocument(String documentLocation) throws RuntimeException;
+    public boolean lockDocument(String documentLocation);
 
-    public boolean unlockDocument(String documentLocation) throws RuntimeException;
+    public boolean unlockDocument(String documentLocation);
 
-    public String copyDocument(String sourceDocumentLocation, String targetFolderLocation,
-            String targetDocumentName) throws RuntimeException;
+    public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName);
 
-    public boolean depublishDocument(String documentLocation) throws RuntimeException;
+    public boolean depublishDocument(String documentLocation);
 
-    public boolean publishDocument(String documentLocation) throws RuntimeException;
+    public boolean publishDocument(String documentLocation);
 
 }

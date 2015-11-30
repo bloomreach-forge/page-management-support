@@ -17,7 +17,10 @@ package org.onehippo.forge.channelmanager.pagesupport.document.management;
 
 import javax.jcr.Session;
 
-public interface DocumentManagementService extends DocumentManagementServiceMBean {
+import org.onehippo.cms7.services.SingletonService;
+
+@SingletonService
+public interface DocumentManagementService extends DocumentManagementServiceMXBean {
 
     public void initialize(Session session) throws RuntimeException;
 

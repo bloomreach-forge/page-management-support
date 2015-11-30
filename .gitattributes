@@ -5,7 +5,7 @@ channel-page-event/src/main/resources/META-INF/hst-assembly/addon/module.xml -te
 channel-page-event/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channelmanager/pagesupport/cross-channel-page-copy-support.xml -text svneol=unset#text/plain
 document-management-service/pom.xml -text
 document-management-service/src/main/java/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementService.java -text svneol=unset#text/plain
-document-management-service/src/main/java/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementServiceMBean.java -text svneol=unset#text/plain
+document-management-service/src/main/java/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementServiceMXBean.java -text svneol=unset#text/plain
 document-management-service/src/main/java/org/onehippo/forge/channelmanager/pagesupport/document/management/impl/DocumentManagementServiceDaemonModule.java -text svneol=unset#text/plain
 document-management-service/src/main/java/org/onehippo/forge/channelmanager/pagesupport/document/management/impl/DocumentWorkflowDocumentManagementService.java -text svneol=unset#text/plain
 document-management-service/src/main/resources/channel-pagesup-document-management-service-module.xml -text svneol=unset#text/plain

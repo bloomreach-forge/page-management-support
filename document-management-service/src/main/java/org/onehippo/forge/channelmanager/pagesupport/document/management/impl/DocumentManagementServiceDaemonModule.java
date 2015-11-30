@@ -27,7 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hippoecm.repository.util.JcrUtils;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementService;
-import org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementServiceMBean;
+import org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementServiceMXBean;
 import org.onehippo.repository.modules.AbstractReconfigurableDaemonModule;
 import org.onehippo.repository.modules.ProvidesService;
 import org.slf4j.Logger;
@@ -84,6 +84,8 @@ public class DocumentManagementServiceDaemonModule extends AbstractReconfigurabl
         if (documentManagementService != null) {
             unregisterDocumentManagementServiceInHippoServiceRegistry();
             unregisterDocumentManagementServiceMBean();
+
+            documentManagementService.destroy();
             documentManagementService = null;
         }
     }
@@ -107,7 +109,7 @@ public class DocumentManagementServiceDaemonModule extends AbstractReconfigurabl
     private void registerDocumentManagementServiceMBean() {
         try {
             MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
-            ObjectName mbeanName = new ObjectName(DocumentManagementServiceMBean.NAME);
+            ObjectName mbeanName = new ObjectName(DocumentManagementServiceMXBean.NAME);
 
             if (mbeanServer.isRegistered(mbeanName)) {
                 mbeanServer.unregisterMBean(mbeanName);
@@ -122,7 +124,7 @@ public class DocumentManagementServiceDaemonModule extends AbstractReconfigurabl
     private void unregisterDocumentManagementServiceMBean() {
         try {
             MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
-            ObjectName mbeanName = new ObjectName(DocumentManagementServiceMBean.NAME);
+            ObjectName mbeanName = new ObjectName(DocumentManagementServiceMXBean.NAME);
 
             if (mbeanServer.isRegistered(mbeanName)) {
                 mbeanServer.unregisterMBean(mbeanName);

@@ -38,32 +38,32 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
     }
 
     @Override
-    public boolean lockDocument(String documentLocation) throws RuntimeException {
+    public boolean lockDocument(String documentLocation) {
         log.debug("##### lockDocument('{}')", documentLocation);
         return false;
     }
 
     @Override
-    public boolean unlockDocument(String documentLocation) throws RuntimeException {
+    public boolean unlockDocument(String documentLocation) {
         log.debug("##### unlockDocument('{}')", documentLocation);
         return false;
     }
 
     @Override
-    public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName)
-            throws RuntimeException {
-        log.debug("##### copyDocument('{}', '{}', '{}')", sourceDocumentLocation, targetFolderLocation, targetDocumentName);
+    public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName) {
+        log.debug("##### copyDocument('{}', '{}', '{}')", sourceDocumentLocation, targetFolderLocation,
+                targetDocumentName);
         return null;
     }
 
     @Override
-    public boolean depublishDocument(String documentLocation) throws RuntimeException {
+    public boolean depublishDocument(String documentLocation) {
         log.debug("##### depublishDocument('{}')", documentLocation);
         return false;
     }
 
     @Override
-    public boolean publishDocument(String documentLocation) throws RuntimeException {
+    public boolean publishDocument(String documentLocation) {
         log.debug("##### publishDocument('{}')", documentLocation);
         return false;
     }
