@@ -16,12 +16,18 @@
 package org.onehippo.forge.channelmanager.pagesupport.channel.event;
 
 import java.lang.management.ManagementFactory;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.hippoecm.hst.configuration.components.HstComponentConfiguration;
 import org.hippoecm.hst.core.container.ComponentManager;
 import org.hippoecm.hst.core.container.ComponentManagerAware;
+import org.hippoecm.hst.core.linking.DocumentParamsScanner;
+import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,36 +58,40 @@ public class PageCopyEventListener implements ComponentManagerAware {
 
     @Subscribe
     @AllowConcurrentEvents
-    public void onPageCopyEvent(PageCopyEvent event) {
-        if (event.getException() != null) {
+    public void onPageCopyEvent(PageCopyEvent pageCopyEvent) {
+        log.debug("##### onPageCopyEvent");
+
+        if (pageCopyEvent.getException() != null) {
             return;
         }
 
-        log.info("Show an example of copying a content document as well!!");
-
-        // copying a document that was selected by a component. For this in this example we will use
-        // 1: hst workflow support
-        // 2: org.hippoecm.hst.core.linking.DocumentParamsScanner.findDocumentPathsRecursive to find which parameter names refer
-        // to documents
-
         try {
-            MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
+            final PageCopyContext pageCopyContext = pageCopyEvent.getPageCopyContext();
 
-            Object [] params = new Object [] { "/a/b/c", "/a/b", "c2" };
-            String [] signature = new String [] { String.class.getName(), String.class.getName(), String.class.getName() };
+            final Set<String> documentPathSet = getDocumentPathSetInPage(pageCopyContext.getSourcePage());
+            final String sourceContentBasePath = pageCopyContext.getEditingMount().getContentPath();
+            final String targetContentBasePath = pageCopyContext.getTargetMount().getContentPath();
 
-            invokeDocumentManagementServiceMBean(mbeanServer, "copyDocument", params, signature);
+            log.debug("##### sourceContentBasePath: {}", sourceContentBasePath);
+            log.debug("##### targetContentBasePath: {}", targetContentBasePath);
+            log.debug("##### documentPaths: {}", documentPathSet);
         } catch (Exception e) {
-            log.error("Failed to invoke the document management service MBean.", e);
+            log.error("Failed to invoke the document management service.", e);
         }
     }
 
-    private Object invokeDocumentManagementServiceMBean(final MBeanServer mbeanServer, String operationName,
-            Object[] params, String[] signature) throws Exception {
+    private Set<String> getDocumentPathSetInPage(final HstComponentConfiguration pageConfig) {
+        List<String> documentPathList = DocumentParamsScanner.findDocumentPathsRecursive(pageConfig, Thread.currentThread().getContextClassLoader());
+        return new LinkedHashSet<String>(documentPathList);
+    }
+
+    private Object invokeDocumentManagementServiceMBean(String operationName, Object[] params, String[] signature)
+            throws Exception {
         final ObjectName mbeanName = new ObjectName(DOCUMENT_MANAGEMENT_SERVICE_NAME);
+        final MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
 
         if (!mbeanServer.isRegistered(mbeanName)) {
-            throw new IllegalStateException("Document Management Service MBean not available.");
+            throw new IllegalStateException("Document Management Service not available.");
         }
 
         return mbeanServer.invoke(mbeanName, operationName, params, signature);

@@ -166,6 +166,13 @@
       </dependency>
 
       <dependency>
+        <groupId>org.onehippo.cms7.hst.components</groupId>
+        <artifactId>hst-core</artifactId>
+        <version>${hippo.hst.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>${lib.slf4j.version}</version>
