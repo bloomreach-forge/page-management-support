@@ -19,9 +19,11 @@ public interface DocumentManagementServiceMXBean {
 
     String NAME = "org.onehippo.forge.channelmanager.pagesupport.document.management:type=DocumentManagementServiceMXBean";
 
-    public boolean lockDocument(String documentLocation);
+    public boolean obtainEditableDocument(String documentLocation);
 
-    public boolean unlockDocument(String documentLocation);
+    public boolean disposeEditableDocument(String documentLocation);
+
+    public boolean commitEditableDocument(String documentLocation);
 
     public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName);
 

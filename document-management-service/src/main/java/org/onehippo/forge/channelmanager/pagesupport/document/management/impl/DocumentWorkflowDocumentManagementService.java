@@ -52,14 +52,14 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
     }
 
     @Override
-    public boolean lockDocument(String documentLocation) {
-        log.debug("##### lockDocument('{}')", documentLocation);
+    public boolean obtainEditableDocument(String documentLocation) {
+        log.debug("##### obtainEditableDocument('{}')", documentLocation);
 
         if (StringUtils.isBlank(documentLocation)) {
             throw new IllegalArgumentException("Invalid document location: '" + documentLocation + "'.");
         }
 
-        boolean locked = false;
+        boolean obtained = false;
 
         try {
             if (!getSession().nodeExists(documentLocation)) {
@@ -73,27 +73,27 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
 
             if (BooleanUtils.isTrue(obtainEditableInstance)) {
                 documentWorkflow.obtainEditableInstance();
-                locked = true;
+                obtained = true;
             } else {
                 throw new IllegalStateException("Document at '" + documentLocation + "' is not allowed to obtain an editable instance.");
             }
         } catch (Exception e) {
-            log.error("Failed to commit editable instance on document.");
+            log.error("Failed to obtain editable instance on document.", e);
             throw new RuntimeException("Failed to obtain editable instance on document at '" + documentLocation + "'. " + e);
         }
 
-        return locked;
+        return obtained;
     }
 
     @Override
-    public boolean unlockDocument(String documentLocation) {
-        log.debug("##### unlockDocument('{}')", documentLocation);
+    public boolean disposeEditableDocument(String documentLocation) {
+        log.debug("##### disposeEditableDocument('{}')", documentLocation);
 
         if (StringUtils.isBlank(documentLocation)) {
             throw new IllegalArgumentException("Invalid document location: '" + documentLocation + "'.");
         }
 
-        boolean unlocked = false;
+        boolean disposed = false;
 
         try {
             if (!getSession().nodeExists(documentLocation)) {
@@ -103,21 +103,54 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
             Node node = getSession().getNode(documentLocation);
             DocumentWorkflow documentWorkflow = getDocumentWorkflow(node);
 
-            Boolean unlock = (Boolean) documentWorkflow.hints().get("unlock");
+            Boolean disposeEditableInstance = (Boolean) documentWorkflow.hints().get("disposeEditableInstance");
 
-            if (BooleanUtils.isTrue(unlock)) {
-                documentWorkflow.unlock();
-                unlocked = true;
+            if (BooleanUtils.isTrue(disposeEditableInstance)) {
+                documentWorkflow.disposeEditableInstance();
+                disposed = true;
             } else {
-                // let's suppose it's not locked at the moment if unclock is false, assuming this service is run by admin user.
-                unlocked = true;
+                throw new IllegalStateException("Document at '" + documentLocation + "' is not allowed to dispose an editable instance.");
             }
         } catch (Exception e) {
-            log.error("Failed to unlock document.");
-            throw new RuntimeException("Failed to unlock document at '" + documentLocation + "'. " + e);
+            log.error("Failed to dispose editable instance on document.", e);
+            throw new RuntimeException("Failed to dispose editable instance on document at '" + documentLocation + "'. " + e);
         }
 
-        return unlocked;
+        return disposed;
+    }
+
+    @Override
+    public boolean commitEditableDocument(String documentLocation) {
+        log.debug("##### commitEditableDocument('{}')", documentLocation);
+
+        if (StringUtils.isBlank(documentLocation)) {
+            throw new IllegalArgumentException("Invalid document location: '" + documentLocation + "'.");
+        }
+
+        boolean committed = false;
+
+        try {
+            if (!getSession().nodeExists(documentLocation)) {
+                throw new IllegalArgumentException("Document doesn't exist at '" + documentLocation + "'.");
+            }
+
+            Node node = getSession().getNode(documentLocation);
+            DocumentWorkflow documentWorkflow = getDocumentWorkflow(node);
+
+            Boolean commitEditableInstance = (Boolean) documentWorkflow.hints().get("commitEditableInstance");
+
+            if (BooleanUtils.isTrue(commitEditableInstance)) {
+                documentWorkflow.commitEditableInstance();
+                committed = true;
+            } else {
+                throw new IllegalStateException("Document at '" + documentLocation + "' is not allowed to commit an editable instance.");
+            }
+        } catch (Exception e) {
+            log.error("Failed to commit editable instance on document.", e);
+            throw new RuntimeException("Failed to commit editable instance on document at '" + documentLocation + "'. " + e);
+        }
+
+        return committed;
     }
 
     @Override
@@ -137,12 +170,18 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
             }
 
             Node sourceDocumentNode = getSession().getNode(sourceDocumentLocation);
-            Node targetFolderNode = getSession().getNode(targetFolderLocation);
 
             DocumentWorkflow documentWorkflow = getDocumentWorkflow(sourceDocumentNode);
-            documentWorkflow.copy(new Document(targetFolderNode), targetDocumentName);
+            Boolean copy = (Boolean) documentWorkflow.hints().get("copy");
 
-            targetDocumentLocation = targetFolderNode.getNode(targetDocumentName).getPath();
+            if (BooleanUtils.isTrue(copy)) {
+                Node targetFolderNode = getSession().getNode(targetFolderLocation);
+                documentWorkflow.copy(new Document(targetFolderNode), targetDocumentName);
+                targetDocumentLocation = targetFolderNode.getNode(targetDocumentName).getPath();
+            } else {
+                throw new IllegalStateException("Copy action not available on document at '" + sourceDocumentLocation
+                        + "' to '" + targetFolderLocation + "/" + targetDocumentName + "'.");
+            }
         } catch (RepositoryException | WorkflowException | RemoteException e) {
             log.error("Failed to copy document at '{}' to '{}/{}'.", sourceDocumentLocation, targetFolderLocation,
                     targetDocumentName, e);
@@ -212,27 +251,14 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
             Node node = getSession().getNode(documentLocation);
             DocumentWorkflow documentWorkflow = getDocumentWorkflow(node);
 
-            Boolean isLive = (Boolean) documentWorkflow.hints().get("isLive");
+            Boolean publish = (Boolean) documentWorkflow.hints().get("publish");
 
-            if (BooleanUtils.isTrue(isLive)) {
-                // already published, so just return true
-                published = true;
-            } else {
-                Boolean previewAvailable = (Boolean) documentWorkflow.hints().get("previewAvailable");
-
-                if (!BooleanUtils.isTrue(previewAvailable)) {
-                    throw new IllegalStateException("Document at '" + documentLocation + "' doesn't have preview variant.");
-                }
-
-                Boolean publish = (Boolean) documentWorkflow.hints().get("publish");
-
-                if (!BooleanUtils.isTrue(publish)) {
-                    throw new IllegalStateException("Document at '" + documentLocation + "' doesn't have publish action.");
-                }
-
-                documentWorkflow.publish();
-                published = true;
+            if (!BooleanUtils.isTrue(publish)) {
+                throw new IllegalStateException("Document at '" + documentLocation + "' doesn't have publish action.");
             }
+
+            documentWorkflow.publish();
+            published = true;
         } catch (RepositoryException | WorkflowException | RemoteException e) {
             log.error("Failed to publish document at '{}'.", documentLocation, e);
             throw new RuntimeException("Failed to publish document at '" + documentLocation + "'. " + e);
