@@ -48,13 +48,6 @@ class DocumentManagementServiceClient {
         return BooleanUtils.isTrue(ret);
     }
 
-    public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName) throws Exception {
-        String ret = (String) invokeDocumentManagementServiceMBean("copyDocument",
-                new String[] { sourceDocumentLocation, targetFolderLocation, targetDocumentName },
-                new String[] { String.class.getName(), String.class.getName(), String.class.getName() });
-        return ret;
-    }
-
     boolean depublishDocument(String documentLocation) throws Exception {
         Boolean ret = (Boolean) invokeDocumentManagementServiceMBean("depublishDocument",
                 new String[] { documentLocation }, new String[] { String.class.getName() });
@@ -65,6 +58,27 @@ class DocumentManagementServiceClient {
         Boolean ret = (Boolean) invokeDocumentManagementServiceMBean("publishDocument",
                 new String[] { documentLocation }, new String[] { String.class.getName() });
         return BooleanUtils.isTrue(ret);
+    }
+
+    public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName) throws Exception {
+        String ret = (String) invokeDocumentManagementServiceMBean("copyDocument",
+                new String[] { sourceDocumentLocation, targetFolderLocation, targetDocumentName },
+                new String[] { String.class.getName(), String.class.getName(), String.class.getName() });
+        return ret;
+    }
+
+    public String translateFolder(String sourceFolderLocation, String language, String name) throws Exception {
+        String ret = (String) invokeDocumentManagementServiceMBean("translateFolder",
+                new String[] { sourceFolderLocation, language, name },
+                new String[] { String.class.getName(), String.class.getName(), String.class.getName() });
+        return ret;
+    }
+
+    public String translateDocument(String sourceDocumentLocation, String language, String name) throws Exception {
+        String ret = (String) invokeDocumentManagementServiceMBean("translateDocument",
+                new String[] { sourceDocumentLocation, language, name },
+                new String[] { String.class.getName(), String.class.getName(), String.class.getName() });
+        return ret;
     }
 
     public ObjectName getMbeanName() {

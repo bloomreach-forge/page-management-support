@@ -31,6 +31,8 @@ public interface DocumentManagementServiceMXBean {
 
     String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName);
 
+    String translateFolder(String sourceFolderLocation, String language, String name);
+
     String translateDocument(String sourceDocumentLocation, String language, String name);
 
 }

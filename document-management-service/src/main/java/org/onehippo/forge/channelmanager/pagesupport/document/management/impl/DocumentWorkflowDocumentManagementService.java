@@ -313,6 +313,40 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
     }
 
     @Override
+    public String translateFolder(String sourceFolderLocation, String targetLanguage, String targetFolderNodeName) {
+        log.debug("##### translateFolder('{}', '{}', '{}')", sourceFolderLocation, targetLanguage,
+                targetFolderNodeName);
+
+        String targetFolderLocation = null;
+
+        try {
+            if (!getSession().nodeExists(sourceFolderLocation)) {
+                throw new IllegalArgumentException(
+                        "Source folder doesn't exist at '" + sourceFolderLocation + "'.");
+            }
+
+            Node sourceFolderNode = getSession().getNode(sourceFolderLocation);
+
+            if (sourceFolderNode == null || !sourceFolderNode.isNodeType(HippoStdNodeType.NT_FOLDER)) {
+                throw new IllegalArgumentException(
+                        "Source folder is not found at '" + sourceFolderLocation + "'.");
+            }
+
+            TranslationWorkflow folderTranslationWorkflow = getFolderTranslationWorkflow(sourceFolderNode);
+            Document translatedFolderDocument = folderTranslationWorkflow.addTranslation(targetLanguage, targetFolderNodeName);
+            Node translatedFolderNode = translatedFolderDocument.getNode(getSession());
+            targetFolderLocation = translatedFolderNode.getPath();
+        } catch (RepositoryException | WorkflowException | RemoteException e) {
+            log.error("Failed to trasnlate folder at '{}' to '{}' in '{}'.", sourceFolderLocation,
+                    targetFolderNodeName, targetLanguage, e);
+            throw new RuntimeException("Failed to add translated folder of '" + sourceFolderLocation + "' to '"
+                    + targetFolderNodeName + "' in '" + targetLanguage + "'. " + e);
+        }
+
+        return targetFolderLocation;
+    }
+
+    @Override
     public String translateDocument(String sourceDocumentLocation, String targetLanguage, String targetDocumentNodeName) {
         log.debug("##### translateDocument('{}', '{}', '{}')", sourceDocumentLocation, targetLanguage,
                 targetDocumentNodeName);
@@ -376,6 +410,12 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
     protected DocumentWorkflow getDocumentWorkflow(final Node documentHandleNode) throws RepositoryException {
         return (DocumentWorkflow) HippoWorkflowUtils.getHippoWorkflow(getSession(), getDocumentWorkflowCategory(),
                 documentHandleNode);
+    }
+
+    protected TranslationWorkflow getFolderTranslationWorkflow(final Node folderNode)
+            throws RepositoryException {
+        return (TranslationWorkflow) HippoWorkflowUtils.getHippoWorkflow(getSession(), "translation",
+                folderNode);
     }
 
     protected TranslationWorkflow getDocumentTranslationWorkflow(final Node documentVariantNode)
