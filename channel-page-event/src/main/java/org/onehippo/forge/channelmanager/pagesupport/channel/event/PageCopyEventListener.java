@@ -80,6 +80,15 @@ public class PageCopyEventListener implements ComponentManagerAware {
         }
     }
 
+    /**
+     * In case of targeting, you also get all the locations for the
+     * variants in the list. The returned set can have values that start
+     * with a '/' or without. If they start with a '/', they are absolute
+     * paths (from jcr root). If they don't start with a '/', they are
+     * relative to the channel content root.
+     * @param pageConfig
+     * @return
+     */
     private Set<String> getDocumentPathSetInPage(final HstComponentConfiguration pageConfig) {
         List<String> documentPathList = DocumentParamsScanner.findDocumentPathsRecursive(pageConfig, Thread.currentThread().getContextClassLoader());
         return new LinkedHashSet<String>(documentPathList);

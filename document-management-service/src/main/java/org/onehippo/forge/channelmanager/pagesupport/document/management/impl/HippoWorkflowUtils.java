@@ -15,21 +15,70 @@
  */
 package org.onehippo.forge.channelmanager.pagesupport.document.management.impl;
 
+import java.rmi.RemoteException;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 
+import org.apache.commons.lang.StringUtils;
+import org.hippoecm.repository.api.HippoNode;
+import org.hippoecm.repository.api.HippoNodeType;
 import org.hippoecm.repository.api.HippoWorkspace;
+import org.hippoecm.repository.api.StringCodec;
+import org.hippoecm.repository.api.StringCodecFactory;
 import org.hippoecm.repository.api.Workflow;
+import org.hippoecm.repository.api.WorkflowException;
 import org.hippoecm.repository.api.WorkflowManager;
+import org.hippoecm.repository.standardworkflow.DefaultWorkflow;
+import org.hippoecm.repository.standardworkflow.FolderWorkflow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class HippoWorkflowUtils {
+
+    private static Logger log = LoggerFactory.getLogger(HippoWorkflowUtils.class);
+
+    /**
+     * Hippo Repository specific predefined folder node type name
+     */
+    private static final String DEFAULT_HIPPO_FOLDER_NODE_TYPE = "hippostd:folder";
+
+    /**
+     * The workflow category name to get a folder workflow. We use threepane as this is the same as the CMS uses
+     */
+    private static final String DEFAULT_HIPPO_FOLDER_WORKFLOW_CATEGORY = "threepane";
+
+    /**
+     * The workflow category name to add a new document.
+     */
+    private static final String DEFAULT_NEW_DOCUMENT_WORKFLOW_CATEGORY = "new-document";
+
+    /**
+     * The workflow category name to add a new folder.
+     */
+    private static final String DEFAULT_NEW_FOLDER_WORKFLOW_CATEGORY = "new-folder";
+
+    /**
+     * The workflow category name to localize the new document
+     */
+    private static final String DEFAULT_WORKFLOW_CATEGORY = "core";
+
+    /**
+     * The codec which is used for the node names
+     */
+    private static final StringCodec DEFAULT_URI_ENCODING = new StringCodecFactory.UriEncoding();
 
     private HippoWorkflowUtils() {
     }
 
-    public static Workflow getWorkflow(final Session session, final String category, final Node node)
+    public static Workflow getHippoWorkflow(final Session session, final String category, final Node node)
             throws RepositoryException {
         Workspace workspace = session.getWorkspace();
 
@@ -51,4 +100,240 @@ class HippoWorkflowUtils {
         }
     }
 
+    public static Node createMissingHippoFolders(final Session session, String absPath)
+            throws RepositoryException, WorkflowException {
+        String[] folderNames = StringUtils.split(absPath, "/");
+
+        Node rootNode = session.getRootNode();
+        Node curNode = rootNode;
+        String folderNodePath;
+
+        for (String folderName : folderNames) {
+            String folderNodeName = DEFAULT_URI_ENCODING.encode(folderName);
+
+            if (curNode == rootNode) {
+                folderNodePath = "/" + folderNodeName;
+            } else {
+                folderNodePath = curNode.getPath() + "/" + folderNodeName;
+            }
+
+            Node existingFolderNode = getExistingHippoFolderNode(session, folderNodePath);
+
+            if (existingFolderNode == null) {
+                curNode = session
+                        .getNode(createHippoFolderNodeByWorkflow(session, curNode, DEFAULT_HIPPO_FOLDER_NODE_TYPE, folderName));
+            } else {
+                curNode = existingFolderNode;
+            }
+
+            curNode = getHippoCanonicalNode(curNode);
+
+            if (isHippoMirrorNode(curNode)) {
+                curNode = getRereferencedNodeByHippoMirror(curNode);
+            }
+        }
+
+        return curNode;
+    }
+
+    private static Node getHippoCanonicalNode(Node node) {
+        if (node instanceof HippoNode) {
+            HippoNode hnode = (HippoNode) node;
+
+            try {
+                Node canonical = hnode.getCanonicalNode();
+
+                if (canonical == null) {
+                    log.debug("Cannot get canonical node for '{}'. This means there is no phyiscal equivalence of the "
+                            + "virtual node. Return null", node.getPath());
+                }
+
+                return canonical;
+            } catch (RepositoryException e) {
+                log.error("Repository exception while fetching canonical node. Return null", e);
+                throw new RuntimeException(e);
+            }
+        }
+
+        return node;
+    }
+
+    private static boolean isHippoMirrorNode(Node node) throws RepositoryException {
+        if (node.isNodeType(HippoNodeType.NT_FACETSELECT) || node.isNodeType(HippoNodeType.NT_MIRROR)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static Node getRereferencedNodeByHippoMirror(Node mirrorNode) {
+        String docBaseUUID = null;
+
+        try {
+            if (!isHippoMirrorNode(mirrorNode)) {
+                log.info("Cannot deref a node that is not of (sub)type '{}' or '{}'. Return null",
+                        HippoNodeType.NT_FACETSELECT, HippoNodeType.NT_MIRROR);
+                return null;
+            }
+
+            // HippoNodeType.HIPPO_DOCBASE is a mandatory property so no need to test if exists
+            docBaseUUID = mirrorNode.getProperty(HippoNodeType.HIPPO_DOCBASE).getString();
+
+            try {
+                return mirrorNode.getSession().getNodeByIdentifier(docBaseUUID);
+            } catch (IllegalArgumentException e) {
+                log.warn("Docbase cannot be parsed to a valid uuid. Return null");
+                return null;
+            }
+        } catch (ItemNotFoundException e) {
+            String path = null;
+
+            try {
+                path = mirrorNode.getPath();
+            } catch (RepositoryException e1) {
+                log.error("RepositoryException, cannot return deferenced node: {}", e1);
+            }
+
+            log.info(
+                    "ItemNotFoundException, cannot return deferenced node because docbase uuid '{}' cannot be found. The docbase property is at '{}/hippo:docbase'. Return null",
+                    docBaseUUID, path);
+        } catch (RepositoryException e) {
+            log.error("RepositoryException, cannot return deferenced node: {}", e);
+        }
+
+        return null;
+    }
+
+    private static Node getExistingHippoFolderNode(final Session session, final String absPath)
+            throws RepositoryException {
+        if (!session.nodeExists(absPath)) {
+            return null;
+        }
+
+        Node node = session.getNode(absPath);
+        Node candidateNode = null;
+
+        if (session.getRootNode().isSame(node)) {
+            return session.getRootNode();
+        } else {
+            Node parentNode = node.getParent();
+            for (NodeIterator nodeIt = parentNode.getNodes(node.getName()); nodeIt.hasNext();) {
+                Node siblingNode = nodeIt.nextNode();
+                if (!isHippoDocumentHandleOrVariant(siblingNode)) {
+                    candidateNode = siblingNode;
+                    break;
+                }
+            }
+        }
+
+        if (candidateNode == null) {
+            return null;
+        }
+
+        Node canonicalFolderNode = getHippoCanonicalNode(candidateNode);
+
+        if (isHippoMirrorNode(canonicalFolderNode)) {
+            canonicalFolderNode = getRereferencedNodeByHippoMirror(canonicalFolderNode);
+        }
+
+        if (canonicalFolderNode == null) {
+            return null;
+        }
+
+        if (isHippoDocumentHandleOrVariant(canonicalFolderNode)) {
+            return null;
+        }
+
+        return canonicalFolderNode;
+    }
+
+    private static boolean isHippoDocumentHandleOrVariant(Node node) throws RepositoryException {
+        if (node.isNodeType("hippo:handle")) {
+            return true;
+        } else if (node.isNodeType("hippo:document")) {
+            if (!node.getSession().getRootNode().isSame(node)) {
+                Node parentNode = node.getParent();
+
+                if (parentNode.isNodeType("hippo:handle")) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static String createHippoFolderNodeByWorkflow(final Session session, Node folderNode, String nodeTypeName,
+            String name) throws RepositoryException, WorkflowException {
+        try {
+            folderNode = getHippoCanonicalNode(folderNode);
+            Workflow wf = getHippoWorkflow(session, DEFAULT_HIPPO_FOLDER_WORKFLOW_CATEGORY, folderNode);
+
+            if (wf instanceof FolderWorkflow) {
+                FolderWorkflow fwf = (FolderWorkflow) wf;
+
+                String category = DEFAULT_NEW_DOCUMENT_WORKFLOW_CATEGORY;
+
+                if (nodeTypeName.equals(DEFAULT_HIPPO_FOLDER_NODE_TYPE)) {
+                    category = DEFAULT_NEW_FOLDER_WORKFLOW_CATEGORY;
+
+                    // now check if there is some more specific workflow for hippostd:folder
+                    if (fwf.hints() != null && fwf.hints().get("prototypes") != null) {
+                        Object protypesMap = fwf.hints().get("prototypes");
+                        if (protypesMap instanceof Map) {
+                            for (Object o : ((Map) protypesMap).entrySet()) {
+                                Entry entry = (Entry) o;
+                                if (entry.getKey() instanceof String && entry.getValue() instanceof Set) {
+                                    if (((Set) entry.getValue()).contains(DEFAULT_HIPPO_FOLDER_NODE_TYPE)) {
+                                        // we found possibly a more specific workflow for folderNodeTypeName. Use the key as category
+                                        category = (String) entry.getKey();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                String nodeName = DEFAULT_URI_ENCODING.encode(name);
+                String added = fwf.add(category, nodeTypeName, nodeName);
+                if (added == null) {
+                    throw new WorkflowException("Failed to add document/folder for type '" + nodeTypeName
+                            + "'. Make sure there is a prototype.");
+                }
+                Node addedNode = folderNode.getSession().getNode(added);
+                if (!nodeName.equals(name)) {
+                    DefaultWorkflow defaultWorkflow = (DefaultWorkflow) getHippoWorkflow(session, DEFAULT_WORKFLOW_CATEGORY,
+                            addedNode);
+                    defaultWorkflow.localizeName(name);
+                }
+
+                if (DEFAULT_NEW_DOCUMENT_WORKFLOW_CATEGORY.equals(category)) {
+
+                    // added new document : because the document must be in 'preview' availability, we now set this explicitly
+                    if (addedNode.isNodeType("hippostd:publishable")) {
+                        log.info("Added document '{}' is pusblishable so set status to preview.", addedNode.getPath());
+                        addedNode.setProperty("hippostd:state", "unpublished");
+                        addedNode.setProperty(HippoNodeType.HIPPO_AVAILABILITY, new String[] { "preview" });
+                    } else {
+                        log.info("Added document '{}' is not publishable so set status to live & preview directly.",
+                                addedNode.getPath());
+                        addedNode.setProperty(HippoNodeType.HIPPO_AVAILABILITY, new String[] { "live", "preview" });
+                    }
+
+                    if (addedNode.isNodeType("hippostd:publishableSummary")) {
+                        addedNode.setProperty("hippostd:stateSummary", "new");
+                    }
+                    addedNode.getSession().save();
+                }
+                return added;
+            } else {
+                throw new WorkflowException(
+                        "Can't create folder " + name + " [" + nodeTypeName + "] in the folder " + folderNode.getPath()
+                                + ", because there is no FolderWorkflow possible on the folder node: " + wf);
+            }
+        } catch (RemoteException e) {
+            throw new WorkflowException(e.toString(), e);
+        }
+    }
 }

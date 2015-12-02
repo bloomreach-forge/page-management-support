@@ -165,7 +165,9 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
                 throw new IllegalArgumentException("Source document doesn't exist at '" + sourceDocumentLocation + "'.");
             }
 
-            if (!getSession().nodeExists(targetFolderLocation)) {
+            final Node targetFolderNode = HippoWorkflowUtils.createMissingHippoFolders(getSession(), targetFolderLocation);
+
+            if (targetFolderNode == null) {
                 throw new IllegalArgumentException("Target folder doesn't exist at '" + targetFolderLocation + "'.");
             }
 
@@ -175,7 +177,6 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
             Boolean copy = (Boolean) documentWorkflow.hints().get("copy");
 
             if (BooleanUtils.isTrue(copy)) {
-                Node targetFolderNode = getSession().getNode(targetFolderLocation);
                 documentWorkflow.copy(new Document(targetFolderNode), targetDocumentName);
                 targetDocumentLocation = targetFolderNode.getNode(targetDocumentName).getPath();
             } else {
@@ -276,6 +277,6 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
     }
 
     protected DocumentWorkflow getDocumentWorkflow(final Node node) throws RepositoryException {
-        return (DocumentWorkflow) HippoWorkflowUtils.getWorkflow(getSession(), getDocumentWorkflowCategory(), node);
+        return (DocumentWorkflow) HippoWorkflowUtils.getHippoWorkflow(getSession(), getDocumentWorkflowCategory(), node);
     }
 }
