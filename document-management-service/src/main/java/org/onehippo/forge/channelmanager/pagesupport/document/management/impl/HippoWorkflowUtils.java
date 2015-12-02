@@ -263,6 +263,22 @@ class HippoWorkflowUtils {
         return false;
     }
 
+    public static Node getHippoDocumentHandle(Node node) throws RepositoryException {
+        if (node.isNodeType("hippo:handle")) {
+            return node;
+        } else if (node.isNodeType("hippo:document")) {
+            if (!node.getSession().getRootNode().isSame(node)) {
+                Node parentNode = node.getParent();
+
+                if (parentNode.isNodeType("hippo:handle")) {
+                    return parentNode;
+                }
+            }
+        }
+
+        return null;
+    }
+
     private static String createHippoFolderNodeByWorkflow(final Session session, Node folderNode, String nodeTypeName,
             String name) throws RepositoryException, WorkflowException {
         try {

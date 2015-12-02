@@ -66,8 +66,13 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
                 throw new IllegalArgumentException("Document doesn't exist at '" + documentLocation + "'.");
             }
 
-            Node node = getSession().getNode(documentLocation);
-            DocumentWorkflow documentWorkflow = getDocumentWorkflow(node);
+            Node documentHandleNode = HippoWorkflowUtils.getHippoDocumentHandle(getSession().getNode(documentLocation));
+
+            if (documentHandleNode == null) {
+                throw new IllegalArgumentException("Document handle is not found at '" + documentLocation + "'.");
+            }
+
+            DocumentWorkflow documentWorkflow = getDocumentWorkflow(documentHandleNode);
 
             Boolean obtainEditableInstance = (Boolean) documentWorkflow.hints().get("obtainEditableInstance");
 
@@ -100,8 +105,13 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
                 throw new IllegalArgumentException("Document doesn't exist at '" + documentLocation + "'.");
             }
 
-            Node node = getSession().getNode(documentLocation);
-            DocumentWorkflow documentWorkflow = getDocumentWorkflow(node);
+            Node documentHandleNode = HippoWorkflowUtils.getHippoDocumentHandle(getSession().getNode(documentLocation));
+
+            if (documentHandleNode == null) {
+                throw new IllegalArgumentException("Document handle is not found at '" + documentLocation + "'.");
+            }
+
+            DocumentWorkflow documentWorkflow = getDocumentWorkflow(documentHandleNode);
 
             Boolean disposeEditableInstance = (Boolean) documentWorkflow.hints().get("disposeEditableInstance");
 
@@ -134,8 +144,13 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
                 throw new IllegalArgumentException("Document doesn't exist at '" + documentLocation + "'.");
             }
 
-            Node node = getSession().getNode(documentLocation);
-            DocumentWorkflow documentWorkflow = getDocumentWorkflow(node);
+            Node documentHandleNode = HippoWorkflowUtils.getHippoDocumentHandle(getSession().getNode(documentLocation));
+
+            if (documentHandleNode == null) {
+                throw new IllegalArgumentException("Document handle is not found at '" + documentLocation + "'.");
+            }
+
+            DocumentWorkflow documentWorkflow = getDocumentWorkflow(documentHandleNode);
 
             Boolean commitEditableInstance = (Boolean) documentWorkflow.hints().get("commitEditableInstance");
 
@@ -154,9 +169,9 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
     }
 
     @Override
-    public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName) {
+    public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentNodeName) {
         log.debug("##### copyDocument('{}', '{}', '{}')", sourceDocumentLocation, targetFolderLocation,
-                targetDocumentName);
+                targetDocumentNodeName);
 
         String targetDocumentLocation = null;
 
@@ -171,23 +186,27 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
                 throw new IllegalArgumentException("Target folder doesn't exist at '" + targetFolderLocation + "'.");
             }
 
-            Node sourceDocumentNode = getSession().getNode(sourceDocumentLocation);
+            Node sourceDocumentHandleNode = HippoWorkflowUtils.getHippoDocumentHandle(getSession().getNode(sourceDocumentLocation));
 
-            DocumentWorkflow documentWorkflow = getDocumentWorkflow(sourceDocumentNode);
+            if (sourceDocumentHandleNode == null) {
+                throw new IllegalArgumentException("Source document handle is not found at '" + sourceDocumentLocation + "'.");
+            }
+
+            DocumentWorkflow documentWorkflow = getDocumentWorkflow(sourceDocumentHandleNode);
             Boolean copy = (Boolean) documentWorkflow.hints().get("copy");
 
             if (BooleanUtils.isTrue(copy)) {
-                documentWorkflow.copy(new Document(targetFolderNode), targetDocumentName);
-                targetDocumentLocation = targetFolderNode.getNode(targetDocumentName).getPath();
+                documentWorkflow.copy(new Document(targetFolderNode), targetDocumentNodeName);
+                targetDocumentLocation = targetFolderNode.getNode(targetDocumentNodeName).getPath();
             } else {
                 throw new IllegalStateException("Copy action not available on document at '" + sourceDocumentLocation
-                        + "' to '" + targetFolderLocation + "/" + targetDocumentName + "'.");
+                        + "' to '" + targetFolderLocation + "/" + targetDocumentNodeName + "'.");
             }
         } catch (RepositoryException | WorkflowException | RemoteException e) {
             log.error("Failed to copy document at '{}' to '{}/{}'.", sourceDocumentLocation, targetFolderLocation,
-                    targetDocumentName, e);
+                    targetDocumentNodeName, e);
             throw new RuntimeException("Failed to copy document at '" + sourceDocumentLocation + "' to '"
-                    + targetFolderLocation + "/" + targetDocumentName + "'. " + e);
+                    + targetFolderLocation + "/" + targetDocumentNodeName + "'. " + e);
         }
 
         return targetDocumentLocation;
@@ -208,8 +227,13 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
                 throw new IllegalArgumentException("Document doesn't exist at '" + documentLocation + "'.");
             }
 
-            Node node = getSession().getNode(documentLocation);
-            DocumentWorkflow documentWorkflow = getDocumentWorkflow(node);
+            Node documentHandleNode = HippoWorkflowUtils.getHippoDocumentHandle(getSession().getNode(documentLocation));
+
+            if (documentHandleNode == null) {
+                throw new IllegalArgumentException("Document handle is not found at '" + documentLocation + "'.");
+            }
+
+            DocumentWorkflow documentWorkflow = getDocumentWorkflow(documentHandleNode);
 
             Boolean isLive = (Boolean) documentWorkflow.hints().get("isLive");
 
@@ -249,8 +273,13 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
                 throw new IllegalArgumentException("Document doesn't exist at '" + documentLocation + "'.");
             }
 
-            Node node = getSession().getNode(documentLocation);
-            DocumentWorkflow documentWorkflow = getDocumentWorkflow(node);
+            Node documentHandleNode = HippoWorkflowUtils.getHippoDocumentHandle(getSession().getNode(documentLocation));
+
+            if (documentHandleNode == null) {
+                throw new IllegalArgumentException("Document handle is not found at '" + documentLocation + "'.");
+            }
+
+            DocumentWorkflow documentWorkflow = getDocumentWorkflow(documentHandleNode);
 
             Boolean publish = (Boolean) documentWorkflow.hints().get("publish");
 
@@ -268,12 +297,16 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
         return published;
     }
 
-    protected Session getSession() {
-        return session;
+    public String getDocumentWorkflowCategory() {
+        return documentWorkflowCategory;
     }
 
-    protected String getDocumentWorkflowCategory() {
-        return documentWorkflowCategory;
+    public void setDocumentWorkflowCategory(String documentWorkflowCategory) {
+        this.documentWorkflowCategory = documentWorkflowCategory;
+    }
+
+    protected Session getSession() {
+        return session;
     }
 
     protected DocumentWorkflow getDocumentWorkflow(final Node node) throws RepositoryException {
