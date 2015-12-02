@@ -25,10 +25,12 @@ public interface DocumentManagementServiceMXBean {
 
     boolean commitEditableDocument(String documentLocation);
 
-    String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName);
-
     boolean depublishDocument(String documentLocation);
 
     boolean publishDocument(String documentLocation);
+
+    String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName);
+
+    String translateDocument(String sourceDocumentLocation, String language, String name);
 
 }

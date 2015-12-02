@@ -16,6 +16,7 @@
 package org.onehippo.forge.channelmanager.pagesupport.document.management.impl;
 
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -28,6 +29,7 @@ import javax.jcr.Session;
 import javax.jcr.Workspace;
 
 import org.apache.commons.lang.StringUtils;
+import org.hippoecm.repository.HippoStdNodeType;
 import org.hippoecm.repository.api.HippoNode;
 import org.hippoecm.repository.api.HippoNodeType;
 import org.hippoecm.repository.api.HippoWorkspace;
@@ -98,6 +100,23 @@ class HippoWorkflowUtils {
                 Thread.currentThread().setContextClassLoader(currentClassloader);
             }
         }
+    }
+
+    public static Map<String, Node> getDocumentVariantsMap(final Node handle) throws RepositoryException {
+        Map<String, Node> variantsMap = new HashMap<>();
+        Node variantNode = null;
+        String hippoState;
+
+        for (NodeIterator nodeIt = handle.getNodes(handle.getName()); nodeIt.hasNext(); ) {
+            variantNode = nodeIt.nextNode();
+
+            if (variantNode.hasProperty(HippoStdNodeType.HIPPOSTD_STATE)) {
+                hippoState = variantNode.getProperty(HippoStdNodeType.HIPPOSTD_STATE).getString();
+                variantsMap.put(hippoState, variantNode);
+            }
+        }
+
+        return variantsMap;
     }
 
     public static Node createMissingHippoFolders(final Session session, String absPath)
