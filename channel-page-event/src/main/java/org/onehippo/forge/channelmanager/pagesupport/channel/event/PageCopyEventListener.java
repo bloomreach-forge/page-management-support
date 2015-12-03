@@ -33,7 +33,9 @@ import org.hippoecm.hst.core.request.HstRequestContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
 import org.hippoecm.hst.util.NodeUtils;
+import org.hippoecm.repository.HippoStdNodeType;
 import org.hippoecm.repository.api.HippoNodeType;
+import org.hippoecm.repository.util.JcrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,16 +86,17 @@ public class PageCopyEventListener implements ComponentManagerAware {
 
         final PageCopyContext pageCopyContext = pageCopyEvent.getPageCopyContext();
 
-        copyAllLinkedDocumentsUnderHstComponentConfiguration(
-                pageCopyContext.getRequestContext(),
-                pageCopyContext.getSourcePage(),
-                pageCopyContext.getEditingMount(), pageCopyContext.getTargetMount());
+        final Mount sourceMount = pageCopyContext.getEditingMount();
+        final Mount targetMount = pageCopyContext.getTargetMount();
+
+        if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
+            copyAllLinkedDocumentsUnderHstComponentConfiguration(pageCopyContext.getRequestContext(),
+                    pageCopyContext.getSourcePage(), sourceMount, targetMount);
+        }
     }
 
-    private void copyAllLinkedDocumentsUnderHstComponentConfiguration(
-            final HstRequestContext requestContext,
-            final HstComponentConfiguration compConfig,
-            final Mount sourceMount, final Mount targetMount) {
+    private void copyAllLinkedDocumentsUnderHstComponentConfiguration(final HstRequestContext requestContext,
+            final HstComponentConfiguration compConfig, final Mount sourceMount, final Mount targetMount) {
         final String sourceContentBasePath = sourceMount.getContentPath();
         final String targetContentBasePath = targetMount.getContentPath();
 
@@ -101,22 +104,43 @@ public class PageCopyEventListener implements ComponentManagerAware {
         log.debug("##### targetContentBasePath: {}", targetContentBasePath);
 
         try {
+            final Node sourceContentBaseNode = requestContext.getSession().getNode(sourceContentBasePath);
+            final Node targetContentBaseNode = requestContext.getSession().getNode(targetContentBasePath);
+            String targetTranslationLanguage = JcrUtils.getStringProperty(targetContentBaseNode,
+                    "hippotranslation:locale", null);
+
+            if (StringUtils.isBlank(targetTranslationLanguage)) {
+                log.error("Target translation language is blank at '{}'.", targetContentBasePath);
+                return;
+            }
+
             final Set<String> documentPathSet = getDocumentPathSetInPage(compConfig);
             log.debug("##### documentPaths: {}", documentPathSet);
 
             String sourceDocumentAbsPath;
+            String sourceFolderRelPath;
             String targetDocumentAbsPath;
             String targetFolderAbsPath;
-            String targetDocumentNodeName;
+            String documentNodeName;
 
             for (String documentPath : documentPathSet) {
                 if (StringUtils.startsWith(documentPath, "/")) {
-                    log.info("##### skiping '{}' because it's an absolute jcr path, not relative to source mount content base",
+                    log.info(
+                            "##### skiping '{}' because it's an absolute jcr path, not relative to source mount content base",
                             documentPath);
                     continue;
                 }
 
                 sourceDocumentAbsPath = sourceContentBasePath + "/" + documentPath;
+                int offset = documentPath.lastIndexOf('/');
+
+                if (offset != -1) {
+                    sourceFolderRelPath = documentPath.substring(0, offset);
+                    documentNodeName = documentPath.substring(offset + 1);
+                } else {
+                    sourceFolderRelPath = null;
+                    documentNodeName = documentPath;
+                }
 
                 if (!documentExists(requestContext.getSession(), sourceDocumentAbsPath)) {
                     log.info("##### skiping '{}' because it doesn't exist under '{}'.", documentPath,
@@ -132,11 +156,15 @@ public class PageCopyEventListener implements ComponentManagerAware {
                     continue;
                 }
 
-                int offset = targetDocumentAbsPath.lastIndexOf('/');
-                targetFolderAbsPath = targetDocumentAbsPath.substring(0, offset);
-                targetDocumentNodeName = targetDocumentAbsPath.substring(offset + 1);
+                targetFolderAbsPath = StringUtils.substringBeforeLast(targetDocumentAbsPath, "/");
 
-                getDocumentManagementServiceClient().copyDocument(sourceDocumentAbsPath, targetFolderAbsPath, targetDocumentNodeName);
+                if (!folderExists(requestContext.getSession(), targetFolderAbsPath)) {
+                    translateFolders(requestContext.getSession(), sourceContentBaseNode, sourceFolderRelPath,
+                            targetContentBaseNode, targetTranslationLanguage);
+                }
+
+                getDocumentManagementServiceClient().translateDocument(sourceDocumentAbsPath, targetTranslationLanguage,
+                        documentNodeName);
             }
         } catch (Exception e) {
             log.error("Failed to invoke the document management service.", e);
@@ -153,8 +181,46 @@ public class PageCopyEventListener implements ComponentManagerAware {
      * @return
      */
     private Set<String> getDocumentPathSetInPage(final HstComponentConfiguration pageConfig) {
-        List<String> documentPathList = DocumentParamsScanner.findDocumentPathsRecursive(pageConfig, Thread.currentThread().getContextClassLoader());
+        List<String> documentPathList = DocumentParamsScanner.findDocumentPathsRecursive(pageConfig,
+                Thread.currentThread().getContextClassLoader());
         return new LinkedHashSet<String>(documentPathList);
+    }
+
+    private void translateFolders(final Session session, final Node sourceBaseFolderNode,
+            final String sourceFolderRelPath, final Node targetBaseFolderNode, final String targetTranslationLanguage)
+                    throws Exception {
+        String[] folderNodeNames = StringUtils.split(sourceFolderRelPath, "/");
+        String sourceFolderLocation = sourceBaseFolderNode.getPath();
+        String targetFolderLocation = targetBaseFolderNode.getPath();
+
+        for (String folderNodeName : folderNodeNames) {
+            sourceFolderLocation += "/" + folderNodeName;
+
+            if (!folderExists(session, sourceFolderLocation)) {
+                throw new IllegalArgumentException("Source folder doesn't exist at '" + sourceFolderLocation + "'.");
+            }
+
+            targetFolderLocation += "/" + folderNodeName;
+
+            if (!folderExists(session, targetFolderLocation)) {
+                getDocumentManagementServiceClient().translateFolder(sourceFolderLocation, targetTranslationLanguage,
+                        folderNodeName);
+            }
+        }
+    }
+
+    private boolean folderExists(final Session session, final String folderLocation) throws RepositoryException {
+        if (!session.nodeExists(folderLocation)) {
+            return false;
+        }
+
+        final Node node = session.getNode(folderLocation);
+
+        if (NodeUtils.isNodeType(node, HippoStdNodeType.NT_FOLDER)) {
+            return true;
+        }
+
+        return false;
     }
 
     private boolean documentExists(final Session session, final String documentLocation) throws RepositoryException {
