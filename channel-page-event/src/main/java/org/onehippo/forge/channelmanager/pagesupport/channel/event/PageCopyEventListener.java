@@ -82,12 +82,19 @@ public class PageCopyEventListener implements ComponentManagerAware {
 
         final PageCopyContext pageCopyContext = pageCopyEvent.getPageCopyContext();
 
-        final Mount sourceMount = pageCopyContext.getEditingMount();
-        final Mount targetMount = pageCopyContext.getTargetMount();
+        try {
+            final Mount sourceMount = pageCopyContext.getEditingMount();
+            final Mount targetMount = pageCopyContext.getTargetMount();
 
-        if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
-            copyDocumentsLinkedByHstComponentConfiguration(pageCopyContext.getRequestContext(),
-                    pageCopyContext.getSourcePage(), sourceMount, targetMount);
+            if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
+                copyDocumentsLinkedByHstComponentConfiguration(pageCopyContext.getRequestContext(),
+                        pageCopyContext.getSourcePage(), sourceMount, targetMount);
+            }
+        } catch (RuntimeException e) {
+            pageCopyEvent.setException(e);
+        } catch (Exception e) {
+            pageCopyEvent.setException(
+                    new RuntimeException("Failed to handle page copy event properly. " + e.toString(), e));
         }
     }
 
@@ -164,6 +171,7 @@ public class PageCopyEventListener implements ComponentManagerAware {
             }
         } catch (Exception e) {
             log.error("Failed to invoke the document management service.", e);
+            throw new RuntimeException("Failed to copy all the linked documents. " + e.toString());
         }
     }
 
