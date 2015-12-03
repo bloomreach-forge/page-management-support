@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,9 +31,6 @@ import org.hippoecm.hst.core.linking.DocumentParamsScanner;
 import org.hippoecm.hst.core.request.HstRequestContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
-import org.hippoecm.hst.util.NodeUtils;
-import org.hippoecm.repository.HippoStdNodeType;
-import org.hippoecm.repository.api.HippoNodeType;
 import org.hippoecm.repository.util.JcrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,12 +86,12 @@ public class PageCopyEventListener implements ComponentManagerAware {
         final Mount targetMount = pageCopyContext.getTargetMount();
 
         if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
-            copyAllLinkedDocumentsUnderHstComponentConfiguration(pageCopyContext.getRequestContext(),
+            copyDocumentsLinkedByHstComponentConfiguration(pageCopyContext.getRequestContext(),
                     pageCopyContext.getSourcePage(), sourceMount, targetMount);
         }
     }
 
-    private void copyAllLinkedDocumentsUnderHstComponentConfiguration(final HstRequestContext requestContext,
+    private void copyDocumentsLinkedByHstComponentConfiguration(final HstRequestContext requestContext,
             final HstComponentConfiguration compConfig, final Mount sourceMount, final Mount targetMount) {
         final String sourceContentBasePath = sourceMount.getContentPath();
         final String targetContentBasePath = targetMount.getContentPath();
@@ -142,7 +138,7 @@ public class PageCopyEventListener implements ComponentManagerAware {
                     documentNodeName = documentPath;
                 }
 
-                if (!documentExists(requestContext.getSession(), sourceDocumentAbsPath)) {
+                if (!HippoFolderDocumentUtils.documentExists(requestContext.getSession(), sourceDocumentAbsPath)) {
                     log.info("##### skiping '{}' because it doesn't exist under '{}'.", documentPath,
                             sourceContentBasePath);
                     continue;
@@ -150,7 +146,7 @@ public class PageCopyEventListener implements ComponentManagerAware {
 
                 targetDocumentAbsPath = targetContentBasePath + "/" + documentPath;
 
-                if (documentExists(requestContext.getSession(), targetDocumentAbsPath)) {
+                if (HippoFolderDocumentUtils.documentExists(requestContext.getSession(), targetDocumentAbsPath)) {
                     log.info("##### skiping '{}' because it already exists under '{}'.", documentPath,
                             targetContentBasePath);
                     continue;
@@ -158,7 +154,7 @@ public class PageCopyEventListener implements ComponentManagerAware {
 
                 targetFolderAbsPath = StringUtils.substringBeforeLast(targetDocumentAbsPath, "/");
 
-                if (!folderExists(requestContext.getSession(), targetFolderAbsPath)) {
+                if (!HippoFolderDocumentUtils.folderExists(requestContext.getSession(), targetFolderAbsPath)) {
                     translateFolders(requestContext.getSession(), sourceContentBaseNode, sourceFolderRelPath,
                             targetContentBaseNode, targetTranslationLanguage);
                 }
@@ -196,52 +192,17 @@ public class PageCopyEventListener implements ComponentManagerAware {
         for (String folderNodeName : folderNodeNames) {
             sourceFolderLocation += "/" + folderNodeName;
 
-            if (!folderExists(session, sourceFolderLocation)) {
+            if (!HippoFolderDocumentUtils.folderExists(session, sourceFolderLocation)) {
                 throw new IllegalArgumentException("Source folder doesn't exist at '" + sourceFolderLocation + "'.");
             }
 
             targetFolderLocation += "/" + folderNodeName;
 
-            if (!folderExists(session, targetFolderLocation)) {
+            if (!HippoFolderDocumentUtils.folderExists(session, targetFolderLocation)) {
                 getDocumentManagementServiceClient().translateFolder(sourceFolderLocation, targetTranslationLanguage,
                         folderNodeName);
             }
         }
     }
 
-    private boolean folderExists(final Session session, final String folderLocation) throws RepositoryException {
-        if (!session.nodeExists(folderLocation)) {
-            return false;
-        }
-
-        final Node node = session.getNode(folderLocation);
-
-        if (NodeUtils.isNodeType(node, HippoStdNodeType.NT_FOLDER)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean documentExists(final Session session, final String documentLocation) throws RepositoryException {
-        if (!session.nodeExists(documentLocation)) {
-            return false;
-        }
-
-        final Node node = session.getNode(documentLocation);
-
-        if (NodeUtils.isNodeType(node, HippoNodeType.NT_HANDLE)) {
-            return true;
-        } else if (NodeUtils.isNodeType(node, HippoNodeType.NT_DOCUMENT)) {
-            if (!session.getRootNode().isSame(node)) {
-                Node parentNode = node.getParent();
-
-                if (NodeUtils.isNodeType(parentNode, HippoNodeType.NT_HANDLE)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 }

@@ -1,6 +1,7 @@
 * text=auto !eol
 channel-page-event/pom.xml -text svneol=unset#text/plain
 channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/channel/event/DocumentManagementServiceClient.java -text svneol=unset#text/plain
+channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/channel/event/HippoFolderDocumentUtils.java -text svneol=unset#text/plain
 channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/channel/event/PageCopyEventListener.java -text svneol=unset#text/plain
 channel-page-event/src/main/resources/META-INF/hst-assembly/addon/module.xml -text svneol=unset#text/plain
 channel-page-event/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channelmanager/pagesupport/cross-channel-page-copy-support.xml -text svneol=unset#text/plain
