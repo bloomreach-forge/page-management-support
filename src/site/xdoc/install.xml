@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC
+  "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+  "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<!--
+    Copyright 2015 Hippo
+
+    Licensed under the Apache License, Version 2.0 (the  "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<document>
+  <properties>
+    <title>Installing Hippo Channel Manager Page Management Support</title>
+  </properties>
+  <body>
+    <section name="Installing Hippo Channel Manager Page Management Support">
+      <subsection name="Add Dependencies">
+        <p>
+          Make sure you have the forge Maven2 repository reference and dependency definition in the root pom.xml of your project.
+        </p>
+        <div class="brush: xml">
+          <source><![CDATA[
+    <repositories>
+
+      <!-- SNIP -->
+
+      <repository>
+        <id>channel-pagesup-maven-repo</id>
+        <name>Hippo Channel Manager Page Management Support Maven 2 Repository</name>
+        <url>http://forge.onehippo.org/svn/channel-pagesup/maven2/</url>
+      </repository>
+
+      <!-- SNIP -->
+
+    </repositories>
+
+    <!-- SNIP -->
+
+    <dependencyManagement>
+
+      <!-- SNIP -->
+
+      <dependencies>
+
+        <!-- SNIP -->
+
+        <!-- NOTE: You should set a property named 'forge.channel-pagesup.version' to a version of this plugin! -->
+
+        <!-- DocumentManagementService as CMS application side dependency -->
+        <dependency>
+          <groupId>org.onehippo.forge.channel-pagesup</groupId>
+          <artifactId>channel-pagesup-document-management-service</artifactId>
+          <version>${forge.channel-pagesup.version}</version>
+        </dependency>
+
+        <!-- CopyPageEvent handler as SITE application side dependency -->
+        <dependency>
+          <groupId>org.onehippo.forge.channel-pagesup</groupId>
+          <artifactId>channel-pagesup-channel-page-event</artifactId>
+          <version>${forge.channel-pagesup.version}</version>
+        </dependency>
+
+        <!-- SNIP -->
+
+      </dependencies>
+
+      <!-- SNIP -->
+
+    </dependencyManagement>
+    ]]></source>
+        </div>
+        <p>
+          And add the following dependency reference into your Hippo CMS Web Application module subproject.
+        </p>
+        <div class="brush: xml">
+          <source><![CDATA[
+    <dependencies>
+
+      <!-- SNIP -->
+
+      <!-- DocumentManagementService as CMS application side dependency -->
+      <dependency>
+        <groupId>org.onehippo.forge.channel-pagesup</groupId>
+        <artifactId>channel-pagesup-document-management-service</artifactId>
+      </dependency>
+
+      <!-- SNIP -->
+
+    </dependencies>
+    ]]></source>
+        </div>
+        <p>
+          And add the following dependency reference into your Hippo SITE Web Application module subproject.
+        </p>
+        <div class="brush: xml">
+          <source><![CDATA[
+    <dependencies>
+
+      <!-- SNIP -->
+
+      <!-- CopyPageEvent handler as SITE application side dependency -->
+      <dependency>
+        <groupId>org.onehippo.forge.channel-pagesup</groupId>
+        <artifactId>channel-pagesup-channel-page-event</artifactId>
+      </dependency>
+
+      <!-- SNIP -->
+
+    </dependencies>
+    ]]></source>
+        </div>
+        <p>
+          Now, you're ready to use the plugin!
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>

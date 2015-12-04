@@ -1,8 +1,8 @@
 * text=auto !eol
 channel-page-event/pom.xml -text svneol=unset#text/plain
+channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/channel/event/DocumentCopyingPageCopyEventListener.java -text svneol=unset#text/plain
 channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/channel/event/DocumentManagementServiceClient.java -text svneol=unset#text/plain
 channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/channel/event/HippoFolderDocumentUtils.java -text svneol=unset#text/plain
-channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/channel/event/PageCopyEventListener.java -text svneol=unset#text/plain
 channel-page-event/src/main/resources/META-INF/hst-assembly/addon/module.xml -text svneol=unset#text/plain
 channel-page-event/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml -text svneol=unset#text/plain
 document-management-service/pom.xml -text
@@ -63,4 +63,5 @@ src/site/resources/sh/styles/shThemeMidnight.css -text
 src/site/resources/sh/styles/shThemeRDark.css -text
 src/site/site.xml -text
 src/site/xdoc/index.xml -text
+src/site/xdoc/install.xml -text svneol=unset#text/plain
 src/site/xdoc/release-notes.xml -text

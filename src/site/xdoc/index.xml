@@ -24,7 +24,32 @@
   <body>
     <section name="Hippo Channel Manager Page Management Support">
       <p>
-        TODO
+        This project provides a PageCopyEvent listener
+        (<code>org.onehippo.forge.channelmanager.pagesupport.channel.event.DocumentCopyingPageCopyEventListener</code>)
+        which copies linked documents from the source channel to the target channel
+        on the event of page copying in the channel manager.
+      </p>
+    </section>
+    <section name="Demo Application">
+      <subsection name="Demo Application with Hippo CMS 10">
+        <p>You can check out, build and run demo application, which contains all the examples explained in this site documentation.</p>
+        <p>Here are example commands to check out, build and run demo application:</p>
+        <div class="brush: bash">
+          <source><![CDATA[
+  $ svn checkout https://forge.onehippo.org/svn/channel-pagesup/channel-pagesup-demo/trunk channel-pagesup-demo-TRUNK
+  $ cd channel-pagesup-demo-TRUNK
+  $ mvn clean verify
+  $ mvn -P cargo.run
+          ]]></source>
+        </div>
+        <p>
+          Visit http://localhost:8080/cms/.
+        </p>
+      </subsection>
+    </section>
+    <section name="Testing with Demo Application">
+      <p>
+        TODO: describe example steps with screenshots.
       </p>
     </section>
   </body>
