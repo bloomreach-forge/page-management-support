@@ -25,6 +25,9 @@ import org.hippoecm.repository.api.HippoNodeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Hippo Folder/Document Node Utilities.
+ */
 public class HippoFolderDocumentUtils {
 
     private static Logger log = LoggerFactory.getLogger(HippoFolderDocumentUtils.class);
@@ -32,6 +35,13 @@ public class HippoFolderDocumentUtils {
     private HippoFolderDocumentUtils() {
     }
 
+    /**
+     * Returns true if a folder exists at {@code folderLocation}.
+     * @param session JCR session
+     * @param folderLocation folder location
+     * @return true if a folder exists at {@code folderLocation}
+     * @throws RepositoryException if repository exception occurs
+     */
     public static boolean folderExists(final Session session, final String folderLocation) throws RepositoryException {
         if (!session.nodeExists(folderLocation)) {
             return false;
@@ -46,6 +56,13 @@ public class HippoFolderDocumentUtils {
         return false;
     }
 
+    /**
+     * Returns true if a document exists at {@code documentLocation}.
+     * @param session JCR session
+     * @param documentLocation document handle or variant location
+     * @return true if a document exists at {@code documentLocation}
+     * @throws RepositoryException if repository exception occurs
+     */
     public static boolean documentExists(final Session session, final String documentLocation) throws RepositoryException {
         if (!session.nodeExists(documentLocation)) {
             return false;
@@ -68,6 +85,12 @@ public class HippoFolderDocumentUtils {
         return false;
     }
 
+    /**
+     * Returns {@code hippotranslation:locale} property value from the {@code node} if exists,
+     * or null if not existing.
+     * @param node JCR node
+     * @return {@code hippotranslation:locale} property value from the {@code node} if exists, or null if not existing
+     */
     public static String getHippoTranslationLanguage(final Node node) {
         try {
             if (node.hasProperty("hippotranslation:locale")) {
@@ -80,6 +103,13 @@ public class HippoFolderDocumentUtils {
         return null;
     }
 
+    /**
+     * Returns {@code node} if it is a document handle node, or its parent if it is a document variant node.
+     * Otherwise, returns null.
+     * @param node JCR node
+     * @return {@code node} if it is a document handle node, or its parent if it is a document variant node. Otherwise, returns null.
+     * @throws RepositoryException if repository exception occurs
+     */
     public static Node getHippoDocumentHandle(Node node) throws RepositoryException {
         if (node.isNodeType("hippo:handle")) {
             return node;

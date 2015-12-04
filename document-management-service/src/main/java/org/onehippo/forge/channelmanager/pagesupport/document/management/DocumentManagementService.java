@@ -17,13 +17,27 @@ package org.onehippo.forge.channelmanager.pagesupport.document.management;
 
 import javax.jcr.Session;
 
+import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.cms7.services.SingletonService;
 
+/**
+ * Hippo CMS Document/Folder Workflow invocation service interface
+ * to be reigstred in {@link HippoServiceRegistry}.
+ */
 @SingletonService
 public interface DocumentManagementService extends DocumentManagementServiceMXBean {
 
+    /**
+     * Initializes this document management service.
+     * @param session JCR session to use in workflow operations
+     * @throws RuntimeException if any repository/workflow related exception occurs.
+     */
     public void initialize(Session session) throws RuntimeException;
 
+    /**
+     * Destroys this document management service.
+     * @throws RuntimeException if any repository/workflow related exception occurs.
+     */
     public void destroy() throws RuntimeException;
 
 }

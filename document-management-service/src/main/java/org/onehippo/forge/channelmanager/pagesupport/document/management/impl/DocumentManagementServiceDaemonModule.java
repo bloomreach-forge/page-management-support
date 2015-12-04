@@ -29,10 +29,15 @@ import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementService;
 import org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementServiceMXBean;
 import org.onehippo.repository.modules.AbstractReconfigurableDaemonModule;
+import org.onehippo.repository.modules.DaemonModule;
 import org.onehippo.repository.modules.ProvidesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Hippo Repository {@link DaemonModule} implementation
+ * to register/unregister {@link DocumentManagementService} component.
+ */
 @ProvidesService(types = DocumentManagementService.class)
 public class DocumentManagementServiceDaemonModule extends AbstractReconfigurableDaemonModule {
 

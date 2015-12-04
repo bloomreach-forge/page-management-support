@@ -23,6 +23,9 @@ import javax.management.ObjectName;
 
 import org.apache.commons.lang.BooleanUtils;
 
+/**
+ * Internal <code>DocumentManagementService</code> client stub using JMX API.
+ */
 class DocumentManagementServiceClient {
 
     private static final String DEFAULT_DOCUMENT_MANAGEMENT_SERVICE_NAME = "org.onehippo.forge.channelmanager.pagesupport.document.management:type=DocumentManagementServiceMXBean";

@@ -37,6 +37,15 @@ import org.slf4j.LoggerFactory;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 
+/**
+ * {@link PageCopyEvent} event handler which is to be registered through
+ * {@link ComponentManager#registerEventSubscriber(Object)} and unregistered through
+ * {@link ComponentManager#unregisterEventSubscriber(Object)} during the HST-2 based web application lifecycle.
+ * <P>
+ * Basically this event handler scans all the linked documents in a page and its components
+ * and copy each document from the source channel to the target channel if not existing in the target channel.
+ * </P>
+ */
 public class DocumentCopyingPageCopyEventListener implements ComponentManagerAware {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentCopyingPageCopyEventListener.class);

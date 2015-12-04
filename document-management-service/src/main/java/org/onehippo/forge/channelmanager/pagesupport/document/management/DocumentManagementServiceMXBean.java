@@ -15,24 +15,76 @@
  */
 package org.onehippo.forge.channelmanager.pagesupport.document.management;
 
+/**
+ * Hippo CMS Document/Folder Workflow invocation service interface as possibly deployed as JMX MBean.
+ */
 public interface DocumentManagementServiceMXBean {
 
+    /**
+     * JMX MBean name to be used.
+     */
     String NAME = "org.onehippo.forge.channelmanager.pagesupport.document.management:type=DocumentManagementServiceMXBean";
 
+    /**
+     * Obtains an editable draft variant from the document handle location.
+     * @param documentLocation document handle location
+     * @return true if the operation was successful, false otherwise
+     */
     boolean obtainEditableDocument(String documentLocation);
 
+    /**
+     * Discards the draft variant currently being edited.
+     * @param documentLocation document handle location
+     * @return true if the operation was successful, false otherwise
+     */
     boolean disposeEditableDocument(String documentLocation);
 
+    /**
+     * Commits the draft variant currently being edited.
+     * @param documentLocation document handle location
+     * @return true if the operation was successful, false otherwise
+     */
     boolean commitEditableDocument(String documentLocation);
 
+    /**
+     * Takes offline the document.
+     * @param documentLocation document handle location
+     * @return true if the operation was successful, false otherwise
+     */
     boolean depublishDocument(String documentLocation);
 
+    /**
+     * Publishes the document.
+     * @param documentLocation document handle location
+     * @return true if the operation was successful, false otherwise
+     */
     boolean publishDocument(String documentLocation);
 
+    /**
+     * Copies the {@code sourceDocumentLocation} to {@code targetFolderLocation} with the {@code targetDocumentName}.
+     * @param sourceDocumentLocation source document handle location
+     * @param targetFolderLocation target folder location
+     * @param targetDocumentName target document handle node name
+     * @return the copied target document handle location
+     */
     String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName);
 
+    /**
+     * Translates the {@code sourceFolderLocation} to {@code language} with the {@code name}.
+     * @param sourceFolderLocation source folder location
+     * @param language target language to translate to
+     * @param name target folder name
+     * @return the translated target folder location
+     */
     String translateFolder(String sourceFolderLocation, String language, String name);
 
+    /**
+     * Translates the {@code sourceDocumentLocation} to {@code language} with the {@code name}.
+     * @param sourceDocumentLocation source document handle location
+     * @param language target language to translate to
+     * @param name target document name
+     * @return the translated target document handle location
+     */
     String translateDocument(String sourceDocumentLocation, String language, String name);
 
 }

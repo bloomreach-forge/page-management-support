@@ -43,6 +43,9 @@ import org.hippoecm.repository.standardworkflow.FolderWorkflow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Internal utility to invoke Hippo Workflow APIs.
+ */
 class HippoWorkflowUtils {
 
     private static Logger log = LoggerFactory.getLogger(HippoWorkflowUtils.class);
@@ -80,6 +83,14 @@ class HippoWorkflowUtils {
     private HippoWorkflowUtils() {
     }
 
+    /**
+     * Returns {@link Workflow} instance by the {@code category} for the {@code node}.
+     * @param session JCR session
+     * @param category workflow category
+     * @param node folder or document node
+     * @return {@link Workflow} instance for the {@code node} and the {@code category}
+     * @throws RepositoryException if any repository/workflow exception occurs
+     */
     public static Workflow getHippoWorkflow(final Session session, final String category, final Node node)
             throws RepositoryException {
         Workspace workspace = session.getWorkspace();
@@ -102,6 +113,12 @@ class HippoWorkflowUtils {
         }
     }
 
+    /**
+     * Returns a map of variant nodes, keyed by variant states such as {@link HippoStdNodeType.PUBLISHED} or {@link HippoStdNodeType.UNPUBLISHED}.
+     * @param handle document handle node
+     * @return a map of variant nodes, keyed by variant states such as {@link HippoStdNodeType.PUBLISHED} or {@link HippoStdNodeType.UNPUBLISHED}
+     * @throws RepositoryException if any repository/workflow exception occurs
+     */
     public static Map<String, Node> getDocumentVariantsMap(final Node handle) throws RepositoryException {
         Map<String, Node> variantsMap = new HashMap<>();
         Node variantNode = null;
@@ -119,6 +136,14 @@ class HippoWorkflowUtils {
         return variantsMap;
     }
 
+    /**
+     * Checks if all the folders exist in the given {@code absPath} and creates folders if not existing.
+     * @param session JCR session
+     * @param absPath absolute folder node path
+     * @return the final folder node if successful
+     * @throws RepositoryException if any repository exception occurs
+     * @throws WorkflowException if any workflow exception occurs
+     */
     public static Node createMissingHippoFolders(final Session session, String absPath)
             throws RepositoryException, WorkflowException {
         String[] folderNames = StringUtils.split(absPath, "/");
@@ -153,6 +178,29 @@ class HippoWorkflowUtils {
         }
 
         return curNode;
+    }
+
+    /**
+     * Returns {@code node} if it is a document handle node or its parent if it is a document variant node.
+     * Otherwise returns null.
+     * @param node JCR node
+     * @return {@code node} if it is a document handle node or its parent if it is a document variant node. Otherwise returns null.
+     * @throws RepositoryException if repository exception occurs
+     */
+    public static Node getHippoDocumentHandle(Node node) throws RepositoryException {
+        if (node.isNodeType("hippo:handle")) {
+            return node;
+        } else if (node.isNodeType("hippo:document")) {
+            if (!node.getSession().getRootNode().isSame(node)) {
+                Node parentNode = node.getParent();
+
+                if (parentNode.isNodeType("hippo:handle")) {
+                    return parentNode;
+                }
+            }
+        }
+
+        return null;
     }
 
     private static Node getHippoCanonicalNode(Node node) {
@@ -280,22 +328,6 @@ class HippoWorkflowUtils {
         }
 
         return false;
-    }
-
-    public static Node getHippoDocumentHandle(Node node) throws RepositoryException {
-        if (node.isNodeType("hippo:handle")) {
-            return node;
-        } else if (node.isNodeType("hippo:document")) {
-            if (!node.getSession().getRootNode().isSame(node)) {
-                Node parentNode = node.getParent();
-
-                if (parentNode.isNodeType("hippo:handle")) {
-                    return parentNode;
-                }
-            }
-        }
-
-        return null;
     }
 
     private static String createHippoFolderNodeByWorkflow(final Session session, Node folderNode, String nodeTypeName,

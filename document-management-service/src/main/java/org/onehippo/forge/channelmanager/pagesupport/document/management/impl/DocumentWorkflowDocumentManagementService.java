@@ -33,6 +33,9 @@ import org.onehippo.repository.documentworkflow.DocumentWorkflow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Default implementation for {@link DocumentManagementService}.
+ */
 public class DocumentWorkflowDocumentManagementService implements DocumentManagementService {
 
     private static Logger log = LoggerFactory.getLogger(DocumentWorkflowDocumentManagementService.class);
