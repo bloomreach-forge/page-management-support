@@ -268,10 +268,6 @@
           <encoding>${project.build.sourceEncoding}</encoding>
           <skip>false</skip>
           <aggregate>true</aggregate>
-          <!--
-          <destDir>userapidocs</destDir>
-          -->
-          <sourcepath>${basedir}/fieldpicker/src/main/java</sourcepath>
         </configuration>
         <reportSets>
           <reportSet>

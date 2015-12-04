@@ -24,12 +24,61 @@
   <body>
     <section name="Architectural Views">
       <p>
-        TODO
+        Here's a runtime view of the system using this forge module components.
+      </p>
+      <p>
+        <em>Note: </em> Elements in yellow color are provided by this forge module project
+        while the other elements are provided by Hippo CMS as built-in features.
       </p>
       <img src="images/architectural-view1.png" alt="Architectural View" />
       <p>
-        TODO
+        Here are some highlights about each element and communication between elements.
       </p>
+      <ul>
+        <li>
+          <a href="apidocs/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementService.html">
+            <code>DocumentManagementService</code>
+          </a> is a service interface to invoke Hippo CMS Document/Folder
+          Workflow operations more easily with simpler parameters.
+        </li>
+        <li>
+          Service component implementation for
+          <a href="apidocs/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementService.html">
+            <code>DocumentManagementService</code>
+          </a>
+          interface is registered by
+          <a href="apidocs/org/onehippo/forge/channelmanager/pagesupport/document/management/impl/DocumentManagementServiceDaemonModule.html">
+            <code>DocumentManagementServiceDaemonModule</code>
+          </a>
+          through
+          <a href="http://javadoc.onehippo.org/10.1/hippo-services/org/onehippo/cms7/services/HippoServiceRegistry.html">
+            <code>HippoServiceRegistry</code>
+          </a>, and so the service can be used in any web applications in the same
+          servlet container through
+          <a href="http://javadoc.onehippo.org/10.1/hippo-services/org/onehippo/cms7/services/HippoServiceRegistry.html">
+            <code>HippoServiceRegistry</code>
+          </a>.
+          In addition, the service is also exposed through JMX as 
+          <a href="apidocs/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementServiceMXBean.html">
+            <code>DocumentManagementServiceMXBean</code>
+          </a>,
+          so it's also possible to use the service through JMX standard API.
+        </li>
+        <li>
+          <a href="apidocs/org/onehippo/forge/channelmanager/pagesupport/channel/event/DocumentCopyingPageCopyEventListener.html">
+            <code>DocumentCopyingPageCopyEventListener</code>
+          </a> is an implementation to subscribe
+          <code>org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent</code> event
+          propagated by Hippo CMS Channel Manager through HST-2 Guave Event Bus.
+        </li>
+        <li>
+          <a href="apidocs/org/onehippo/forge/channelmanager/pagesupport/channel/event/DocumentCopyingPageCopyEventListener.html">
+            <code>DocumentCopyingPageCopyEventListener</code>
+          </a> retrieves all the linked document paths in the page
+          and its components (by invoking <code>org.hippoecm.hst.core.linking.DocumentParamsScanner</code>),
+          and copy each document from the source channel to the target channel if not existing in target channel.
+        </li>
+      </ul>
     </section>
    </body>
 </document>

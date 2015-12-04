@@ -24,14 +24,29 @@
   <body>
     <section name="Hippo Channel Manager Page Management Support">
       <p>
-        This project provides some add-on features to handle <code>PageCopyEvent</code>
-        which is propagated when a page is being copied from a channel.
+        This project provides some add-on features like the following:
       </p>
+      <ul>
+        <li>
+          <code>DocumentCopyingPageCopyEventListener</code> handling <code>PageCopyEvent</code>
+          propagated by Hippo Channel Manager,
+          in order to copy all the linked documents by the page and its components together,
+          when a page is being copied from a channel.
+        </li>
+        <li>
+          <code>DocumentManagementService</code> component to provide document/folder workflow operations.
+        </li>
+      </ul>
       <subsection name="DocumentCopyingPageCopyEventListener component">
         <p>
           <code>org.onehippo.forge.channelmanager.pagesupport.channel.event.DocumentCopyingPageCopyEventListener</code>
-          component copies linked documents from the source channel to the target channel
+          component copies linked documents in a page and its components from the source channel to the target channel
           on the event of page copying in the channel manager.
+        </p>
+      </subsection>
+      <subsection name="DocumentManagementService component">
+        <p>
+          <code>org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementService</code> component is provided to manage document/folder workflows more easily.
         </p>
       </subsection>
     </section>
