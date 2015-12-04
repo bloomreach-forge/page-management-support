@@ -24,11 +24,16 @@
   <body>
     <section name="Hippo Channel Manager Page Management Support">
       <p>
-        This project provides a PageCopyEvent listener
-        (<code>org.onehippo.forge.channelmanager.pagesupport.channel.event.DocumentCopyingPageCopyEventListener</code>)
-        which copies linked documents from the source channel to the target channel
-        on the event of page copying in the channel manager.
+        This project provides some add-on features to handle <code>PageCopyEvent</code>
+        which is propagated when a page is being copied from a channel.
       </p>
+      <subsection name="DocumentCopyingPageCopyEventListener component">
+        <p>
+          <code>org.onehippo.forge.channelmanager.pagesupport.channel.event.DocumentCopyingPageCopyEventListener</code>
+          component copies linked documents from the source channel to the target channel
+          on the event of page copying in the channel manager.
+        </p>
+      </subsection>
     </section>
     <section name="Demo Application">
       <subsection name="Demo Application with Hippo CMS 10">
