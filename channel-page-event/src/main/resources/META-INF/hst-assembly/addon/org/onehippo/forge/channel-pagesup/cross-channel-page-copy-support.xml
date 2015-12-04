@@ -9,6 +9,8 @@
 
   <bean class="org.onehippo.forge.channelmanager.pagesupport.channel.event.PageCopyEventListener"
         init-method="init" destroy-method="destroy">
+    <property name="copyDocumentsLinkedBySourcePage" value="true" />
   </bean>
+
 
 </beans>

@@ -31,7 +31,6 @@ import org.hippoecm.hst.core.linking.DocumentParamsScanner;
 import org.hippoecm.hst.core.request.HstRequestContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
-import org.hippoecm.repository.util.JcrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +44,8 @@ public class PageCopyEventListener implements ComponentManagerAware {
     private ComponentManager componentManager;
 
     private DocumentManagementServiceClient documentManagementServiceClient;
+
+    private boolean copyDocumentsLinkedBySourcePage;
 
     @Override
     public void setComponentManager(ComponentManager componentManager) {
@@ -71,24 +72,69 @@ public class PageCopyEventListener implements ComponentManagerAware {
         this.documentManagementServiceClient = documentManagementServiceClient;
     }
 
+    public boolean isCopyDocumentsLinkedBySourcePage() {
+        return copyDocumentsLinkedBySourcePage;
+    }
+
+    public void setCopyDocumentsLinkedBySourcePage(boolean copyDocumentsLinkedBySourcePage) {
+        this.copyDocumentsLinkedBySourcePage = copyDocumentsLinkedBySourcePage;
+    }
+
     @Subscribe
     @AllowConcurrentEvents
     public void onPageCopyEvent(PageCopyEvent pageCopyEvent) {
-        log.debug("##### onPageCopyEvent");
-
         if (pageCopyEvent.getException() != null) {
             return;
         }
 
         final PageCopyContext pageCopyContext = pageCopyEvent.getPageCopyContext();
+        final HstRequestContext requestContext = pageCopyContext.getRequestContext();
+        final Mount sourceMount = pageCopyContext.getEditingMount();
+        final Mount targetMount = pageCopyContext.getTargetMount();
+        final String sourceContentBasePath = sourceMount.getContentPath();
+        final String targetContentBasePath = targetMount.getContentPath();
 
         try {
-            final Mount sourceMount = pageCopyContext.getEditingMount();
-            final Mount targetMount = pageCopyContext.getTargetMount();
+            final Node sourceContentBaseNode = requestContext.getSession().getNode(sourceContentBasePath);
+            final Node targetContentBaseNode = requestContext.getSession().getNode(targetContentBasePath);
+            String sourceTranslationLanguage = HippoFolderDocumentUtils
+                    .getHippoTranslationLanguage(sourceContentBaseNode);
+            String targetTranslationLanguage = HippoFolderDocumentUtils
+                    .getHippoTranslationLanguage(targetContentBaseNode);
 
-            if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
-                copyDocumentsLinkedByHstComponentConfiguration(pageCopyContext.getRequestContext(),
-                        pageCopyContext.getSourcePage(), sourceMount, targetMount);
+            if (StringUtils.isBlank(sourceTranslationLanguage)) {
+                throw new IllegalStateException(
+                        "Blank translation language in the source base content at '" + sourceContentBasePath + "'.");
+            }
+
+            if (StringUtils.isBlank(targetTranslationLanguage)) {
+                throw new IllegalStateException(
+                        "Blank translation language in the target base content at '" + targetContentBasePath + "'.");
+            }
+
+            if (StringUtils.equals(sourceTranslationLanguage, targetTranslationLanguage)) {
+                throw new IllegalStateException(
+                        "The same translation language of the source and the target base content. Source='"
+                                + sourceContentBasePath + "'. Target='" + targetContentBasePath + "'.");
+            }
+
+            if (isCopyDocumentsLinkedBySourcePage()) {
+                final Set<String> documentPathSet = getDocumentPathSetInPage(pageCopyContext.getSourcePage());
+
+                if (!documentPathSet.isEmpty()) {
+                    if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
+                        copyDocuments(pageCopyContext.getRequestContext().getSession(), documentPathSet,
+                                sourceContentBaseNode, targetContentBaseNode);
+                    } else {
+                        log.info(
+                                "Linked document copying step skipped because the content path of the target mount is the same as that of the source mount.");
+                    }
+                } else {
+                    log.info("No linked document founds in the source page.");
+                }
+            } else {
+                log.info(
+                        "Linked document copying step skipped because 'copyDocumentsLinkedBySourcePage' is turned off.");
             }
         } catch (RuntimeException e) {
             pageCopyEvent.setException(e);
@@ -98,76 +144,59 @@ public class PageCopyEventListener implements ComponentManagerAware {
         }
     }
 
-    private void copyDocumentsLinkedByHstComponentConfiguration(final HstRequestContext requestContext,
-            final HstComponentConfiguration compConfig, final Mount sourceMount, final Mount targetMount) {
-        final String sourceContentBasePath = sourceMount.getContentPath();
-        final String targetContentBasePath = targetMount.getContentPath();
-
-        log.debug("##### sourceContentBasePath: {}", sourceContentBasePath);
-        log.debug("##### targetContentBasePath: {}", targetContentBasePath);
-
+    private void copyDocuments(final Session session, final Set<String> documentPathSet,
+            final Node sourceContentBaseNode, final Node targetContentBaseNode) {
         try {
-            final Node sourceContentBaseNode = requestContext.getSession().getNode(sourceContentBasePath);
-            final Node targetContentBaseNode = requestContext.getSession().getNode(targetContentBasePath);
-            String targetTranslationLanguage = JcrUtils.getStringProperty(targetContentBaseNode,
-                    "hippotranslation:locale", null);
+            final String sourceContentBasePath = sourceContentBaseNode.getPath();
+            final String targetContentBasePath = targetContentBaseNode.getPath();
+            final String targetTranslationLanguage = HippoFolderDocumentUtils
+                    .getHippoTranslationLanguage(targetContentBaseNode);
 
-            if (StringUtils.isBlank(targetTranslationLanguage)) {
-                log.error("Target translation language is blank at '{}'.", targetContentBasePath);
-                return;
-            }
-
-            final Set<String> documentPathSet = getDocumentPathSetInPage(compConfig);
-            log.debug("##### documentPaths: {}", documentPathSet);
-
-            String sourceDocumentAbsPath;
-            String sourceFolderRelPath;
+            Node sourceDocumentHandleNode;
             String targetDocumentAbsPath;
             String targetFolderAbsPath;
-            String documentNodeName;
 
             for (String documentPath : documentPathSet) {
                 if (StringUtils.startsWith(documentPath, "/")) {
                     log.info(
-                            "##### skiping '{}' because it's an absolute jcr path, not relative to source mount content base",
+                            "Skiping '{}' because it's an absolute jcr path, not relative to source mount content base",
                             documentPath);
                     continue;
                 }
 
-                sourceDocumentAbsPath = sourceContentBasePath + "/" + documentPath;
-                int offset = documentPath.lastIndexOf('/');
-
-                if (offset != -1) {
-                    sourceFolderRelPath = documentPath.substring(0, offset);
-                    documentNodeName = documentPath.substring(offset + 1);
-                } else {
-                    sourceFolderRelPath = null;
-                    documentNodeName = documentPath;
+                if (!sourceContentBaseNode.hasNode(documentPath)) {
+                    log.info("Skiping '{}' because it doesn't exist under '{}'.", documentPath, sourceContentBasePath);
+                    continue;
                 }
 
-                if (!HippoFolderDocumentUtils.documentExists(requestContext.getSession(), sourceDocumentAbsPath)) {
-                    log.info("##### skiping '{}' because it doesn't exist under '{}'.", documentPath,
+                sourceDocumentHandleNode = HippoFolderDocumentUtils
+                        .getHippoDocumentHandle(sourceContentBaseNode.getNode(documentPath));
+
+                if (sourceDocumentHandleNode == null) {
+                    log.info("Skiping '{}' because there's no document at the location under '{}'.", documentPath,
                             sourceContentBasePath);
                     continue;
                 }
 
                 targetDocumentAbsPath = targetContentBasePath + "/" + documentPath;
 
-                if (HippoFolderDocumentUtils.documentExists(requestContext.getSession(), targetDocumentAbsPath)) {
-                    log.info("##### skiping '{}' because it already exists under '{}'.", documentPath,
-                            targetContentBasePath);
+                if (HippoFolderDocumentUtils.documentExists(session, targetDocumentAbsPath)) {
+                    log.info("Skiping '{}' because it already exists under '{}'.", documentPath, targetContentBasePath);
                     continue;
                 }
 
                 targetFolderAbsPath = StringUtils.substringBeforeLast(targetDocumentAbsPath, "/");
 
-                if (!HippoFolderDocumentUtils.folderExists(requestContext.getSession(), targetFolderAbsPath)) {
-                    translateFolders(requestContext.getSession(), sourceContentBaseNode, sourceFolderRelPath,
-                            targetContentBaseNode, targetTranslationLanguage);
+                if (!HippoFolderDocumentUtils.folderExists(session, targetFolderAbsPath)) {
+                    String sourceFolderRelPath = sourceDocumentHandleNode.getParent().getPath()
+                            .substring(sourceContentBasePath.length() + 1);
+
+                    translateFolders(session, sourceContentBaseNode, sourceFolderRelPath, targetContentBaseNode,
+                            targetTranslationLanguage);
                 }
 
-                getDocumentManagementServiceClient().translateDocument(sourceDocumentAbsPath, targetTranslationLanguage,
-                        documentNodeName);
+                getDocumentManagementServiceClient().translateDocument(sourceDocumentHandleNode.getPath(),
+                        targetTranslationLanguage, sourceDocumentHandleNode.getName());
             }
         } catch (Exception e) {
             log.error("Failed to invoke the document management service.", e);

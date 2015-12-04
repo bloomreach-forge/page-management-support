@@ -4,7 +4,7 @@ channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/c
 channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/channel/event/HippoFolderDocumentUtils.java -text svneol=unset#text/plain
 channel-page-event/src/main/java/org/onehippo/forge/channelmanager/pagesupport/channel/event/PageCopyEventListener.java -text svneol=unset#text/plain
 channel-page-event/src/main/resources/META-INF/hst-assembly/addon/module.xml -text svneol=unset#text/plain
-channel-page-event/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channelmanager/pagesupport/cross-channel-page-copy-support.xml -text svneol=unset#text/plain
+channel-page-event/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml -text svneol=unset#text/plain
 document-management-service/pom.xml -text
 document-management-service/src/main/java/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementService.java -text svneol=unset#text/plain
 document-management-service/src/main/java/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementServiceMXBean.java -text svneol=unset#text/plain

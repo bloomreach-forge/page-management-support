@@ -22,8 +22,12 @@ import javax.jcr.Session;
 import org.hippoecm.hst.util.NodeUtils;
 import org.hippoecm.repository.HippoStdNodeType;
 import org.hippoecm.repository.api.HippoNodeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HippoFolderDocumentUtils {
+
+    private static Logger log = LoggerFactory.getLogger(HippoFolderDocumentUtils.class);
 
     private HippoFolderDocumentUtils() {
     }
@@ -62,5 +66,33 @@ public class HippoFolderDocumentUtils {
         }
 
         return false;
+    }
+
+    public static String getHippoTranslationLanguage(final Node node) {
+        try {
+            if (node.hasProperty("hippotranslation:locale")) {
+                return node.getProperty("hippotranslation:locale").getString();
+            }
+        } catch (RepositoryException e) {
+            log.error("Failed to retrieve hippotranslation:locale property.", e);
+        }
+
+        return null;
+    }
+
+    public static Node getHippoDocumentHandle(Node node) throws RepositoryException {
+        if (node.isNodeType("hippo:handle")) {
+            return node;
+        } else if (node.isNodeType("hippo:document")) {
+            if (!node.getSession().getRootNode().isSame(node)) {
+                Node parentNode = node.getParent();
+
+                if (parentNode.isNodeType("hippo:handle")) {
+                    return parentNode;
+                }
+            }
+        }
+
+        return null;
     }
 }
