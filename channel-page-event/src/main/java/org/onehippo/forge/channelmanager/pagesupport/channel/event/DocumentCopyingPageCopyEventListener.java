@@ -34,7 +34,7 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 
 /**
- * {@link PageCopyEvent} event handler which is to be registered through
+ * <code>org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent</code> event handler which is to be registered through
  * {@link ComponentManager#registerEventSubscriber(Object)} and unregistered through
  * {@link ComponentManager#unregisterEventSubscriber(Object)} during the HST-2 based web application lifecycle.
  * <P>
