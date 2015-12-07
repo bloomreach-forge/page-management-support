@@ -16,6 +16,16 @@ document-management-service/src/main/resources/hippoecm-extension.xml -text svne
 /pom.xml -text
 src/site/resources/highlight-source-elements.js -text
 src/site/resources/images/architectural-view1.png -text
+src/site/resources/images/testscreen01.png -text
+src/site/resources/images/testscreen02.png -text
+src/site/resources/images/testscreen03.png -text
+src/site/resources/images/testscreen04.png -text
+src/site/resources/images/testscreen05.png -text
+src/site/resources/images/testscreen06.png -text
+src/site/resources/images/testscreen07.png -text
+src/site/resources/images/testscreen08.png -text
+src/site/resources/images/testscreen09.png -text
+src/site/resources/images/testscreen10.png -text
 src/site/resources/jquery-1.7.2.min.js -text
 src/site/resources/sh/scripts/shAutoloader.js -text
 src/site/resources/sh/scripts/shBrushAS3.js -text
