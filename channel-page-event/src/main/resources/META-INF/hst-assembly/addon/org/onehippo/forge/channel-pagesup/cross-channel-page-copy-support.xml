@@ -9,6 +9,7 @@
 
   <bean class="org.onehippo.forge.channelmanager.pagesupport.channel.event.DocumentCopyingPageCopyEventListener"
         init-method="init" destroy-method="destroy">
+    <!-- flag whether or not to copy all the documents linked by the page and its components -->
     <property name="copyDocumentsLinkedBySourcePage" value="true" />
   </bean>
 

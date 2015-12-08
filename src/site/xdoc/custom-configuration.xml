@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC
+  "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+  "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<!--
+    Copyright 2015 Hippo
+
+    Licensed under the Apache License, Version 2.0 (the  "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<document>
+  <properties>
+    <title>Installing Hippo Channel Manager Page Management Support</title>
+  </properties>
+  <body>
+
+    <section name="Custom Configuration">
+
+      <p>
+        If you would like to change the default behaviors or customize the default implementation components
+        for some reasons, then this page might help you.
+      </p>
+
+      <subsection name="Custom Configuration for DocumentCopyingPageCopyEventListener component">
+        <p>
+          <code>org.onehippo.forge.channelmanager.pagesupport.channel.event.DocumentCopyingPageCopyEventListener</code>
+          component copies linked documents in a page and its components from the source channel to the target channel
+          on the event of page copying in the channel manager.
+        </p>
+        <p>
+          By default, the <code>DocumentCopyingPageCopyEventListener</code> component is provided by
+          the built-in <a href="http://www.onehippo.org/library/concepts/hst-spring/hst-addon-module-support.html">HST Addon Module</a>.
+        </p>
+        <p>
+          The original component bean configuration is defined in
+          <a href="https://forge.onehippo.org/svn/channel-pagesup/channel-pagesup/trunk/channel-page-event/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml">https://forge.onehippo.org/svn/channel-pagesup/channel-pagesup/trunk/channel-page-event/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml</a>
+          in the source.
+        </p>
+        <p>
+          If you want to extend or customize the bean,
+          you can add a classpath resource (classpath:META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml)
+          in your SITE application to shadow the file with a custom bean definition.
+          e.g, <code>site/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml</code>
+        </p>
+      </subsection>
+
+      <subsection name="Custom Configuration for DocumentManagementService component">
+        <p>
+          <code>org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementService</code> component is provided to manage document/folder workflows more easily.
+        </p>
+        <p>
+          The default implementation of <code>DocumentManagementService</code> is
+          <code>org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentWorkflowDocumentManagementService</code>,
+          and the component is registered by the <code>DaemonModule</code> implementation,
+          <code>org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentManagementServiceDaemonModule</code>,
+          with the following JCR configuration under <code>/hippo:configuration/hippo:modules/</code>:
+        </p>
+        <div class="brush: xml">
+          <source><![CDATA[
+<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" sv:name="channel-pagesup-document-management-service-module">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>hipposys:module</sv:value>
+  </sv:property>
+  <sv:property sv:name="hipposys:className" sv:type="String">
+    <sv:value>org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentManagementServiceDaemonModule</sv:value>
+  </sv:property>
+  <sv:node sv:name="hippo:moduleconfig">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+  </sv:node>
+</sv:node>
+    ]]></source>
+        </div>
+        <p>
+          If you have to extend or customize the default <code>DocumentManagementService</code> component for some reasons,
+          then you may extend or replace the class, <code>org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentWorkflowDocumentManagementService</code>,
+          with a custom one (which must implement <code>org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementService</code>)
+          and set the FQCN of your custom implementation class to a string property, named "document.management.service",
+          in <code>hippo:moduleconfig</code> node.
+          For example, if your custom implementation is <code>org.example.MyDocumentManagementService</code>, then
+          you can change the configuration like this:
+        </p>
+        <div class="brush: xml">
+          <source><![CDATA[
+<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" sv:name="channel-pagesup-document-management-service-module">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>hipposys:module</sv:value>
+  </sv:property>
+  <sv:property sv:name="hipposys:className" sv:type="String">
+    <sv:value>org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentManagementServiceDaemonModule</sv:value>
+  </sv:property>
+  <sv:node sv:name="hippo:moduleconfig">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>nt:unstructured</sv:value>
+    </sv:property>
+    <sv:property sv:name="document.management.service" sv:type="String" sv:multiple="false">
+      <sv:value>org.example.MyDocumentManagementService</sv:value>
+    </sv:property>
+  </sv:node>
+</sv:node>
+    ]]></source>
+        </div>
+      </subsection>
+
+    </section>
+
+  </body>
+</document>

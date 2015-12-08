@@ -74,6 +74,7 @@ src/site/resources/sh/styles/shThemeMidnight.css -text
 src/site/resources/sh/styles/shThemeRDark.css -text
 src/site/site.xml -text
 src/site/xdoc/architecture-view.xml -text svneol=unset#text/plain
+src/site/xdoc/custom-configuration.xml -text svneol=unset#text/plain
 src/site/xdoc/index.xml -text
 src/site/xdoc/install.xml -text svneol=unset#text/plain
 src/site/xdoc/release-notes.xml -text
