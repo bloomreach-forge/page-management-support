@@ -24,13 +24,9 @@ import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.hippoecm.hst.configuration.components.HstComponentConfiguration;
-import org.hippoecm.hst.configuration.hosting.Mount;
 import org.hippoecm.hst.core.container.ComponentManager;
 import org.hippoecm.hst.core.container.ComponentManagerAware;
 import org.hippoecm.hst.core.linking.DocumentParamsScanner;
-import org.hippoecm.hst.core.request.HstRequestContext;
-import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
-import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +87,8 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
 
     @Subscribe
     @AllowConcurrentEvents
-    public void onPageCopyEvent(PageCopyEvent pageCopyEvent) {
+    public void onPageCopyEvent(/*PageCopyEvent*/ Object pageCopyEvent) {
+        /*
         if (pageCopyEvent.getException() != null) {
             return;
         }
@@ -151,6 +148,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
             pageCopyEvent.setException(
                     new RuntimeException("Failed to handle page copy event properly. " + e.toString(), e));
         }
+        */
     }
 
     private void copyDocuments(final Session session, final Set<String> documentPathSet,
