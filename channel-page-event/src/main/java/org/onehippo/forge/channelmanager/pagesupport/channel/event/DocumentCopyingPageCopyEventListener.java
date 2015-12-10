@@ -100,56 +100,60 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
         final HstRequestContext requestContext = pageCopyContext.getRequestContext();
         final Mount sourceMount = pageCopyContext.getEditingMount();
         final Mount targetMount = pageCopyContext.getTargetMount();
-        final String sourceContentBasePath = sourceMount.getContentPath();
-        final String targetContentBasePath = targetMount.getContentPath();
 
-        try {
-            final Node sourceContentBaseNode = requestContext.getSession().getNode(sourceContentBasePath);
-            final Node targetContentBaseNode = requestContext.getSession().getNode(targetContentBasePath);
-            String sourceTranslationLanguage = HippoFolderDocumentUtils
-                    .getHippoTranslationLanguage(sourceContentBaseNode);
-            String targetTranslationLanguage = HippoFolderDocumentUtils
-                    .getHippoTranslationLanguage(targetContentBaseNode);
+        final String sourceContentBasePath = sourceMount.getContentPath().intern();
+        final String targetContentBasePath = targetMount.getContentPath().intern();
 
-            if (StringUtils.isBlank(sourceTranslationLanguage)) {
-                throw new IllegalStateException(
-                        "Blank translation language in the source base content at '" + sourceContentBasePath + "'.");
-            }
+        // synchronize interned targetContentBasePath to disallow concurrent document copying on the same target channel
+        synchronized (targetContentBasePath) {
+            try {
+                final Node sourceContentBaseNode = requestContext.getSession().getNode(sourceContentBasePath);
+                final Node targetContentBaseNode = requestContext.getSession().getNode(targetContentBasePath);
+                String sourceTranslationLanguage = HippoFolderDocumentUtils
+                        .getHippoTranslationLanguage(sourceContentBaseNode);
+                String targetTranslationLanguage = HippoFolderDocumentUtils
+                        .getHippoTranslationLanguage(targetContentBaseNode);
 
-            if (StringUtils.isBlank(targetTranslationLanguage)) {
-                throw new IllegalStateException(
-                        "Blank translation language in the target base content at '" + targetContentBasePath + "'.");
-            }
+                if (StringUtils.isBlank(sourceTranslationLanguage)) {
+                    throw new IllegalStateException("Blank translation language in the source base content at '"
+                            + sourceContentBasePath + "'.");
+                }
 
-            if (StringUtils.equals(sourceTranslationLanguage, targetTranslationLanguage)) {
-                throw new IllegalStateException(
-                        "The same translation language of the source and the target base content. Source='"
-                                + sourceContentBasePath + "'. Target='" + targetContentBasePath + "'.");
-            }
+                if (StringUtils.isBlank(targetTranslationLanguage)) {
+                    throw new IllegalStateException("Blank translation language in the target base content at '"
+                            + targetContentBasePath + "'.");
+                }
 
-            if (isCopyDocumentsLinkedBySourcePage()) {
-                final Set<String> documentPathSet = getDocumentPathSetInPage(pageCopyContext.getSourcePage());
+                if (StringUtils.equals(sourceTranslationLanguage, targetTranslationLanguage)) {
+                    throw new IllegalStateException(
+                            "The same translation language of the source and the target base content. Source='"
+                                    + sourceContentBasePath + "'. Target='" + targetContentBasePath + "'.");
+                }
 
-                if (!documentPathSet.isEmpty()) {
-                    if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
-                        copyDocuments(pageCopyContext.getRequestContext().getSession(), documentPathSet,
-                                sourceContentBaseNode, targetContentBaseNode);
+                if (isCopyDocumentsLinkedBySourcePage()) {
+                    final Set<String> documentPathSet = getDocumentPathSetInPage(pageCopyContext.getSourcePage());
+
+                    if (!documentPathSet.isEmpty()) {
+                        if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
+                            copyDocuments(pageCopyContext.getRequestContext().getSession(), documentPathSet,
+                                    sourceContentBaseNode, targetContentBaseNode);
+                        } else {
+                            log.info(
+                                    "Linked document copying step skipped because the content path of the target mount is the same as that of the source mount.");
+                        }
                     } else {
-                        log.info(
-                                "Linked document copying step skipped because the content path of the target mount is the same as that of the source mount.");
+                        log.info("No linked document founds in the source page.");
                     }
                 } else {
-                    log.info("No linked document founds in the source page.");
+                    log.info(
+                            "Linked document copying step skipped because 'copyDocumentsLinkedBySourcePage' is turned off.");
                 }
-            } else {
-                log.info(
-                        "Linked document copying step skipped because 'copyDocumentsLinkedBySourcePage' is turned off.");
+            } catch (RuntimeException e) {
+                pageCopyEvent.setException(e);
+            } catch (Exception e) {
+                pageCopyEvent.setException(
+                        new RuntimeException("Failed to handle page copy event properly. " + e.toString(), e));
             }
-        } catch (RuntimeException e) {
-            pageCopyEvent.setException(e);
-        } catch (Exception e) {
-            pageCopyEvent.setException(
-                    new RuntimeException("Failed to handle page copy event properly. " + e.toString(), e));
         }
     }
 
