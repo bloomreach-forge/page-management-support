@@ -124,25 +124,31 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                             + targetContentBasePath + "'.");
                 }
 
-                if (StringUtils.equals(sourceTranslationLanguage, targetTranslationLanguage)) {
-                    throw new IllegalStateException(
-                            "The same translation language of the source and the target base content. Source='"
-                                    + sourceContentBasePath + "'. Target='" + targetContentBasePath + "'.");
-                }
-
                 if (isCopyDocumentsLinkedBySourcePage()) {
-                    final Set<String> documentPathSet = getDocumentPathSetInPage(pageCopyContext.getSourcePage());
-
-                    if (!documentPathSet.isEmpty()) {
-                        if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
-                            copyDocuments(pageCopyContext.getRequestContext().getSession(), documentPathSet,
-                                    sourceContentBaseNode, targetContentBaseNode);
-                        } else {
-                            log.info(
-                                    "Linked document copying step skipped because the content path of the target mount is the same as that of the source mount.");
-                        }
+                    if (StringUtils.equals(sourceContentBasePath, targetContentBasePath)) {
+                        log.info(
+                                "No need to copy documents because the source and target channel have the same content base path: {}'",
+                                sourceContentBasePath);
                     } else {
-                        log.info("No linked document founds in the source page.");
+                        if (StringUtils.equals(sourceTranslationLanguage, targetTranslationLanguage)) {
+                            throw new IllegalStateException(
+                                    "The same translation language of the source and the target base content. Source='"
+                                            + sourceContentBasePath + "'. Target='" + targetContentBasePath + "'.");
+                        }
+
+                        final Set<String> documentPathSet = getDocumentPathSetInPage(pageCopyContext.getSourcePage());
+
+                        if (!documentPathSet.isEmpty()) {
+                            if (!StringUtils.equals(sourceMount.getContentPath(), targetMount.getContentPath())) {
+                                copyDocuments(pageCopyContext.getRequestContext().getSession(), documentPathSet,
+                                        sourceContentBaseNode, targetContentBaseNode);
+                            } else {
+                                log.info(
+                                        "Linked document copying step skipped because the content path of the target mount is the same as that of the source mount.");
+                            }
+                        } else {
+                            log.info("No linked document founds in the source page.");
+                        }
                     }
                 } else {
                     log.info(
