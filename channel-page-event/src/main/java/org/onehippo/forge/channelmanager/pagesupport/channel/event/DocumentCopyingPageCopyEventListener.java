@@ -31,6 +31,8 @@ import org.hippoecm.hst.core.linking.DocumentParamsScanner;
 import org.hippoecm.hst.core.request.HstRequestContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
+import org.hippoecm.repository.translation.HippoTranslationNodeType;
+import org.hippoecm.repository.util.JcrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -206,7 +208,28 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
 
                 targetFolderAbsPath = StringUtils.substringBeforeLast(targetDocumentAbsPath, "/");
 
-                if (!HippoFolderDocumentUtils.folderExists(session, targetFolderAbsPath)) {
+                if (HippoFolderDocumentUtils.folderExists(session, targetFolderAbsPath)) {
+                    Node targetFolderNode = session.getNode(targetFolderAbsPath);
+
+                    if (!targetFolderNode.isNodeType(HippoTranslationNodeType.NT_TRANSLATED)) {
+                        throw new RuntimeException(
+                                "Cannot copy documents because the target folder at '" + targetFolderAbsPath
+                                        + "' is not type of " + HippoTranslationNodeType.NT_TRANSLATED + ".");
+                    } else {
+                        Node sourceFolderNode = sourceDocumentHandleNode.getParent();
+                        String sourceFolderTranslationId = JcrUtils.getStringProperty(sourceFolderNode,
+                                HippoTranslationNodeType.ID, null);
+                        String targetFolderTranslationId = JcrUtils.getStringProperty(targetFolderNode,
+                                HippoTranslationNodeType.ID, null);
+                        if (!StringUtils.equals(sourceFolderTranslationId, targetFolderTranslationId)) {
+                            throw new RuntimeException(
+                                    "Cannot copy documents because the translation ID of target folder at '"
+                                            + targetFolderAbsPath + "' doesn't match with that of source folder at '"
+                                            + sourceFolderNode.getPath() + "'. '" + targetFolderTranslationId
+                                            + "' (target) vs. '" + sourceFolderTranslationId + "' (source).");
+                        }
+                    }
+                } else {
                     String sourceFolderRelPath = sourceDocumentHandleNode.getParent().getPath()
                             .substring(sourceContentBasePath.length() + 1);
 
@@ -217,6 +240,8 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                 getDocumentManagementServiceClient().translateDocument(sourceDocumentHandleNode.getPath(),
                         targetTranslationLanguage, sourceDocumentHandleNode.getName());
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             log.error("Failed to invoke the document management service.", e);
             throw new RuntimeException("Failed to copy all the linked documents. " + e.toString());
