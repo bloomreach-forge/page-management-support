@@ -15,6 +15,7 @@
  */
 package org.onehippo.forge.channelmanager.pagesupport.channel.event;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -163,8 +164,9 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                 pageCopyEvent.setException(e);
             } catch (Exception e) {
                 log.error("Failed to handle page copy event properly.", e);
-                pageCopyEvent.setException(
-                        new ClientException("Failed to handle page copy event properly. " + e.toString(), ClientError.UNKNOWN));
+                final String clientMessage = "Failed to handle page copy event properly. " + e.toString();
+                pageCopyEvent.setException(new ClientException(clientMessage, ClientError.UNKNOWN,
+                        Collections.singletonMap("errorReason", clientMessage)));
             }
         }
     }
@@ -216,10 +218,11 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                     Node targetFolderNode = session.getNode(targetFolderAbsPath);
 
                     if (!targetFolderNode.isNodeType(HippoTranslationNodeType.NT_TRANSLATED)) {
-                        throw new ClientException(
-                                "Cannot copy documents because the target folder at '" + targetFolderAbsPath
-                                        + "' is not type of " + HippoTranslationNodeType.NT_TRANSLATED + ".",
-                                        ClientError.INVALID_NODE_TYPE);
+                        final String clientMessage = "Cannot copy documents because the target folder at '"
+                                + targetFolderAbsPath + "' is not type of " + HippoTranslationNodeType.NT_TRANSLATED
+                                + ".";
+                        throw new ClientException(clientMessage, ClientError.INVALID_NODE_TYPE,
+                                Collections.singletonMap("errorReason", clientMessage));
                     } else {
                         Node sourceFolderNode = sourceDocumentHandleNode.getParent();
                         String sourceFolderTranslationId = JcrUtils.getStringProperty(sourceFolderNode,
@@ -227,12 +230,12 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                         String targetFolderTranslationId = JcrUtils.getStringProperty(targetFolderNode,
                                 HippoTranslationNodeType.ID, null);
                         if (!StringUtils.equals(sourceFolderTranslationId, targetFolderTranslationId)) {
-                            throw new ClientException(
-                                    "Cannot copy documents because the translation ID of target folder at '"
-                                            + targetFolderAbsPath + "' doesn't match with that of source folder at '"
-                                            + sourceFolderNode.getPath() + "'. '" + targetFolderTranslationId
-                                            + "' (target) vs. '" + sourceFolderTranslationId + "' (source).",
-                                            ClientError.UNKNOWN);
+                            final String clientMessage = "Cannot copy documents because the translation ID of target folder at '"
+                                    + targetFolderAbsPath + "' doesn't match with that of source folder at '"
+                                    + sourceFolderNode.getPath() + "'. '" + targetFolderTranslationId
+                                    + "' (target) vs. '" + sourceFolderTranslationId + "' (source).";
+                            throw new ClientException(clientMessage, ClientError.UNKNOWN,
+                                    Collections.singletonMap("errorReason", clientMessage));
                         }
                     }
                 } else {
@@ -249,8 +252,9 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
         } catch (ClientException e) {
             throw e;
         } catch (Exception e) {
-            throw new ClientException("Failed to copy all the linked documents. " + e.toString(),
-                    ClientError.UNKNOWN);
+            final String clientMessage = "Failed to copy all the linked documents. " + e.toString();
+            throw new ClientException(clientMessage, ClientError.UNKNOWN,
+                    Collections.singletonMap("errorReason", clientMessage));
         }
     }
 
