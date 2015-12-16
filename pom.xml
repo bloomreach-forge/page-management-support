@@ -33,7 +33,7 @@
     <!--
     <hippo.hst.version>3.1.0</hippo.hst.version>
     -->
-    <hippo.hst.version>3.2.0-page-copy-SNAPSHOT</hippo.hst.version>
+    <hippo.hst.version>3.1.2-page-copy-SNAPSHOT</hippo.hst.version>
 
     <guava.version>16.0.1</guava.version>
     <commons-lang.version>2.6</commons-lang.version>
