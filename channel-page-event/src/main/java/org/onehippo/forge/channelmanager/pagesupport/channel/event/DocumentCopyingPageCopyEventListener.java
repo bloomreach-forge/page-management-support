@@ -180,13 +180,13 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
             for (String documentPath : documentPathSet) {
                 if (StringUtils.startsWith(documentPath, "/")) {
                     log.info(
-                            "Skiping '{}' because it's an absolute jcr path, not relative to source mount content base",
+                            "Skipping '{}' because it's an absolute jcr path, not relative to source mount content base",
                             documentPath);
                     continue;
                 }
 
                 if (!sourceContentBaseNode.hasNode(documentPath)) {
-                    log.info("Skiping '{}' because it doesn't exist under '{}'.", documentPath, sourceContentBasePath);
+                    log.info("Skipping '{}' because it doesn't exist under '{}'.", documentPath, sourceContentBasePath);
                     continue;
                 }
 
@@ -194,7 +194,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                         .getHippoDocumentHandle(sourceContentBaseNode.getNode(documentPath));
 
                 if (sourceDocumentHandleNode == null) {
-                    log.info("Skiping '{}' because there's no document at the location under '{}'.", documentPath,
+                    log.info("Skipping '{}' because there's no document at the location under '{}'.", documentPath,
                             sourceContentBasePath);
                     continue;
                 }
@@ -202,7 +202,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                 targetDocumentAbsPath = targetContentBasePath + "/" + documentPath;
 
                 if (HippoFolderDocumentUtils.documentExists(session, targetDocumentAbsPath)) {
-                    log.info("Skiping '{}' because it already exists under '{}'.", documentPath, targetContentBasePath);
+                    log.info("Skipping '{}' because it already exists under '{}'.", documentPath, targetContentBasePath);
                     continue;
                 }
 

@@ -340,7 +340,7 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
             Node translatedFolderNode = translatedFolderDocument.getNode(getSession());
             targetFolderLocation = translatedFolderNode.getPath();
         } catch (RepositoryException | WorkflowException | RemoteException e) {
-            log.error("Failed to trasnlate folder at '{}' to '{}' in '{}'.", sourceFolderLocation,
+            log.error("Failed to translate folder at '{}' to '{}' in '{}'.", sourceFolderLocation,
                     targetFolderNodeName, targetLanguage, e);
             throw new RuntimeException("Failed to add translated folder of '" + sourceFolderLocation + "' to '"
                     + targetFolderNodeName + "' in '" + targetLanguage + "'. " + e);
@@ -389,7 +389,7 @@ public class DocumentWorkflowDocumentManagementService implements DocumentManage
             Node translatedDocumentHandleNode = HippoWorkflowUtils.getHippoDocumentHandle(translatedDocument.getNode(getSession()));
             targetDocumentLocation = translatedDocumentHandleNode.getPath();
         } catch (RepositoryException | WorkflowException | RemoteException e) {
-            log.error("Failed to trasnlate document at '{}' to '{}' in '{}'.", sourceDocumentLocation,
+            log.error("Failed to translate document at '{}' to '{}' in '{}'.", sourceDocumentLocation,
                     targetDocumentNodeName, targetLanguage, e);
             throw new RuntimeException("Failed to add translated document of '" + sourceDocumentLocation + "' to '"
                     + targetDocumentNodeName + "' in '" + targetLanguage + "'. " + e);
