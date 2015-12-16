@@ -31,6 +31,8 @@ import org.hippoecm.hst.core.linking.DocumentParamsScanner;
 import org.hippoecm.hst.core.request.HstRequestContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
+import org.hippoecm.hst.pagecomposer.jaxrs.services.exceptions.ClientError;
+import org.hippoecm.hst.pagecomposer.jaxrs.services.exceptions.ClientException;
 import org.hippoecm.repository.translation.HippoTranslationNodeType;
 import org.hippoecm.repository.util.JcrUtils;
 import org.slf4j.Logger;
@@ -156,11 +158,13 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                     log.info(
                             "Linked document copying step skipped because 'copyDocumentsLinkedBySourcePage' is turned off.");
                 }
-            } catch (RuntimeException e) {
+            } catch (ClientException e) {
+                log.error("Failed to handle page copy event properly.", e);
                 pageCopyEvent.setException(e);
             } catch (Exception e) {
+                log.error("Failed to handle page copy event properly.", e);
                 pageCopyEvent.setException(
-                        new RuntimeException("Failed to handle page copy event properly. " + e.toString(), e));
+                        new ClientException("Failed to handle page copy event properly. " + e.toString(), ClientError.UNKNOWN));
             }
         }
     }
@@ -212,9 +216,10 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                     Node targetFolderNode = session.getNode(targetFolderAbsPath);
 
                     if (!targetFolderNode.isNodeType(HippoTranslationNodeType.NT_TRANSLATED)) {
-                        throw new RuntimeException(
+                        throw new ClientException(
                                 "Cannot copy documents because the target folder at '" + targetFolderAbsPath
-                                        + "' is not type of " + HippoTranslationNodeType.NT_TRANSLATED + ".");
+                                        + "' is not type of " + HippoTranslationNodeType.NT_TRANSLATED + ".",
+                                        ClientError.INVALID_NODE_TYPE);
                     } else {
                         Node sourceFolderNode = sourceDocumentHandleNode.getParent();
                         String sourceFolderTranslationId = JcrUtils.getStringProperty(sourceFolderNode,
@@ -222,11 +227,12 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                         String targetFolderTranslationId = JcrUtils.getStringProperty(targetFolderNode,
                                 HippoTranslationNodeType.ID, null);
                         if (!StringUtils.equals(sourceFolderTranslationId, targetFolderTranslationId)) {
-                            throw new RuntimeException(
+                            throw new ClientException(
                                     "Cannot copy documents because the translation ID of target folder at '"
                                             + targetFolderAbsPath + "' doesn't match with that of source folder at '"
                                             + sourceFolderNode.getPath() + "'. '" + targetFolderTranslationId
-                                            + "' (target) vs. '" + sourceFolderTranslationId + "' (source).");
+                                            + "' (target) vs. '" + sourceFolderTranslationId + "' (source).",
+                                            ClientError.UNKNOWN);
                         }
                     }
                 } else {
@@ -240,11 +246,11 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                 getDocumentManagementServiceClient().translateDocument(sourceDocumentHandleNode.getPath(),
                         targetTranslationLanguage, sourceDocumentHandleNode.getName());
             }
-        } catch (RuntimeException e) {
+        } catch (ClientException e) {
             throw e;
         } catch (Exception e) {
-            log.error("Failed to invoke the document management service.", e);
-            throw new RuntimeException("Failed to copy all the linked documents. " + e.toString());
+            throw new ClientException("Failed to copy all the linked documents. " + e.toString(),
+                    ClientError.UNKNOWN);
         }
     }
 
