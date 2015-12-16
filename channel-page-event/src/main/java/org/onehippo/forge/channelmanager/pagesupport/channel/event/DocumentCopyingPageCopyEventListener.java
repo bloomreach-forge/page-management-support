@@ -313,7 +313,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                                 // sourceReference is never expected to be null, but just in case a null check
                                 populateSelfAndDescending(sourceReference, skipSet);
                             }
-                            // no need to check descendant configs
+                            // no need to check descendant configurations
                             return;
                         }
                     }
