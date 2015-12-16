@@ -165,7 +165,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
             } catch (Exception e) {
                 log.error("Failed to handle page copy event properly.", e);
                 final String clientMessage = "Failed to handle page copy event properly. " + e.toString();
-                pageCopyEvent.setException(new ClientException(clientMessage, ClientError.UNKNOWN,
+                pageCopyEvent.setException(new ClientException(clientMessage, ClientError.ITEM_CANNOT_BE_CLONED,
                         Collections.singletonMap("errorReason", clientMessage)));
             }
         }
@@ -234,7 +234,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                                     + targetFolderAbsPath + "' doesn't match with that of source folder at '"
                                     + sourceFolderNode.getPath() + "'. '" + targetFolderTranslationId
                                     + "' (target) vs. '" + sourceFolderTranslationId + "' (source).";
-                            throw new ClientException(clientMessage, ClientError.UNKNOWN,
+                            throw new ClientException(clientMessage, ClientError.ITEM_CANNOT_BE_CLONED,
                                     Collections.singletonMap("errorReason", clientMessage));
                         }
                     }
@@ -253,7 +253,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
             throw e;
         } catch (Exception e) {
             final String clientMessage = "Failed to copy all the linked documents. " + e.toString();
-            throw new ClientException(clientMessage, ClientError.UNKNOWN,
+            throw new ClientException(clientMessage, ClientError.ITEM_CANNOT_BE_CLONED,
                     Collections.singletonMap("errorReason", clientMessage));
         }
     }
