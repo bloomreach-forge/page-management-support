@@ -272,7 +272,7 @@
         <version>${plugin.javadoc.version}</version>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
-          <skip>true</skip>
+          <skip>false</skip>
           <aggregate>true</aggregate>
         </configuration>
         <reportSets>
