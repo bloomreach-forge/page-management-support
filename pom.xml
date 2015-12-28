@@ -113,6 +113,7 @@
       <url>http://maven.onehippo.com/maven2/</url>
     </repository>
 
+    <!-- Remove the following snapshot repo once 3.2.0 released. -->
     <repository>
       <id>hippo-maven2-snapshots</id>
       <name>Hippo Maven 2</name>
