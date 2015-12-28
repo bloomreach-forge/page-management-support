@@ -30,7 +30,7 @@
     <hippo.repository.version>3.1.0</hippo.repository.version>
     <hippo.services.version>2.1.0</hippo.services.version>
 
-    <hippo.hst.version>3.1.2-page-copy-SNAPSHOT</hippo.hst.version>
+    <hippo.hst.version>3.1.2-page-copy</hippo.hst.version>
 
     <guava.version>16.0.1</guava.version>
     <commons-lang.version>2.6</commons-lang.version>
@@ -110,6 +110,15 @@
       <id>hippo</id>
       <name>Hippo maven 2 repository.</name>
       <url>http://maven.onehippo.com/maven2/</url>
+    </repository>
+    <repository>
+      <id>hippo-maven2-enterprise</id>
+      <name>Hippo Enterprise Maven 2</name>
+      <url>https://maven.onehippo.com/maven2-enterprise</url>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+        <checksumPolicy>fail</checksumPolicy>
+      </releases>
     </repository>
   </repositories>
 
