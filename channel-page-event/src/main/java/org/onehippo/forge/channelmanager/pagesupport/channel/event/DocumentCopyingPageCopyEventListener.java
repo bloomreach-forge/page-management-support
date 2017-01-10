@@ -114,6 +114,24 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
         this.copyDocumentsLinkedBySourcePage = copyDocumentsLinkedBySourcePage;
     }
 
+    /**
+     * Custom event handler before {@link #onPageCopyEvent(PageCopyEvent)} is invoked.
+     * An extended class from this can implement this method if it needs to process some custom tasks before the
+     * normal page copy event handling.
+     * @param pageCopyEvent page copy event
+     */
+    protected void onBeforePageCopyEvent(PageCopyEvent pageCopyEvent) {
+    }
+
+    /**
+     * Custom event handler after {@link #onPageCopyEvent(PageCopyEvent)} is invoked.
+     * An extended class from this can implement this method if it needs to process some custom tasks after the
+     * normal page copy event handling.
+     * @param pageCopyEvent page copy event
+     */
+    protected void onAfterPageCopyEvent(PageCopyEvent pageCopyEvent) {
+    }
+
     @Subscribe
     @AllowConcurrentEvents
     public void onPageCopyEvent(PageCopyEvent pageCopyEvent) {
@@ -132,6 +150,8 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
         // synchronize interned targetContentBasePath to disallow concurrent document copying on the same target channel
         synchronized (targetContentBasePath) {
             try {
+                onBeforePageCopyEvent(pageCopyEvent);
+
                 final Node sourceContentBaseNode = requestContext.getSession().getNode(sourceContentBasePath);
                 final Node targetContentBaseNode = requestContext.getSession().getNode(targetContentBasePath);
                 String sourceTranslationLanguage = HippoFolderDocumentUtils
@@ -179,6 +199,8 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                     log.info(
                             "Linked document copying step skipped because 'copyDocumentsLinkedBySourcePage' is turned off.");
                 }
+
+                onAfterPageCopyEvent(pageCopyEvent);
             } catch (ClientException e) {
                 log.error("Failed to handle page copy event properly.", e);
                 pageCopyEvent.setException(e);
