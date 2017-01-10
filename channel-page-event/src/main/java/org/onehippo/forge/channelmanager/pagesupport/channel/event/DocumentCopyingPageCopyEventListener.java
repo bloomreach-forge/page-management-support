@@ -15,19 +15,26 @@
  */
 package org.onehippo.forge.channelmanager.pagesupport.channel.event;
 
+import static org.hippoecm.hst.configuration.HstNodeTypes.COMPONENT_PROPERTY_REFERECENCECOMPONENT;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
 
 import org.apache.commons.lang.StringUtils;
 import org.hippoecm.hst.configuration.components.HstComponentConfiguration;
@@ -42,12 +49,14 @@ import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
 import org.hippoecm.hst.pagecomposer.jaxrs.services.exceptions.ClientError;
 import org.hippoecm.hst.pagecomposer.jaxrs.services.exceptions.ClientException;
+import org.hippoecm.repository.HippoStdNodeType;
 import org.hippoecm.repository.translation.HippoTranslationNodeType;
 import org.hippoecm.repository.util.JcrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.hippoecm.hst.configuration.HstNodeTypes.COMPONENT_PROPERTY_REFERECENCECOMPONENT;
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
 
 /**
  * <code>org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent</code> event handler which is to be registered through
@@ -61,6 +70,10 @@ import static org.hippoecm.hst.configuration.HstNodeTypes.COMPONENT_PROPERTY_REF
 public class DocumentCopyingPageCopyEventListener implements ComponentManagerAware {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentCopyingPageCopyEventListener.class);
+
+    private static final Pattern INDEX_NOTATION_PATTERN = Pattern.compile("\\[\\d+\\](\\/|$)");
+
+    private static final String TRANSLATED_FOLDER_QUERY = "/jcr:root{0}//element(*,hippostd:folder)[@hippotranslation:id=''{1}'']";
 
     private ComponentManager componentManager;
 
@@ -178,7 +191,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
         }
     }
 
-    private void copyDocuments(final Session session, final Set<String> documentPathSet,
+    private void copyDocuments(final Session session, final Set<String> sourceDocumentPathSet,
             final Node sourceContentBaseNode, final Node targetContentBaseNode) {
         try {
             final String sourceContentBasePath = sourceContentBaseNode.getPath();
@@ -190,32 +203,32 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
             String targetDocumentAbsPath;
             String targetFolderAbsPath;
 
-            for (String documentPath : documentPathSet) {
-                if (StringUtils.startsWith(documentPath, "/")) {
+            for (String sourceDocumentPath : sourceDocumentPathSet) {
+                if (StringUtils.startsWith(sourceDocumentPath, "/")) {
                     log.info(
                             "Skipping '{}' because it's an absolute jcr path, not relative to source mount content base",
-                            documentPath);
+                            sourceDocumentPath);
                     continue;
                 }
 
-                if (!sourceContentBaseNode.hasNode(documentPath)) {
-                    log.info("Skipping '{}' because it doesn't exist under '{}'.", documentPath, sourceContentBasePath);
+                if (!sourceContentBaseNode.hasNode(sourceDocumentPath)) {
+                    log.info("Skipping '{}' because it doesn't exist under '{}'.", sourceDocumentPath, sourceContentBasePath);
                     continue;
                 }
 
                 sourceDocumentHandleNode = HippoFolderDocumentUtils
-                        .getHippoDocumentHandle(sourceContentBaseNode.getNode(documentPath));
+                        .getHippoDocumentHandle(sourceContentBaseNode.getNode(sourceDocumentPath));
 
                 if (sourceDocumentHandleNode == null) {
-                    log.info("Skipping '{}' because there's no document at the location under '{}'.", documentPath,
+                    log.info("Skipping '{}' because there's no document at the location under '{}'.", sourceDocumentPath,
                             sourceContentBasePath);
                     continue;
                 }
 
-                targetDocumentAbsPath = targetContentBasePath + "/" + documentPath;
+                targetDocumentAbsPath = resolveTargetDocumentAbsPath(sourceContentBaseNode, targetContentBaseNode, sourceDocumentPath);
 
                 if (HippoFolderDocumentUtils.documentExists(session, targetDocumentAbsPath)) {
-                    log.info("Skipping '{}' because it already exists under '{}'.", documentPath, targetContentBasePath);
+                    log.info("Skipping '{}' because it already exists under '{}'.", sourceDocumentPath, targetContentBasePath);
                     continue;
                 }
 
@@ -263,6 +276,98 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
             throw new ClientException(clientMessage, ClientError.ITEM_CANNOT_BE_CLONED,
                     Collections.singletonMap("errorReason", clientMessage));
         }
+    }
+
+    /**
+     * Resolves target document absolute path under {@code targetContentBaseNode},
+     * corresponding to the {@code sourceDocumentPath} under {@code sourceContentBaseNode}.
+     * @param sourceContentBaseNode source content base folder node
+     * @param targetContentBaseNode target content base folder node
+     * @param sourceDocumentPath source document relative path
+     * @return corresponding target document absolute path
+     * @throws RepositoryException if any repository exception occurs
+     */
+    private String resolveTargetDocumentAbsPath(final Node sourceContentBaseNode, final Node targetContentBaseNode,
+            final String sourceDocumentPath) throws RepositoryException {
+        Node sourceDocumentHandleNode = sourceContentBaseNode.getNode(sourceDocumentPath);
+        Node sourceFolderNode = sourceDocumentHandleNode.getParent();
+        Node targetFolderNode = findTargetTranslatedFolderNode(targetContentBaseNode, sourceFolderNode);
+
+        if (targetFolderNode != null) {
+            return targetFolderNode.getPath() + "/" + sourceDocumentHandleNode.getName();
+        }
+
+        Stack<String> targetFolderNameStack = new Stack<>();
+        targetFolderNameStack.push(sourceFolderNode.getName());
+
+        sourceFolderNode = sourceFolderNode.getParent();
+
+        while (!sourceFolderNode.isSame(sourceContentBaseNode)) {
+            targetFolderNode = findTargetTranslatedFolderNode(targetContentBaseNode, sourceFolderNode);
+
+            if (targetFolderNode != null) {
+                String folderPath = StringUtils.removeStart(targetFolderNode.getPath(),
+                        targetContentBaseNode.getPath() + "/");
+                targetFolderNameStack.push(folderPath);
+                break;
+            } else {
+                targetFolderNameStack.push(sourceFolderNode.getName());
+            }
+
+            sourceFolderNode = sourceFolderNode.getParent();
+        }
+
+        return targetContentBaseNode.getPath() + "/" + StringUtils.join(targetFolderNameStack, "/") + "/"
+                + sourceDocumentHandleNode.getName();
+    }
+
+    /**
+     * Find translated folder node under {@code targetContentBaseNode} for the {@code sourceFolderNode}.
+     * @param targetContentBaseNode target content base folder node
+     * @param sourceFolderNode source folder node
+     * @return translated folder node under {@code targetContentBaseNode} for the {@code sourceFolderNode}
+     * @throws RepositoryException if repository exception occurs
+     */
+    private Node findTargetTranslatedFolderNode(final Node targetContentBaseNode, final Node sourceFolderNode)
+            throws RepositoryException {
+        if (!sourceFolderNode.isNodeType(HippoStdNodeType.NT_FOLDER)
+                || !sourceFolderNode.isNodeType(HippoTranslationNodeType.NT_TRANSLATED)) {
+            return null;
+        }
+
+        Node translatedFolderNode = null;
+
+        final String translationId = JcrUtils.getStringProperty(sourceFolderNode, HippoTranslationNodeType.ID, null);
+        final String statement = MessageFormat.format(TRANSLATED_FOLDER_QUERY, targetContentBaseNode.getPath(),
+                translationId);
+        final Query query = targetContentBaseNode.getSession().getWorkspace().getQueryManager().createQuery(statement,
+                Query.XPATH);
+
+        final List<Node> translatedFolderNodes = new ArrayList<>();
+        final QueryResult result = query.execute();
+        Node node;
+
+        for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext();) {
+            node = nodeIt.nextNode();
+            if (node != null) {
+                translatedFolderNodes.add(node);
+            }
+        }
+
+        if (!translatedFolderNodes.isEmpty()) {
+            translatedFolderNode = translatedFolderNodes.get(0);
+
+            if (translatedFolderNodes.size() > 1) {
+                List<String> translatedFolderNodePaths = new ArrayList<>();
+                for (Node folderNode : translatedFolderNodes) {
+                    translatedFolderNodePaths.add(folderNode.getPath());
+                }
+                log.warn("Multiple translated folder nodes found for translation ID, '{}': {}", translationId,
+                        translatedFolderNodePaths);
+            }
+        }
+
+        return translatedFolderNode;
     }
 
     /**
@@ -364,6 +469,20 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                         folderNodeName);
             }
         }
+    }
+
+    /**
+     * Removes SNS (Same Name Sibling) index notation in the given {@code nodePath}.
+     * @param nodePath node path
+     * @return a node path without SNS (Same Name Sibling) index notation
+     */
+    private static String removeIndexNotationInNodePath(final String nodePath) {
+        if (nodePath == null) {
+            return nodePath;
+        }
+
+        final Matcher matcher = INDEX_NOTATION_PATTERN.matcher(nodePath);
+        return matcher.replaceAll("$1");
     }
 
 }
