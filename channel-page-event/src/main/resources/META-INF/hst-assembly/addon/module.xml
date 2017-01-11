@@ -6,5 +6,6 @@
   <name>org.onehippo.forge.channelmanager.pagesupport.channel.event</name>
   <config-locations>
     <config-location>classpath*:META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/*.xml</config-location>
+    <config-location>classpath*:META-INF/hst-assembly/addon/overrides/org/onehippo/forge/channel-pagesup/*.xml</config-location>
   </config-locations>
 </module>
