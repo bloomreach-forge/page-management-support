@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -70,8 +68,6 @@ import com.google.common.eventbus.Subscribe;
 public class DocumentCopyingPageCopyEventListener implements ComponentManagerAware {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentCopyingPageCopyEventListener.class);
-
-    private static final Pattern INDEX_NOTATION_PATTERN = Pattern.compile("\\[\\d+\\](\\/|$)");
 
     private static final String TRANSLATED_FOLDER_QUERY = "/jcr:root{0}//element(*,hippostd:folder)[@hippotranslation:id=''{1}'']";
 
@@ -492,19 +488,4 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
             }
         }
     }
-
-    /**
-     * Removes SNS (Same Name Sibling) index notation in the given {@code nodePath}.
-     * @param nodePath node path
-     * @return a node path without SNS (Same Name Sibling) index notation
-     */
-    private static String removeIndexNotationInNodePath(final String nodePath) {
-        if (nodePath == null) {
-            return nodePath;
-        }
-
-        final Matcher matcher = INDEX_NOTATION_PATTERN.matcher(nodePath);
-        return matcher.replaceAll("$1");
-    }
-
 }
