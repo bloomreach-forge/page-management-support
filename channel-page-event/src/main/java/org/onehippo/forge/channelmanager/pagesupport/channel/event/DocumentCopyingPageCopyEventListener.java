@@ -221,6 +221,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
             Node sourceDocumentHandleNode;
             String targetDocumentAbsPath;
             String targetFolderAbsPath;
+            String targetFolderRelPath;
 
             for (String sourceDocumentPath : sourceDocumentPathSet) {
                 if (StringUtils.startsWith(sourceDocumentPath, "/")) {
@@ -252,6 +253,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                 }
 
                 targetFolderAbsPath = StringUtils.substringBeforeLast(targetDocumentAbsPath, "/");
+                targetFolderRelPath = StringUtils.substringAfter(targetFolderAbsPath, targetContentBasePath + "/");
 
                 if (HippoFolderDocumentUtils.folderExists(session, targetFolderAbsPath)) {
                     Node targetFolderNode = session.getNode(targetFolderAbsPath);
@@ -282,7 +284,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                             .substring(sourceContentBasePath.length() + 1);
 
                     translateFolders(session, sourceContentBaseNode, sourceFolderRelPath, targetContentBaseNode,
-                            targetTranslationLanguage);
+                            targetFolderRelPath, targetTranslationLanguage);
                 }
 
                 getDocumentManagementServiceClient().translateDocument(sourceDocumentHandleNode.getPath(),
@@ -468,24 +470,31 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
     }
 
     private void translateFolders(final Session session, final Node sourceBaseFolderNode,
-            final String sourceFolderRelPath, final Node targetBaseFolderNode, final String targetTranslationLanguage)
-                    throws Exception {
-        String[] folderNodeNames = StringUtils.split(sourceFolderRelPath, "/");
+            final String sourceFolderRelPath, final Node targetBaseFolderNode, final String targetFolderRelPath,
+            final String targetTranslationLanguage) throws Exception {
+        String[] sourceFolderNodeNames = StringUtils.split(sourceFolderRelPath, "/");
+        String[] targetFolderNodeNames = StringUtils.split(targetFolderRelPath, "/");
         String sourceFolderLocation = sourceBaseFolderNode.getPath();
         String targetFolderLocation = targetBaseFolderNode.getPath();
 
-        for (String folderNodeName : folderNodeNames) {
-            sourceFolderLocation += "/" + folderNodeName;
+        String sourceFolderNodeName;
+        String targetFolderNodeName;
+
+        for (int i = 0; i < sourceFolderNodeNames.length; i++) {
+            sourceFolderNodeName = sourceFolderNodeNames[i];
+            targetFolderNodeName = (targetFolderNodeNames.length > i) ? targetFolderNodeNames[i] : sourceFolderNodeName;
+
+            sourceFolderLocation += "/" + sourceFolderNodeName;
 
             if (!HippoFolderDocumentUtils.folderExists(session, sourceFolderLocation)) {
                 throw new IllegalArgumentException("Source folder doesn't exist at '" + sourceFolderLocation + "'.");
             }
 
-            targetFolderLocation += "/" + folderNodeName;
+            targetFolderLocation += "/" + targetFolderNodeName;
 
             if (!HippoFolderDocumentUtils.folderExists(session, targetFolderLocation)) {
                 getDocumentManagementServiceClient().translateFolder(sourceFolderLocation, targetTranslationLanguage,
-                        folderNodeName);
+                        targetFolderNodeName);
             }
         }
     }
