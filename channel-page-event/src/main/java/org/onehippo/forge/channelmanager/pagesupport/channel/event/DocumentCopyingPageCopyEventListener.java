@@ -49,6 +49,7 @@ import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
 import org.hippoecm.hst.pagecomposer.jaxrs.services.exceptions.ClientError;
 import org.hippoecm.hst.pagecomposer.jaxrs.services.exceptions.ClientException;
 import org.hippoecm.repository.HippoStdNodeType;
+import org.hippoecm.repository.api.HippoNodeType;
 import org.hippoecm.repository.translation.HippoTranslationNodeType;
 import org.hippoecm.repository.util.JcrUtils;
 import org.slf4j.Logger;
@@ -71,6 +72,8 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
     private static final Logger log = LoggerFactory.getLogger(DocumentCopyingPageCopyEventListener.class);
 
     private static final String TRANSLATED_FOLDER_QUERY = "/jcr:root{0}//element(*,hippostd:folder)[@hippotranslation:id=''{1}'']";
+
+    private static final String TRANSLATED_DOCUMENT_HANDLE_QUERY = "/jcr:root{0}//element(*,hippostdpubwf:document)[@hippotranslation:id=''{1}'']/..";
 
     private ComponentManager componentManager;
 
@@ -219,6 +222,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                     .getHippoTranslationLanguage(targetContentBaseNode);
 
             Node sourceDocumentHandleNode;
+            Node targetDocumentHandleNode;
             String targetDocumentAbsPath;
             String targetFolderAbsPath;
             String targetFolderRelPath;
@@ -242,6 +246,14 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                 if (sourceDocumentHandleNode == null) {
                     log.info("Skipping '{}' because there's no document at the location under '{}'.", sourceDocumentPath,
                             sourceContentBasePath);
+                    continue;
+                }
+
+                targetDocumentHandleNode = findTargetTranslatedDocumentHandleNode(targetContentBaseNode, sourceDocumentHandleNode);
+
+                if (targetDocumentHandleNode != null) {
+                    log.info("Skipping '{}' because there exists a translated document at '{}'.", sourceDocumentPath,
+                            targetDocumentHandleNode.getPath());
                     continue;
                 }
 
@@ -389,6 +401,62 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
         }
 
         return translatedFolderNode;
+    }
+
+    /**
+     * Find translated document handle node under {@code targetContentBaseNode} for the {@code sourceDocumentHandleNode}.
+     * @param targetContentBaseNode target content base folder node
+     * @param sourceDocumentHandleNode source document handle node
+     * @return translated document handle node under {@code targetContentBaseNode} for the {@code sourceDocumentHandleNode}
+     * @throws RepositoryException if repository exception occurs
+     */
+    private Node findTargetTranslatedDocumentHandleNode(final Node targetContentBaseNode, final Node sourceDocumentHandleNode)
+            throws RepositoryException {
+        if (!sourceDocumentHandleNode.isNodeType(HippoNodeType.NT_HANDLE)
+                || !sourceDocumentHandleNode.hasNode(sourceDocumentHandleNode.getName())) {
+            return null;
+        }
+
+        final Node sourceDocumentVariantNode = sourceDocumentHandleNode.getNode(sourceDocumentHandleNode.getName());
+
+        if (!sourceDocumentVariantNode.isNodeType(HippoTranslationNodeType.NT_TRANSLATED)) {
+            return null;
+        }
+
+        final String translationId = JcrUtils.getStringProperty(sourceDocumentVariantNode, HippoTranslationNodeType.ID, null);
+
+        final String statement = MessageFormat.format(TRANSLATED_DOCUMENT_HANDLE_QUERY, targetContentBaseNode.getPath(),
+                translationId);
+        final Query query = targetContentBaseNode.getSession().getWorkspace().getQueryManager().createQuery(statement,
+                Query.XPATH);
+
+        final List<Node> translatedDocumentHandleNodes = new ArrayList<>();
+        final QueryResult result = query.execute();
+        Node node;
+
+        for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext();) {
+            node = nodeIt.nextNode();
+            if (node != null) {
+                translatedDocumentHandleNodes.add(node);
+            }
+        }
+
+        Node translatedDocumentHandleNode = null;
+
+        if (!translatedDocumentHandleNodes.isEmpty()) {
+            translatedDocumentHandleNode = translatedDocumentHandleNodes.get(0);
+
+            if (translatedDocumentHandleNodes.size() > 1) {
+                List<String> translatedDocumentHandleNodePaths = new ArrayList<>();
+                for (Node handleNode : translatedDocumentHandleNodes) {
+                    translatedDocumentHandleNodePaths.add(handleNode.getPath());
+                }
+                log.warn("Multiple translated document handle nodes found for translation ID, '{}': {}", translationId,
+                        translatedDocumentHandleNodePaths);
+            }
+        }
+
+        return translatedDocumentHandleNode;
     }
 
     /**
