@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -335,7 +336,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
             sourceFolderNode = sourceFolderNode.getParent();
         }
 
-        return targetContentBaseNode.getPath() + "/" + StringUtils.join(targetFolderNameStack, "/") + "/"
+        return targetContentBaseNode.getPath() + "/" + StringUtils.join(popAllToList(targetFolderNameStack), "/") + "/"
                 + sourceDocumentHandleNode.getName();
     }
 
@@ -487,5 +488,21 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                         folderNodeName);
             }
         }
+    }
+
+    private static <T> List<T> popAllToList(final Stack<T> stack) {
+        if (stack == null) {
+            return Collections.emptyList();
+        }
+
+        List<T> list = new LinkedList<>();
+        T object;
+
+        while (!stack.empty()) {
+            object = stack.pop();
+            list.add(object);
+        }
+
+        return list;
     }
 }
