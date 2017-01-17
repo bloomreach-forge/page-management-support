@@ -30,16 +30,37 @@
           <th>Hippo CMS Release version</th>
         </tr>
         <tr>
-          <td>1.1.x</td>
+          <td>1.x</td>
           <td>10.2+</td>
         </tr>
       </table>
     </section>
-    <section name="Release Notes (1.x.x)">
+    <section name="Release Notes">
+      <subsection name="1.2.0">
+        <p class="smallinfo">Release Date: 17 January 2017</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPPLUG-1423">HIPPLUG-1423</a><br/>
+            DocumentCopyingPageCopyEventListener improvements:
+            <ul>
+              <li>
+                Better determination and creation of target folder in case the target node structure is different from that of the source.
+              </li>
+              <li>
+                Don't create a new document in the target channel if there already is a linked translated document.
+              </li>
+              <li>
+                Introduction of extension hooks <code>onBeforePageCopyEvent</code> and
+                <code>onAfterPageCopyEvent</code> on behalf of customization.
+                See at the <a href="custom-configuration.html#Extension_Hooks">custom configuration page</a>.</li>
+            </ul>
+          </li>
+        </ul>
+      </subsection>
       <subsection name="1.1.0">
+        <p class="smallinfo">Release Date: 28 December 2015</p>
         <ul>
           <li>
-            Initial release
+            Initial release.
           </li>
         </ul>
       </subsection>

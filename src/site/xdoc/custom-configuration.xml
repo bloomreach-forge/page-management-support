@@ -3,7 +3,7 @@
   "-//Apache Software Foundation//DTD XDOC 1.0//EN"
   "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <!--
-    Copyright 2015 Hippo
+    Copyright 2015-2017 Hippo
 
     Licensed under the Apache License, Version 2.0 (the  "License");
     you may not use this file except in compliance with the License.
@@ -51,6 +51,60 @@
           in your SITE application to shadow the file with a custom bean definition.
           e.g, <code>site/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml</code>
         </p>
+        <h4>Extension Hooks</h4>
+        <p>
+          <b>Since version 1.2.0</b>, you can override <code>DocumentCopyingPageCopyEventListener.onBeforePageCopyEvent(PageCopyEvent)</code>
+          and <code>DocumentCopyingPageCopyEventListener.onAfterPageCopyEvent(PageCopyEvent)</code>
+          method to do something more just before and after the basic document content copying process.</p>
+        <p>
+          For example, find all the document path HST component parameters in the HST page/component configurations and
+          resolve the corresponding document path in case the relative document path changes to update the parameter value
+          in the target page/component parameter value. See the following example:
+        </p>
+        <div class="brush: java">
+          <source><![CDATA[
+package org.example;
+
+public class MyDocumentCopyingPageCopyEventListener extends DocumentCopyingPageCopyEventListener {
+
+    @Override
+    protected void onAfterPageCopyEvent(PageCopyEvent pageCopyEvent) {
+        final HstRequestContext requestContext = pageCopyContext.getRequestContext();
+
+        final PageCopyContext pageCopyContext = pageCopyEvent.getPageCopyContext();
+        final String sourceContentBasePath = pageCopyContext.getEditingMount().getContentPath().intern();
+        final String targetContentBasePath = pageCopyContext.getTargetMount().getContentPath().intern();
+
+        final Node newPageNode = pageCopyContext.getNewPageNode();
+
+        // TODO: Maybe you can traverse newPageNode to find child component configuration nodes and investigate component parameter values
+        //       to adjust somethings for your needs here...
+    }
+}
+        ]]></source>
+        </div>
+        <p>
+          In case you want to override the default <code>org.onehippo.forge.channelmanager.pagesupport.channel.event.DocumentCopyingPageCopyEventListener</code>
+          component, you can add an XML file in <code>site/src/main/resources/META-INF/hst-assembly/addon/overrides/org/onehippo/forge/channel-pagesup/</code> resource path.
+          e.g, <code>site/src/main/resources/META-INF/hst-assembly/addon/overrides/org/onehippo/forge/channel-pagesup/custom-page-copy-listener.xml</code>.
+          And, override the bean definition like the following example:
+        </p>
+        <div class="brush: xml">
+          <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+  <bean id="defaultDocumentCopyingPageCopyEventListener"
+        class="org.example.MyDocumentCopyingPageCopyEventListener"
+        init-method="init" destroy-method="destroy">
+    <!-- flag whether or not to copy all the documents linked by the page and its components -->
+    <property name="copyDocumentsLinkedBySourcePage" value="true" />
+  </bean>
+</beans>
+        ]]></source>
+        </div>
       </subsection>
 
       <subsection name="Custom Configuration for DocumentManagementService component">
