@@ -37,6 +37,9 @@
           <code>DocumentManagementService</code> component to provide document/folder workflow operations.
         </li>
       </ul>
+      <subsection name="Code base on GitHub">
+        <p>The code of this project is on GitHub at <a href="https://github.com/onehippo-forge/page-management-support/">https://github.com/onehippo-forge/page-management-support/</a>.</p>
+      </subsection>
       <subsection name="DocumentCopyingPageCopyEventListener component">
         <p>
           <code>org.onehippo.forge.channelmanager.pagesupport.channel.event.DocumentCopyingPageCopyEventListener</code>
