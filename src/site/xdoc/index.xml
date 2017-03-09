@@ -57,19 +57,8 @@
     </section>
     <section name="Demo Application">
       <subsection name="Demo Application with Hippo CMS 10">
-        <p>You can check out, build and run demo application, which contains all the examples explained in this site documentation.</p>
-        <p>Here are example commands to check out, build and run demo application:</p>
-        <div class="brush: bash">
-          <source><![CDATA[
-  $ svn checkout https://forge.onehippo.org/svn/channel-pagesup/channel-pagesup-demo/trunk channel-pagesup-demo-TRUNK
-  $ cd channel-pagesup-demo-TRUNK
-  $ mvn clean verify
-  $ mvn -P cargo.run
-          ]]></source>
-        </div>
-        <p>
-          Visit http://localhost:8080/cms/.
-        </p>
+        <p>You can build and run a demo application, which contains all the examples explained in this site documentation.
+          The demo application is present in the demo submodule.</p>
       </subsection>
     </section>
     <section name="Testing with Demo Application">

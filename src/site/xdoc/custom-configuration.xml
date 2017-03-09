@@ -42,7 +42,7 @@
         </p>
         <p>
           The original component bean configuration is defined in
-          <a href="https://forge.onehippo.org/svn/channel-pagesup/channel-pagesup/trunk/channel-page-event/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml">https://forge.onehippo.org/svn/channel-pagesup/channel-pagesup/trunk/channel-page-event/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml</a>
+          "/src/main/resources/META-INF/hst-assembly/addon/org/onehippo/forge/channel-pagesup/cross-channel-page-copy-support.xml"
           in the source.
         </p>
         <p>
