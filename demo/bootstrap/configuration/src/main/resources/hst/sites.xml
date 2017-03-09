@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" sv:name="hst:sites">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>hst:sites</sv:value>
+  </sv:property>
+  <sv:node sv:name="channelpagesupdemo">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hst:site</sv:value>
+    </sv:property>
+    <sv:property sv:name="hst:content" sv:type="String">
+      <sv:value>/content/documents/channelpagesupdemo</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="channelpagesupdemo-en-us">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hst:site</sv:value>
+    </sv:property>
+    <sv:property sv:name="hst:content" sv:type="String">
+      <sv:value>/content/documents/channelpagesupdemo-en-us</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="channelpagesupdemo-en-uk">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hst:site</sv:value>
+    </sv:property>
+    <sv:property sv:name="hst:content" sv:type="String">
+      <sv:value>/content/documents/channelpagesupdemo-en-uk</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="channelpagesupdemo-en-ca">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hst:site</sv:value>
+    </sv:property>
+    <sv:property sv:name="hst:content" sv:type="String">
+      <sv:value>/content/documents/channelpagesupdemo-en-ca</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="channelpagesupdemo-fr-fr">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hst:site</sv:value>
+    </sv:property>
+    <sv:property sv:name="hst:content" sv:type="String">
+      <sv:value>/content/documents/channelpagesupdemo-fr-fr</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="channelpagesupdemo-fr-be">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hst:site</sv:value>
+    </sv:property>
+    <sv:property sv:name="hst:content" sv:type="String">
+      <sv:value>/content/documents/channelpagesupdemo-fr-be</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="channelpagesupdemo-fr-ca">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hst:site</sv:value>
+    </sv:property>
+    <sv:property sv:name="hst:content" sv:type="String">
+      <sv:value>/content/documents/channelpagesupdemo-fr-ca</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="channelpagesupdemo-nl-nl">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hst:site</sv:value>
+    </sv:property>
+    <sv:property sv:name="hst:content" sv:type="String">
+      <sv:value>/content/documents/channelpagesupdemo-nl-nl</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="channelpagesupdemo-nl-be">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hst:site</sv:value>
+    </sv:property>
+    <sv:property sv:name="hst:content" sv:type="String">
+      <sv:value>/content/documents/channelpagesupdemo-nl-be</sv:value>
+    </sv:property>
+  </sv:node>
+</sv:node>

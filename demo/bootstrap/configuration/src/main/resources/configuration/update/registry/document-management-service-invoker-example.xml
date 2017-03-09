@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node sv:name="Document Management Service Invoker Example" xmlns:sv="http://www.jcp.org/jcr/sv/1.0">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>hipposys:updaterinfo</sv:value>
+  </sv:property>
+  <sv:property sv:name="hipposys:batchsize" sv:type="Long">
+    <sv:value>10</sv:value>
+  </sv:property>
+  <sv:property sv:name="hipposys:description" sv:type="String">
+    <sv:value>Document Management Service Invoker Example</sv:value>
+  </sv:property>
+  <sv:property sv:name="hipposys:dryrun" sv:type="Boolean">
+    <sv:value>true</sv:value>
+  </sv:property>
+  <sv:property sv:name="hipposys:parameters" sv:type="String">
+    <sv:value>{&#xd;
+  "operationName" : "depublishDocument",&#xd;
+  "params" : "/content/documents/channelpagesupdemo-en-us/content/sample-document",&#xd;
+  "signature" : "java.lang.String"&#xd;
+}</sv:value>
+  </sv:property>
+  <sv:property sv:name="hipposys:query" sv:type="String">
+    <sv:value>/jcr:root</sv:value>
+  </sv:property>
+  <sv:property sv:name="hipposys:script" sv:type="String">
+    <sv:value>package org.hippoecm.frontend.plugins.cms.admin.updater&#xd;
+&#xd;
+import org.apache.commons.lang.StringUtils&#xd;
+import org.onehippo.repository.update.BaseNodeUpdateVisitor&#xd;
+import java.lang.management.ManagementFactory&#xd;
+import javax.jcr.Node&#xd;
+import javax.management.MBeanServer&#xd;
+import javax.management.ObjectName&#xd;
+&#xd;
+class UpdaterTemplate extends BaseNodeUpdateVisitor {&#xd;
+&#xd;
+  final String DOCUMENT_MANAGEMENT_SERVICE_NAME =&#xd;
+    "org.onehippo.forge.channelmanager.pagesupport.document.management:type=DocumentManagementServiceMXBean"&#xd;
+&#xd;
+  boolean doUpdate(Node node) {&#xd;
+    log.info("Invoking document management service.")&#xd;
+&#xd;
+    def operationName = parametersMap['operationName']&#xd;
+    def params = StringUtils.split(parametersMap['params'], ",")&#xd;
+    def signature = StringUtils.split(parametersMap['signature'], ",")&#xd;
+&#xd;
+&#xd;
+    log.info("-- operationName: ${operationName}")&#xd;
+    log.info("-- params: ${params}")&#xd;
+    log.info("-- signature: ${signature}")&#xd;
+&#xd;
+    def mbeanName = new ObjectName(DOCUMENT_MANAGEMENT_SERVICE_NAME)&#xd;
+    def mbeanServer = ManagementFactory.getPlatformMBeanServer()&#xd;
+    def ret = mbeanServer.invoke(mbeanName, operationName, params, signature)&#xd;
+&#xd;
+    log.info("-- return: ${ret}")&#xd;
+&#xd;
+    return false&#xd;
+  }&#xd;
+&#xd;
+  boolean undoUpdate(Node node) {&#xd;
+    throw new UnsupportedOperationException('Updater does not implement undoUpdate method')&#xd;
+  }&#xd;
+&#xd;
+}</sv:value>
+  </sv:property>
+  <sv:property sv:name="hipposys:throttle" sv:type="Long">
+    <sv:value>1000</sv:value>
+  </sv:property>
+</sv:node>
