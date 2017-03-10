@@ -97,7 +97,7 @@
     <repository>
       <name>Hippo Maven 2 Repository</name>
       <id>hippo-maven2</id>
-      <url>https://maven.onehippo.com/content/repositories/maven2/</url>
+      <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>
       <uniqueVersion>false</uniqueVersion>
     </repository>
   </distributionManagement>
