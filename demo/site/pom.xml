@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.onehippo.forge.channel-pagesup</groupId>
     <artifactId>channel-pagesup-demo</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>channel-pagesup-demo-site</artifactId>
   <packaging>war</packaging>
@@ -18,14 +18,6 @@
       <artifactId>channel-pagesup-channel-page-event</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-essentials-components-hst</artifactId>
-    </dependency>
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>
@@ -71,10 +63,6 @@
       <artifactId>freemarker</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.onehippo.cms7.hst.components</groupId>
-      <artifactId>hst-jaxrs</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.onehippo.cms7.hst.client-modules</groupId>
       <artifactId>hst-cms-rest</artifactId>
     </dependency>
@@ -89,6 +77,14 @@
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-plugin-selections-hst-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-essentials-components-hst</artifactId>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
@@ -127,22 +123,6 @@
           <container>
             <type>remote</type>
           </container>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.googlecode.mavenfilesync</groupId>
-        <artifactId>maven-filesync-plugin</artifactId>
-        <configuration>
-          <mappings>
-            <mapping>
-              <sourceFolder>src/main/resources</sourceFolder>
-              <destinationFolder>@../target/tomcat${cargo.tomcat.major.version}x/webapps/site/WEB-INF/classes</destinationFolder>
-            </mapping>
-            <mapping>
-              <sourceFolder>src/main/webapp</sourceFolder>
-              <destinationFolder>@../target/tomcat${cargo.tomcat.major.version}x/webapps/site</destinationFolder>
-            </mapping>
-          </mappings>
         </configuration>
       </plugin>
     </plugins>
