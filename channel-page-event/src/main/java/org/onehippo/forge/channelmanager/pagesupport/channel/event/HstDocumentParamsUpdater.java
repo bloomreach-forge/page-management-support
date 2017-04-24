@@ -1,4 +1,19 @@
-package org.onehippo.forge.channelmanager.pagesupport.demo.listener;
+/*
+ * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.onehippo.forge.channelmanager.pagesupport.channel.event;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +25,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.hippoecm.hst.configuration.ConfigurationUtils;
 import org.hippoecm.hst.configuration.HstNodeTypes;
 import org.hippoecm.hst.configuration.components.HstComponentConfiguration;
@@ -20,49 +36,43 @@ import org.hippoecm.hst.content.beans.standard.HippoDocument;
 import org.hippoecm.hst.content.beans.standard.HippoDocumentBean;
 import org.hippoecm.hst.core.linking.DocumentParamsScanner;
 import org.hippoecm.hst.core.request.HstRequestContext;
-import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
-import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
-import org.onehippo.forge.channelmanager.pagesupport.channel.event.DocumentCopyingPageCopyEventListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A  PageCopyEventListener that implements the hook described at
- * https://onehippo-forge.github.io/page-management-support/custom-configuration.html#Extension_Hooks
- * 
+ * Utility inspired by {@link org.hippoecm.hst.core.linking.DocumentParamsScanner}.
+ *
  * It scans HST configuration and fixes broken 'documentLink' and 'jcrPath' parameters that point to non-existing paths.
  */
-public class ConfigUpdatingPageCopyEventListener extends DocumentCopyingPageCopyEventListener {
+public class HstDocumentParamsUpdater {
 
-    private static final Logger log = LoggerFactory.getLogger(ConfigUpdatingPageCopyEventListener.class);
+    private static Logger log = LoggerFactory.getLogger(HstDocumentParamsUpdater.class);
 
-    @Override
-    protected void onAfterPageCopyEvent(PageCopyEvent pageCopyEvent) {
-
-        final PageCopyContext pageCopyContext = pageCopyEvent.getPageCopyContext();
-
-        updateDocumentPaths(pageCopyContext.getEditingMount(), pageCopyContext.getSourcePage(),
-                pageCopyContext.getTargetMount(), pageCopyContext.getNewPageNode(),
-                pageCopyContext.getRequestContext());
-
+    private HstDocumentParamsUpdater() {
     }
 
-    protected void updateDocumentPaths(final Mount sourceMount,
-                                            final HstComponentConfiguration source,
-                                            final Mount targetMount,
-                                            final Node targetNode,
-                                            final HstRequestContext requestContext) {
-
+    /**
+     * Update 'documentLink' and 'jcrPath' HST parameters in the target HST configuration node, based on the source and
+     * target documents being linked as translations of each other.
+     */
+    public static void updateTargetDocumentPaths(final Mount sourceMount,
+                                                final HstComponentConfiguration source,
+                                                final Mount targetMount,
+                                                final Node targetNode,
+                                                final HstRequestContext requestContext) {
         try {
             final String componentClassName = source.getComponentClassName();
 
             if (StringUtils.isNotEmpty(componentClassName)) {
 
-                final Set<String> parameters = DocumentParamsScanner.getNames(componentClassName, ConfigUpdatingPageCopyEventListener.class.getClassLoader());
+                final Set<String> parameters = DocumentParamsScanner.getNames(componentClassName, DocumentCopyingPageCopyEventListener.class.getClassLoader());
                 log.debug("Got document parameters {} from component class {}", parameters, componentClassName);
 
-                final Map<String, String> changeMap = getTargetDocumentPaths(sourceMount, source, targetMount, requestContext, parameters);
-                replaceTargetParameterValues(targetNode, changeMap);
+                if (!parameters.isEmpty()) {
+                    final Map<String, String> changeMap = getTargetDocumentPaths(sourceMount, source, targetMount, requestContext, parameters);
+                    replaceTargetParameterValues(targetNode, changeMap);
+                }
             }
 
             // recursively update child nodes, based on the target node names because the source is merged configuration
@@ -75,10 +85,9 @@ public class ConfigUpdatingPageCopyEventListener extends DocumentCopyingPageCopy
                 final HstComponentConfiguration sourceChild = source.getChildByName(targetChild.getName());
                 if (sourceChild == null) {
                     log.warn("No child named {} found for source configuration, skipping updating {} and below", targetChild.getName(), targetChild.getPath());
-                }
-                else {
+                } else {
                     // recursion
-                    updateDocumentPaths(sourceMount, sourceChild, targetMount, targetChild, requestContext);
+                    updateTargetDocumentPaths(sourceMount, sourceChild, targetMount, targetChild, requestContext);
                 }
             }
         } catch (RepositoryException e) {
@@ -87,9 +96,10 @@ public class ConfigUpdatingPageCopyEventListener extends DocumentCopyingPageCopy
     }
 
     /**
-     * Replace all matching parameter values with the changed ones.
+     * Replace all matching parameter values with changed ones.
      */
-    protected static void replaceTargetParameterValues(final Node targetNode, final Map<String, String> changeMap) throws RepositoryException {
+    public static void replaceTargetParameterValues(final Node targetNode,
+                                                    final Map<String, String> changeMap) throws RepositoryException {
 
         if (targetNode.hasProperty(HstNodeTypes.GENERAL_PROPERTY_PARAMETER_VALUES)) {
             final Value[] paramValues = targetNode.getProperty(HstNodeTypes.GENERAL_PROPERTY_PARAMETER_VALUES).getValues();
@@ -104,8 +114,7 @@ public class ConfigUpdatingPageCopyEventListener extends DocumentCopyingPageCopy
                 if (changeMap.containsKey(oldValues[j])) {
                     newValues[j] = changeMap.get(oldValues[j]);
                     changed = true;
-                }
-                else {
+                } else {
                     newValues[j] = oldValues[j];
                 }
             }
@@ -120,7 +129,11 @@ public class ConfigUpdatingPageCopyEventListener extends DocumentCopyingPageCopy
     /**
      * Map source content paths to target content paths, based on translated (linked) content
      */
-    protected Map<String, String> getTargetDocumentPaths(final Mount sourceMount, final HstComponentConfiguration source, final Mount targetMount, final HstRequestContext requestContext, final Set<String> parameters) {
+    public static Map<String, String> getTargetDocumentPaths(final Mount sourceMount,
+                                                             final HstComponentConfiguration source,
+                                                             final Mount targetMount,
+                                                             final HstRequestContext requestContext,
+                                                             final Set<String> parameters) {
 
         final Map<String, String> changeMap = new HashMap<>();
 
@@ -152,7 +165,13 @@ public class ConfigUpdatingPageCopyEventListener extends DocumentCopyingPageCopy
         return changeMap;
     }
 
-    protected String getTargetDocumentPath(final String sourceMountContentPath, final String sourceDocumentPath, final String targetMountContentPath, final HstRequestContext requestContext) {
+    /**
+     * Get a target document path from a source, based on the linked translations and target base content path.
+     */
+    public static String getTargetDocumentPath(final String sourceMountContentPath,
+                                               final String sourceDocumentPath,
+                                               final String targetMountContentPath,
+                                               final HstRequestContext requestContext) {
 
         final boolean isAbsolute = sourceDocumentPath.startsWith("/");
 
@@ -165,6 +184,7 @@ public class ConfigUpdatingPageCopyEventListener extends DocumentCopyingPageCopy
                 for (final HippoDocumentBean bean : translations.getTranslations()) {
 
                     if (bean.getPath().startsWith(targetMountContentPath)) {
+
                         // take the full handle path if absolute, else subtract targetMountContentPath/
                         final String targetDocumentPath = isAbsolute ? bean.getCanonicalHandlePath() :
                                 bean.getCanonicalHandlePath().substring(targetMountContentPath.length() + 1);
@@ -172,8 +192,7 @@ public class ConfigUpdatingPageCopyEventListener extends DocumentCopyingPageCopy
                         return targetDocumentPath;
                     }
                 }
-            }
-            else {
+            } else {
                 log.error("Object for path {} is not a HippoDocument but a {}", sourceAbsolutePath, obj.getClass().getName());
             }
         } catch (ObjectBeanManagerException e) {
