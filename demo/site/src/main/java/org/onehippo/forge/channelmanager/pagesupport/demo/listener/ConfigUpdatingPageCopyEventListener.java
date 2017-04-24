@@ -16,8 +16,8 @@ import org.hippoecm.hst.configuration.components.HstComponentConfiguration;
 import org.hippoecm.hst.configuration.hosting.Mount;
 import org.hippoecm.hst.content.beans.ObjectBeanManagerException;
 import org.hippoecm.hst.content.beans.standard.HippoAvailableTranslationsBean;
-import org.hippoecm.hst.content.beans.standard.HippoBean;
 import org.hippoecm.hst.content.beans.standard.HippoDocument;
+import org.hippoecm.hst.content.beans.standard.HippoDocumentBean;
 import org.hippoecm.hst.core.linking.DocumentParamsScanner;
 import org.hippoecm.hst.core.request.HstRequestContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
@@ -161,13 +161,13 @@ public class ConfigUpdatingPageCopyEventListener extends DocumentCopyingPageCopy
             Object obj = requestContext.getObjectBeanManager().getObject(sourceAbsolutePath);
             if (obj instanceof HippoDocument) {
 
-                final HippoAvailableTranslationsBean<HippoBean> translations = ((HippoDocument) obj).getAvailableTranslations();
-                for (final HippoBean bean : translations.getTranslations()) {
+                final HippoAvailableTranslationsBean<HippoDocumentBean> translations = ((HippoDocumentBean) obj).getAvailableTranslations();
+                for (final HippoDocumentBean bean : translations.getTranslations()) {
 
                     if (bean.getPath().startsWith(targetMountContentPath)) {
-                        // take the bean path if absolute, else subtract targetMountContentPath/
-                        final String targetDocumentPath = isAbsolute ? bean.getPath() :
-                                bean.getPath().substring(targetMountContentPath.length() + 1);
+                        // take the full handle path if absolute, else subtract targetMountContentPath/
+                        final String targetDocumentPath = isAbsolute ? bean.getCanonicalHandlePath() :
+                                bean.getCanonicalHandlePath().substring(targetMountContentPath.length() + 1);
                         log.debug("Determined target path {} based on source path {}", targetDocumentPath, sourceDocumentPath);
                         return targetDocumentPath;
                     }
