@@ -57,80 +57,76 @@
           <code>org.onehippo.forge.channelmanager.pagesupport.document.management.DocumentManagementService</code> component is provided to manage document/folder workflows more easily.
         </p>
       </subsection>
-    </section>
-    <section name="Demo Application">
-      <subsection name="Demo Application with Hippo CMS 10">
+      <subsection name="Testing with Demo Application">
         <p>You can build and run a demo application, which contains all the examples explained in this site documentation.
           The demo application is present in the demo submodule.</p>
+        <p>
+          The demo application consists of many different channels.
+          This basic testing steps will show how a page in the source (English / US) channel can be copied to
+          the target (Dutch / Belgium) channel with the linked document content together as an example.
+        </p>
+        <p>
+          Browse the content folder in the source (English / US) channel.
+          You will see three published documents there.
+        </p>
+        <img src="images/testscreen01.png" alt="Test 1" />
+        <p>
+          Now, browse the target (Dutch / Belgium) channel. You won't see any documents there yet.
+        </p>
+        <img src="images/testscreen02.png" alt="Test 2" />
+        <p>
+          Let's select the <strong>Channels</strong> perspective. You will see many channels.
+          We are going to copy a page from the source (English / US) channel to the target (Dutch /
+          Belgium) channel.
+          So, please make sure that the target (Dutch / Belgium) channel should have a preview mode configuration.
+        </p>
+        <p>
+          <em>Note: </em>
+          if a channel doesn't have a preview mode configuration, it won't be
+          available in the dropdown of the <strong>Page Settings</strong> dialog
+          as a target channel when copying a page.
+        </p>
+        <img src="images/testscreen03.png" alt="Test 3" />
+        <p>
+          Now let's edit the source (English / US) channel.
+          And click on the Pages link and create a new page called "test".
+        </p>
+        <img src="images/testscreen04.png" alt="Test 4" />
+        <p>
+          Add three <strong>Simple Content</strong> catalog components in the "test" page.
+          And link to each of the documents under the "content" folder and save the page.
+        </p>
+        <img src="images/testscreen05.png" alt="Test 5" />
+        <p>
+          Click on the <strong>Page Settings</strong> link and select the target (Dutch / Belgium) channel
+          to copy the "test" page.
+        </p>
+        <p>
+          <em>Note: </em>
+          if you don't see a target channel in the dropdown, please make sure that the target channel should have
+          a preview mode configuration in prior.
+        </p>
+        <img src="images/testscreen07.png" alt="Test 7" />
+        <p>
+          Open the target (Dutch / Belgium) channel and select the copied page, "test".
+        </p>
+        <img src="images/testscreen08.png" alt="Test 8" />
+        <p>
+          You will see the copied page, "test", with the copied documents together.
+        </p>
+        <img src="images/testscreen09.png" alt="Test 9" />
+        <p>
+          Also browse the content folder of the target (Dutch / Belgium) channel. You will see all the three documents
+          copied from the source (English / US) channel.
+        </p>
+        <img src="images/testscreen10.png" alt="Test 10" />
+        <p>
+          <em>Note: </em>
+          All the linked documents from the copied page are copied together into the target channel content folder.
+          However, the copied documents are taken offline after copying.
+          Editors are responsible for publishing those copied documents afterward.
+        </p>
       </subsection>
-    </section>
-    <section name="Testing with Demo Application">
-      <p>
-        The demo application consists of many different channels.
-        This basic testing steps will show how a page in the source (English / US) channel can be copied to
-        the target (Dutch / Belgium) channel with the linked document content together as an example.
-      </p>
-      <p>
-        Browse the content folder in the source (English / US) channel.
-        You will see three published documents there.
-      </p>
-      <img src="images/testscreen01.png" alt="Test 1" />
-      <p>
-        Now, browse the target (Dutch / Belgium) channel. You won't see any documents there yet.
-      </p>
-      <img src="images/testscreen02.png" alt="Test 2" />
-      <p>
-        Let's select the <strong>Channels</strong> perspective. You will see many channels.
-        We are going to copy a page from the source (English / US) channel to the target (Dutch /
-        Belgium) channel.
-        So, please make sure that the target (Dutch / Belgium) channel should have a preview mode configuration.
-      </p>
-      <p>
-        <em>Note: </em>
-        if a channel doesn't have a preview mode configuration, it won't be
-        available in the dropdown of the <strong>Page Settings</strong> dialog
-        as a target channel when copying a page.
-      </p>
-      <img src="images/testscreen03.png" alt="Test 3" />
-      <p>
-        Now let's edit the source (English / US) channel.
-        And click on the Pages link and create a new page called "test".
-      </p>
-      <img src="images/testscreen04.png" alt="Test 4" />
-      <p>
-        Add three <strong>Simple Content</strong> catalog components in the "test" page.
-        And link to each of the documents under the "content" folder and save the page.
-      </p>
-      <img src="images/testscreen05.png" alt="Test 5" />
-      <p>
-        Click on the <strong>Page Settings</strong> link and select the target (Dutch / Belgium) channel
-        to copy the "test" page.
-      </p>
-      <p>
-        <em>Note: </em>
-        if you don't see a target channel in the dropdown, please make sure that the target channel should have
-        a preview mode configuration in prior.
-      </p>
-      <img src="images/testscreen07.png" alt="Test 7" />
-      <p>
-        Open the target (Dutch / Belgium) channel and select the copied page, "test".
-      </p>
-      <img src="images/testscreen08.png" alt="Test 8" />
-      <p>
-        You will see the copied page, "test", with the copied documents together.
-      </p>
-      <img src="images/testscreen09.png" alt="Test 9" />
-      <p>
-        Also browse the content folder of the target (Dutch / Belgium) channel. You will see all the three documents
-        copied from the source (English / US) channel.
-      </p>
-      <img src="images/testscreen10.png" alt="Test 10" />
-      <p>
-        <em>Note: </em>
-        All the linked documents from the copied page are copied together into the target channel content folder.
-        However, the copied documents are taken offline after copying.
-        Editors are responsible for publishing those copied documents afterward.
-      </p>
     </section>
   </body>
 </document>

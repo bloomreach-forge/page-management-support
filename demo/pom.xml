@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-enterprise-release</artifactId>
-    <version>10.2.3</version>
+    <version>11.2.0</version>
     <relativePath />
   </parent>
 
@@ -13,7 +13,7 @@
   <description>Channel Manager Page Support Demo</description>
   <groupId>org.onehippo.forge.channel-pagesup</groupId>
   <artifactId>channel-pagesup-demo</artifactId>
-  <version>1.2.1-SNAPSHOT</version>
+  <version>2.0.0</version>
   <packaging>pom</packaging>
 
   <!-- 
@@ -29,22 +29,21 @@
   <properties>
 
     <!--***START temporary override of versions*** -->
-    <!--  downgrade from 3.2.2 because of CHANNELMGR-1111 "Cross channel page copy: channel select element is disabled" -->
-    <hippo.addon-channel-manager.version>3.2.1</hippo.addon-channel-manager.version>
     <!-- ***END temporary override of versions*** -->
 
-    <forge.channel-pagesup.version>1.2.0</forge.channel-pagesup.version>
+    <forge.channel-pagesup.version>2.0.0</forge.channel-pagesup.version>
 
-    <essentials.version>2.1.0</essentials.version>
+    <essentials.version>3.2.0</essentials.version>
     <jsp-api.version>2.2</jsp-api.version>
     <taglibs.version>1.2.1</taglibs.version>
     <xalan.version>2.7.1</xalan.version>
     <junit.version>4.10</junit.version>
     <easymock.version>3.1</easymock.version>
      
-    <filesync.override>false</filesync.override>
-    <maven.plugins.filesync.version>1.0.0</maven.plugins.filesync.version>
     <repo.bootstrap>true</repo.bootstrap>
+    <content-module-deploy-dir>shared/lib</content-module-deploy-dir>
+
+    <hippo.cms.locales>nl,en</hippo.cms.locales>
 
   </properties>
 
@@ -86,16 +85,6 @@
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
-        <version>${essentials.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.onehippo.cms7</groupId>
-        <artifactId>hippo-essentials-components-cms</artifactId>
-        <version>${essentials.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.onehippo.cms7</groupId>
-        <artifactId>hippo-essentials-components-hst</artifactId>
         <version>${essentials.version}</version>
       </dependency>
 
@@ -174,19 +163,6 @@
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId>com.googlecode.mavenfilesync</groupId>
-                    <artifactId>maven-filesync-plugin</artifactId>
-                    <versionRange>[1.0.0,)</versionRange>
-                    <goals>
-                      <goal>generate</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore />
-                  </action>
-                </pluginExecution>
-                <pluginExecution>
-                  <pluginExecutionFilter>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <goals>
@@ -201,21 +177,6 @@
               </pluginExecutions>
             </lifecycleMappingMetadata>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>com.googlecode.mavenfilesync</groupId>
-          <artifactId>maven-filesync-plugin</artifactId>
-          <version>${maven.plugins.filesync.version}</version>
-          <configuration>
-            <override>${filesync.override}</override>
-          </configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>generate</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -283,9 +244,6 @@
             <artifactId>cargo-maven2-plugin</artifactId>
             <configuration>
               <configuration>
-                <properties>
-                  <catalina.servlet.uriencoding>UTF-8</catalina.servlet.uriencoding>
-                </properties>
                 <configfiles>
                   <configfile>
                     <file>${project.basedir}/conf/context.xml</file>
@@ -298,6 +256,12 @@
                     <tofile>logging.properties</tofile>
                   </configfile>
                 </configfiles>
+                <files>
+                  <file>
+                    <file>${project.basedir}/bootstrap/content/target/channel-pagesup-demo-bootstrap-content-${project.version}.jar</file>
+                    <todir>${content-module-deploy-dir}</todir>
+                  </file>
+                </files>
               </configuration>
               <deployables>
                 <deployable>
@@ -324,7 +288,6 @@
               </deployables>
               <container>
                 <systemProperties>
-                  <derby.stream.error.file>${project.basedir}/target/derby.log</derby.stream.error.file>
                   <log4j.configuration>file:${project.basedir}/conf/log4j-dev.xml</log4j.configuration>
                   <rebel.log4j-plugin>true</rebel.log4j-plugin>
                   <!-- enables auto export and web files watch: -->
@@ -336,6 +299,15 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+
+    <profile>
+      <!-- additional profile to combine with cargo:run to *not* bootstrap the local content module:
+           $ mvn -P cargo.run,without-content -->
+      <id>without-content</id>
+      <properties>
+        <content-module-deploy-dir>temp</content-module-deploy-dir>
+      </properties>
     </profile>
 
     <profile>
@@ -372,6 +344,49 @@
                 <configuration>
                   <descriptors>
                     <descriptor>${project.basedir}/src/main/assembly/distribution.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>dist-with-content</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>jcl-over-slf4j</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <defaultGoal>validate</defaultGoal>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>distro-assembly-with-content</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <descriptors>
+                    <descriptor>${project.basedir}/src/main/assembly/distribution-with-content.xml</descriptor>
                   </descriptors>
                 </configuration>
               </execution>

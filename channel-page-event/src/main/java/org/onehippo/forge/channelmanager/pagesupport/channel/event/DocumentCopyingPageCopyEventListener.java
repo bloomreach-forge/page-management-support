@@ -200,6 +200,8 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                             "Linked document copying step skipped because 'copyDocumentsLinkedBySourcePage' is turned off.");
                 }
 
+                updateTargetHstConfiguration(pageCopyContext);
+
                 onAfterPageCopyEvent(pageCopyEvent);
             } catch (ClientException e) {
                 log.error("Failed to handle page copy event properly.", e);
@@ -211,6 +213,16 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                         Collections.singletonMap("errorReason", clientMessage)));
             }
         }
+    }
+
+    protected void updateTargetHstConfiguration(final PageCopyContext pageCopyContext) {
+
+        // delegate to static utility
+        HstDocumentParamsUpdater.updateTargetDocumentPaths(pageCopyContext.getEditingMount(),
+                                                            pageCopyContext.getSourcePage(),
+                                                            pageCopyContext.getTargetMount(),
+                                                            pageCopyContext.getNewPageNode(),
+                                                            pageCopyContext.getRequestContext());
     }
 
     private void copyDocuments(final Session session, final Set<String> sourceDocumentPathSet,
