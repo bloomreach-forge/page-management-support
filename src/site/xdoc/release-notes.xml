@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright 2015 Hippo
+    Copyright 2015-2017 Hippo B.V.
 
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -30,16 +30,32 @@
           <th>Hippo CMS Release version</th>
         </tr>
         <tr>
+          <td>2.x</td>
+          <td>Hippo CMS 11</td>
+        </tr>
+        <tr>
           <td>1.x</td>
-          <td>10.2+</td>
+          <td>Hippo CMS 10.2</td>
         </tr>
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="2.0.0">
+        <p class="smallinfo">Release Date: 25 April 2017</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-100">HIPFORGE-100</a><br/>
+            Upgrade to Hippo CMS 11.
+          </li>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-99">HIPFORGE-99</a><br/>
+            In DocumentCopyingPageCopyEventListener, update the target HST configuration to make page copy work with
+            different content structures.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="1.2.0">
         <p class="smallinfo">Release Date: 17 January 2017</p>
         <ul>
-          <li><a href="https://issues.onehippo.com/browse/HIPPLUG-1423">HIPPLUG-1423</a><br/>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-79">HIPFORGE-79</a><br/>
             DocumentCopyingPageCopyEventListener improvements:
             <ul>
               <li>
