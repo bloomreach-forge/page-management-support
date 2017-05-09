@@ -217,6 +217,12 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
 
     protected void updateTargetHstConfiguration(final PageCopyContext pageCopyContext) {
 
+        if (pageCopyContext.getEditingMount().getIdentifier().equals(pageCopyContext.getTargetMount().getIdentifier())) {
+            log.debug("No need to update HST parameters when copying to the same mount {} with id {}.",
+                    pageCopyContext.getEditingMount().getMountPath(), pageCopyContext.getEditingMount().getIdentifier());
+            return;
+        }
+
         // delegate to static utility
         HstDocumentParamsUpdater.updateTargetDocumentPaths(pageCopyContext.getEditingMount(),
                                                             pageCopyContext.getSourcePage(),
