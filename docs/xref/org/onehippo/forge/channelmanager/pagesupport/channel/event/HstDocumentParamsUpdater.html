@@ -203,7 +203,7 @@
 <a class="jxr_linenumber" name="193" href="#193">193</a>                     }
 <a class="jxr_linenumber" name="194" href="#194">194</a>                 }
 <a class="jxr_linenumber" name="195" href="#195">195</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="196" href="#196">196</a>                 log.error(<span class="jxr_string">"Object for path {} is not a HippoDocument but a {}"</span>, sourceAbsolutePath, obj.getClass().getName());
+<a class="jxr_linenumber" name="196" href="#196">196</a>                 log.warn(<span class="jxr_string">"Object for path {} is not a HippoDocument but {}"</span>, sourceAbsolutePath, (obj == <strong class="jxr_keyword">null</strong>) ? <span class="jxr_string">"null"</span> : obj.getClass().getName());
 <a class="jxr_linenumber" name="197" href="#197">197</a>             }
 <a class="jxr_linenumber" name="198" href="#198">198</a>         } <strong class="jxr_keyword">catch</strong> (ObjectBeanManagerException e) {
 <a class="jxr_linenumber" name="199" href="#199">199</a>             log.error(<span class="jxr_string">"Failed to get a bean from path "</span> + sourceAbsolutePath, e);
