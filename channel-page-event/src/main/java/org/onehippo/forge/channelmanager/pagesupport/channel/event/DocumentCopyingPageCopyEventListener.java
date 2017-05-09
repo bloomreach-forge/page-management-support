@@ -171,8 +171,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
 
                 if (isCopyDocumentsLinkedBySourcePage()) {
                     if (StringUtils.equals(sourceContentBasePath, targetContentBasePath)) {
-                        log.info(
-                                "No need to copy documents because the source and target channel have the same content base path: {}'",
+                        log.info("No need to copy documents because the source and target channel have the same content base path: {}'",
                                 sourceContentBasePath);
                     } else {
                         if (StringUtils.equals(sourceTranslationLanguage, targetTranslationLanguage)) {
@@ -188,16 +187,15 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                                 copyDocuments(pageCopyContext.getRequestContext().getSession(), documentPathSet,
                                         sourceContentBaseNode, targetContentBaseNode);
                             } else {
-                                log.info(
-                                        "Linked document copying step skipped because the content path of the target mount is the same as that of the source mount.");
+                                log.info("Linked document copying step skipped because the content path of the target " +
+                                        "mount is the same as that of the source mount: {}.", sourceMount.getContentPath());
                             }
                         } else {
                             log.info("No linked document founds in the source page.");
                         }
                     }
                 } else {
-                    log.info(
-                            "Linked document copying step skipped because 'copyDocumentsLinkedBySourcePage' is turned off.");
+                    log.info("Linked document copying step skipped because 'copyDocumentsLinkedBySourcePage' is turned off.");
                 }
 
                 updateTargetHstConfiguration(pageCopyContext);
@@ -216,6 +214,12 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
     }
 
     protected void updateTargetHstConfiguration(final PageCopyContext pageCopyContext) {
+
+        if (pageCopyContext.getEditingMount().getIdentifier().equals(pageCopyContext.getTargetMount().getIdentifier())) {
+            log.debug("No need to update HST parameters when copying to the same mount {} with id {}.",
+                    pageCopyContext.getEditingMount().getMountPath(), pageCopyContext.getEditingMount().getIdentifier());
+            return;
+        }
 
         // delegate to static utility
         HstDocumentParamsUpdater.updateTargetDocumentPaths(pageCopyContext.getEditingMount(),
@@ -241,8 +245,7 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
 
             for (String sourceDocumentPath : sourceDocumentPathSet) {
                 if (StringUtils.startsWith(sourceDocumentPath, "/")) {
-                    log.info(
-                            "Skipping '{}' because it's an absolute jcr path, not relative to source mount content base",
+                    log.info("Skipping '{}' because it's an absolute jcr path, not relative to source mount content base",
                             sourceDocumentPath);
                     continue;
                 }
@@ -477,8 +480,6 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
      * with a '/' or without. If they start with a '/', they are absolute
      * paths (from jcr root). If they don't start with a '/', they are
      * relative to the channel content root.
-     * @param pageCopyContext
-     * @return
      */
     private Set<String> getDocumentPathSetInPage(final PageCopyContext pageCopyContext) throws RepositoryException {
         final FilterPresentComponentConfigurations filterPresentComponentConfigurations
