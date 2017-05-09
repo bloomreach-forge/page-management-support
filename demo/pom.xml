@@ -13,7 +13,7 @@
   <description>Channel Manager Page Support Demo</description>
   <groupId>org.onehippo.forge.channel-pagesup</groupId>
   <artifactId>channel-pagesup-demo</artifactId>
-  <version>2.0.1-SNAPSHOT</version>
+  <version>2.0.1</version>
   <packaging>pom</packaging>
 
   <!-- 
@@ -31,7 +31,7 @@
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
 
-    <forge.channel-pagesup.version>2.0.1-SNAPSHOT</forge.channel-pagesup.version>
+    <forge.channel-pagesup.version>2.0.1</forge.channel-pagesup.version>
 
     <essentials.version>3.2.0</essentials.version>
     <jsp-api.version>2.2</jsp-api.version>
