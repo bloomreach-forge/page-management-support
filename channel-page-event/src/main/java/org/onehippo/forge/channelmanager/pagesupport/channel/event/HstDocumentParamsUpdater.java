@@ -193,7 +193,7 @@ public class HstDocumentParamsUpdater {
                     }
                 }
             } else {
-                log.error("Object for path {} is not a HippoDocument but a {}", sourceAbsolutePath, obj.getClass().getName());
+                log.warn("Object for path {} is not a HippoDocument but {}", sourceAbsolutePath, (obj == null) ? "null" : obj.getClass().getName());
             }
         } catch (ObjectBeanManagerException e) {
             log.error("Failed to get a bean from path " + sourceAbsolutePath, e);
