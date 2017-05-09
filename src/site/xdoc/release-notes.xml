@@ -40,6 +40,13 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="2.0.1">
+        <p class="smallinfo">Release Date: 9 May 2017</p>
+        <ul>
+          <li>Skip updating HST parameters when copying a page to the same mount.</li>
+          <li>Avoid a NullPointerException in log message when a configuration path is incorrect (does not point to a node).</li>
+        </ul>
+      </subsection>
       <subsection name="2.0.0">
         <p class="smallinfo">Release Date: 25 April 2017</p>
         <ul>
