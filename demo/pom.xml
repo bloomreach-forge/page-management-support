@@ -31,7 +31,7 @@
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
 
-    <forge.channel-pagesup.version>2.0.2-SNAPSHOT</forge.channel-pagesup.version>
+    <forge.channel-pagesup.version>${project.version}</forge.channel-pagesup.version>
 
     <essentials.version>3.2.0</essentials.version>
     <jsp-api.version>2.2</jsp-api.version>
