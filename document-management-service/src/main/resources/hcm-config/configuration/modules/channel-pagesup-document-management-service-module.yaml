@@ -1,0 +1,7 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:modules/channel-pagesup-document-management-service-module:
+      jcr:primaryType: hipposys:module
+      hipposys:className: org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentManagementServiceDaemonModule
+      /hippo:moduleconfig:
+        jcr:primaryType: nt:unstructured
