@@ -11,7 +11,14 @@
   <packaging>war</packaging>
   <name>Channel Manager Page Support Demo Site</name>
   <description>Channel Manager Page Support Demo Site</description>
+
   <dependencies>
+
+    <dependency>
+      <groupId>org.onehippo.forge.channel-pagesup</groupId>
+      <artifactId>channel-pagesup-channel-page-event</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>

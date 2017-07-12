@@ -63,6 +63,8 @@
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
 
+    <forge.channel-pagesup.version>${project.version}</forge.channel-pagesup.version>
+
     <essentials.version>4.0.0</essentials.version>
     <jsp-api.version>2.2</jsp-api.version>
     <taglibs.version>1.2.1</taglibs.version>
@@ -85,7 +87,23 @@
   </repositories>
 
   <dependencyManagement>
+
     <dependencies>
+
+      <!-- DocumentManagementService as CMS application side dependency -->
+      <dependency>
+        <groupId>org.onehippo.forge.channel-pagesup</groupId>
+        <artifactId>channel-pagesup-document-management-service</artifactId>
+        <version>${forge.channel-pagesup.version}</version>
+      </dependency>
+
+      <!-- CopyPageEvent handler as SITE application side dependency -->
+      <dependency>
+        <groupId>org.onehippo.forge.channel-pagesup</groupId>
+        <artifactId>channel-pagesup-channel-page-event</artifactId>
+        <version>${forge.channel-pagesup.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-essentials-plugin-sdk-api</artifactId>

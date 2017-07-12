@@ -120,6 +120,8 @@
       <AppenderRef ref="messages"/>
     </Logger>
 
+    <Logger name="org.onehippo.forge.channelmanager.pagesupport" level="debug" />
+
     <!-- project logging -->
     <Logger name="org.onehippo.forge.channelmanager.pagesupport.demo" level="debug"/>
 
