@@ -1,0 +1,145 @@
+/content/documents/channelpagesupdemo/events:
+  jcr:primaryType: hippostd:folder
+  jcr:mixinTypes: ['hippotranslation:translated', 'mix:referenceable']
+  jcr:uuid: 654f3cde-c5f4-4b42-8d54-e386052d566c
+  hippostd:foldertype: [new-events-document, new-events-folder]
+  hippotranslation:id: 097b40be-cf80-456a-831d-4d60993ee720
+  hippotranslation:locale: en
+  /2017:
+    jcr:primaryType: hippostd:folder
+    jcr:mixinTypes: ['hippotranslation:translated', 'mix:referenceable']
+    jcr:uuid: 51af0f0b-370a-414f-8889-57d28c794657
+    hippostd:foldertype: [new-events-document, new-events-folder]
+    hippotranslation:id: 21eb343a-d567-45f3-aa6a-cce8cab75949
+    hippotranslation:locale: en
+    /07:
+      jcr:primaryType: hippostd:folder
+      jcr:mixinTypes: ['hippotranslation:translated', 'mix:referenceable']
+      jcr:uuid: f5b29396-3b61-481d-8894-95a048a4beff
+      hippostd:foldertype: [new-events-document, new-events-folder]
+      hippotranslation:id: 60a38e4a-32ed-4252-bd2b-6684d3f45574
+      hippotranslation:locale: en
+      /breakfast:
+        jcr:primaryType: hippo:handle
+        jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+        jcr:uuid: b8f5eb45-7200-452a-b26e-3118a0dc60b8
+        hippo:name: Breakfast
+        /breakfast:
+          jcr:primaryType: channelpagesupdemo:eventsdocument
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: 421c0e1e-1b87-474c-aee5-73f94ee39424
+          channelpagesupdemo:date: 2013-11-12T08:00:00+01:00
+          channelpagesupdemo:documenttype: event
+          channelpagesupdemo:enddate: 2018-07-11T21:57:00-04:00
+          channelpagesupdemo:introduction: Start the day with a nice breakfast.
+          channelpagesupdemo:location: Room 101
+          channelpagesupdemo:title: Breakfast
+          hippo:availability: [live, preview]
+          hippostd:holder: admin
+          hippostd:state: published
+          hippostdpubwf:createdBy: admin
+          hippostdpubwf:creationDate: 2013-11-12T11:00:00+01:00
+          hippostdpubwf:lastModificationDate: 2013-11-12T11:11:00+01:00
+          hippostdpubwf:lastModifiedBy: admin
+          hippostdpubwf:publicationDate: 2013-11-12T12:16:00+01:00
+          hippotranslation:id: ab20c407-f8b7-4569-9f4f-fea03632c934
+          hippotranslation:locale: en
+          /channelpagesupdemo:content:
+            jcr:primaryType: hippostd:html
+            hippostd:content: |-
+              <html>
+                        <body>
+
+                        <p>Breakfast is served starting from 8:00 until 9:30.</p>
+
+                        </body>
+                        </html>
+          /channelpagesupdemo:image:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: c8f03498-56eb-46c9-83b2-cf014f2e03d7
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+      /introduction-speech:
+        jcr:primaryType: hippo:handle
+        jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+        jcr:uuid: 18e36c35-429d-4fee-b76e-eeabcbfc08bb
+        hippo:name: Introduction speech
+        /introduction-speech:
+          jcr:primaryType: channelpagesupdemo:eventsdocument
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: 38d30b99-ae7b-4dda-9df9-765e55c060c0
+          channelpagesupdemo:date: 2013-11-12T10:00:00+01:00
+          channelpagesupdemo:documenttype: event
+          channelpagesupdemo:enddate: 2018-07-11T21:57:00-04:00
+          channelpagesupdemo:introduction: After breakfast there will be an introductory
+            speech.
+          channelpagesupdemo:location: Room 400
+          channelpagesupdemo:title: Introduction speech
+          hippo:availability: [live, preview]
+          hippostd:holder: admin
+          hippostd:state: published
+          hippostdpubwf:createdBy: admin
+          hippostdpubwf:creationDate: 2013-11-12T11:02:00+01:00
+          hippostdpubwf:lastModificationDate: 2013-11-12T11:16:00+01:00
+          hippostdpubwf:lastModifiedBy: admin
+          hippostdpubwf:publicationDate: 2013-11-12T12:16:00+01:00
+          hippotranslation:id: f77ce2c0-5e95-4a98-9b4a-517ec1f461d2
+          hippotranslation:locale: en
+          /channelpagesupdemo:content:
+            jcr:primaryType: hippostd:html
+            hippostd:content: |-
+              <html>
+                        <body>
+
+                        <p>Speech will be about the workshop.</p>
+
+                        </body>
+                        </html>
+          /channelpagesupdemo:image:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: 9f32434e-84e3-4150-a6f2-d89a67be2fb1
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+      /workshop:
+        jcr:primaryType: hippo:handle
+        jcr:mixinTypes: ['mix:referenceable']
+        jcr:uuid: 7a29ec60-2689-48b2-aca2-49696c5c23eb
+        /workshop:
+          jcr:primaryType: channelpagesupdemo:eventsdocument
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: 8a8a9327-df2e-4be0-a76f-29b40996d279
+          channelpagesupdemo:date: 2013-11-12T13:00:00+01:00
+          channelpagesupdemo:documenttype: event
+          channelpagesupdemo:enddate: 2018-07-11T21:57:00-04:00
+          channelpagesupdemo:introduction: Workshop starts at 1:00
+          channelpagesupdemo:location: Room 600
+          channelpagesupdemo:title: Workshop
+          hippo:availability: [live, preview]
+          hippostd:holder: admin
+          hippostd:state: published
+          hippostdpubwf:createdBy: admin
+          hippostdpubwf:creationDate: 2013-11-12T11:16:00+01:00
+          hippostdpubwf:lastModificationDate: 2013-11-12T11:18:00+01:00
+          hippostdpubwf:lastModifiedBy: admin
+          hippostdpubwf:publicationDate: 2013-11-12T12:16:00+01:00
+          hippotranslation:id: 33252e7a-e52e-4d34-b354-cc226523aa99
+          hippotranslation:locale: en
+          /channelpagesupdemo:content:
+            jcr:primaryType: hippostd:html
+            hippostd:content: |-
+              <html>
+                        <body>
+                        <strong>Everybody </strong>
+                        <p>can join the workshop and start practicing what they learned during the last
+                        week.</p>
+
+                        </body>
+                        </html>
+          /channelpagesupdemo:image:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: d035387b-f9ce-49f6-bcb0-9ab6915a2d5f
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
