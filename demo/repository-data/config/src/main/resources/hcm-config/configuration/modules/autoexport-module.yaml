@@ -5,7 +5,7 @@ definitions:
         autoexport:enabled:
           operation: override
           type: boolean
-          value: true
+          value: false
         autoexport:modules:
           operation: override
           type: string
