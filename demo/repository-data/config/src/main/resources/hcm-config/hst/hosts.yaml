@@ -16,4 +16,4 @@ definitions:
             jcr:primaryType: hst:mount
             hst:homepage: root
             hst:mountpoint: /hst:hst/hst:sites/channelpagesupdemo
-            hst:locale: en
+            hst:locale: en_US
