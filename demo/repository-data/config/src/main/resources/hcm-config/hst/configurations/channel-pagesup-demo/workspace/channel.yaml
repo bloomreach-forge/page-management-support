@@ -1,0 +1,8 @@
+definitions:
+  config:
+    /hst:hst/hst:configurations/channelpagesupdemo/hst:workspace/hst:channel:
+      jcr:primaryType: hst:channel
+      hst:name: Channel Manager Page Support Demo (EN)
+      hst:type: website
+      /hst:channelinfo:
+        jcr:primaryType: hst:channelinfo

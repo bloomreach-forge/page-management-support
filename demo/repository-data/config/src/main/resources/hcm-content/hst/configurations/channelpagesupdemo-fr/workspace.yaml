@@ -1,0 +1,158 @@
+/hst:hst/hst:configurations/channelpagesupdemo-fr/hst:workspace:
+  jcr:primaryType: hst:workspace
+  /hst:channel:
+    jcr:primaryType: hst:channel
+    jcr:uuid: 48b00b5e-7ada-4c55-9b51-b3cbf356028e
+    hst:name: Channel Manager Page Support Demo (FR)
+    hst:type: website
+    /hst:channelinfo:
+      jcr:primaryType: hst:channelinfo
+  /hst:containers:
+    jcr:primaryType: hst:containercomponentfolder
+    /base:
+      jcr:primaryType: hst:containercomponentfolder
+      /top:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: 9aa1e22b-2077-434e-813c-2e4e90104c26
+        hst:label: Top
+        hst:xtype: hst.vbox
+      /footer:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: 5f28e64c-c460-48ce-a0f4-c12b7d217595
+        hst:label: Footer
+        hst:xtype: hst.vbox
+    /homepage:
+      jcr:primaryType: hst:containercomponentfolder
+      /main:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: e3c8e956-8e17-4c75-8bb6-c1d1b2bb5f8d
+        hst:label: Home Page Main
+        hst:xtype: hst.vbox
+    /pagenotfound:
+      jcr:primaryType: hst:containercomponentfolder
+      /main:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: a4edbcde-238e-4efd-8376-12b22d09cf5a
+        hst:label: Page-Not-Found Main
+        hst:xtype: hst.vbox
+    /eventslist:
+      jcr:primaryType: hst:containercomponentfolder
+      /main:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: bef76e79-5db1-4303-9d1a-f368050a71c4
+        hst:label: Event List Main
+        hst:xtype: hst.vbox
+        /eventslist:
+          jcr:primaryType: hst:containeritemcomponent
+          jcr:uuid: 9030d54d-9ed0-4e5b-97fa-9e2da5535779
+          hst:componentclassname: org.onehippo.cms7.essentials.components.EssentialsEventsComponent
+          hst:label: Events List
+          hst:parameternames: [hidePastEvents, documentTypes, sortField, sortOrder,
+            includeSubtypes, showPagination, path, pageSize, documentDateField]
+          hst:parametervalues: ['on', 'channelpagesupdemo:eventsdocument', '', desc,
+            'off', 'on', '', '10', 'channelpagesupdemo:enddate']
+          hst:template: eventslist-main-eventslist
+          hst:xtype: hst.item
+    /eventspage:
+      jcr:primaryType: hst:containercomponentfolder
+      /main:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: dfdf8a23-f56d-411b-b1f9-931d39de86bc
+        hst:label: Event Page Main
+        hst:xtype: hst.vbox
+        /content:
+          jcr:primaryType: hst:containeritemcomponent
+          jcr:uuid: be95f612-a3c0-4c22-9298-243e07c68e61
+          hst:componentclassname: org.onehippo.cms7.essentials.components.EssentialsContentComponent
+          hst:template: eventspage-main
+          hst:xtype: hst.item
+    /newslist:
+      jcr:primaryType: hst:containercomponentfolder
+      /main:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: b739befc-94a6-45e0-baa7-303f86b537d3
+        hst:label: News List Main
+        hst:xtype: hst.vbox
+        /newslist:
+          jcr:primaryType: hst:containeritemcomponent
+          jcr:uuid: 2dbcfc84-1b86-4f28-a5ed-73d946ecdd26
+          hst:componentclassname: org.onehippo.cms7.essentials.components.EssentialsNewsComponent
+          hst:label: News List
+          hst:parameternames: [hidePastEvents, documentTypes, sortField, sortOrder,
+            includeSubtypes, showPagination, path, pageSize, documentDateField, hideFutureItems]
+          hst:parametervalues: ['on', 'channelpagesupdemo:newsdocument', '', desc,
+            'off', 'on', '', '10', 'channelpagesupdemo:date', 'on']
+          hst:template: newslist-main-newslist
+          hst:xtype: hst.item
+    /newspage:
+      jcr:primaryType: hst:containercomponentfolder
+      /main:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: f52fafc0-5131-41d9-b670-38e6e0d85065
+        hst:label: News Page Main
+        hst:xtype: hst.vbox
+        /content:
+          jcr:primaryType: hst:containeritemcomponent
+          jcr:uuid: 2d6173e2-ada2-4a67-8399-a0c96019388d
+          hst:componentclassname: org.onehippo.cms7.essentials.components.EssentialsContentComponent
+          hst:template: newspage-main
+          hst:xtype: hst.item
+    /contentlist:
+      jcr:primaryType: hst:containercomponentfolder
+      /main:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: 0f5d6453-1bda-4e58-b15a-82b710e8c910
+        hst:label: Content List Main
+        hst:xtype: hst.vbox
+        /contentlist:
+          jcr:primaryType: hst:containeritemcomponent
+          jcr:uuid: 07e9fbd4-c015-4c9a-b9f6-9eda473b24b8
+          hst:componentclassname: org.onehippo.cms7.essentials.components.EssentialsListComponent
+          hst:label: Content list
+          hst:parameternames: [documentTypes, sortField, sortOrder, includeSubtypes,
+            showPagination, path, pageSize]
+          hst:parametervalues: ['channelpagesupdemo:contentdocument', '', desc, 'off',
+            'on', '', '10']
+          hst:template: contentlist-main-contentlist
+          hst:xtype: hst.item
+    /contentpage:
+      jcr:primaryType: hst:containercomponentfolder
+      /main:
+        jcr:primaryType: hst:containercomponent
+        jcr:uuid: 97a979a0-5292-46a6-9582-89051deeaccf
+        hst:label: Content Page Main
+        hst:xtype: hst.vbox
+        /content:
+          jcr:primaryType: hst:containeritemcomponent
+          jcr:uuid: af9bdcab-74e6-473b-9b32-263e2fc4314f
+          hst:componentclassname: org.onehippo.cms7.essentials.components.EssentialsContentComponent
+          hst:template: contentpage-main
+          hst:xtype: hst.item
+  /hst:pages:
+    jcr:primaryType: hst:pages
+    jcr:uuid: 4b76de41-2107-4dc2-b080-f14b461048ec
+  /hst:sitemap:
+    jcr:primaryType: hst:sitemap
+    jcr:uuid: f1d700a8-64a5-48f4-8f3d-f3a565b1dab1
+  /hst:sitemenus:
+    jcr:primaryType: hst:sitemenus
+    jcr:uuid: 9afdb5a1-c364-4dc2-aaf3-beca6d0176d5
+    /main:
+      jcr:primaryType: hst:sitemenu
+      jcr:uuid: f7406575-65bc-4523-9156-89af865323b3
+      /home:
+        jcr:primaryType: hst:sitemenuitem
+        jcr:uuid: 52753617-dbd3-4d43-82c3-5df7fe460d70
+        hst:referencesitemapitem: root
+      /events:
+        jcr:primaryType: hst:sitemenuitem
+        jcr:uuid: 9c186198-7aa2-4489-b4e3-0f0d696f0cca
+        hst:referencesitemapitem: events
+      /news:
+        jcr:primaryType: hst:sitemenuitem
+        jcr:uuid: ca7072b2-6a94-491b-8669-6ef94da3ac5e
+        hst:referencesitemapitem: news
+      /content:
+        jcr:primaryType: hst:sitemenuitem
+        jcr:uuid: 4cd6df71-cceb-40fd-b791-6e6aad9ae40d
+        hst:referencesitemapitem: content

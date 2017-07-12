@@ -1,0 +1,4 @@
+/hst:hst/hst:configurations/channelpagesupdemo-fr:
+  jcr:primaryType: hst:configuration
+  jcr:uuid: 8c04ae13-e9e3-49c5-9102-faaf9b0c1f87
+  hst:inheritsfrom: [../common]

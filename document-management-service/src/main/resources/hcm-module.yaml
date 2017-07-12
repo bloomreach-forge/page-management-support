@@ -1,0 +1,5 @@
+group: 
+  name: hippo-forge
+  after: hippo-cms
+project: channel-pagesup
+module: channel-pagesup-document-management-service
