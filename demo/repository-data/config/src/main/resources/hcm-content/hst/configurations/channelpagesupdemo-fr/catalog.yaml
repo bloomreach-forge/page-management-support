@@ -1,0 +1,6 @@
+/hst:hst/hst:configurations/channelpagesupdemo-fr/hst:catalog:
+  jcr:primaryType: hst:catalog
+  jcr:uuid: afa2ace3-0df8-43f5-a5de-e0faa1c340b4
+  /channelpagesupdemo-catalog:
+    jcr:primaryType: hst:containeritempackage
+    jcr:uuid: 9f217ed1-b56e-4415-a701-7677d5eaee10

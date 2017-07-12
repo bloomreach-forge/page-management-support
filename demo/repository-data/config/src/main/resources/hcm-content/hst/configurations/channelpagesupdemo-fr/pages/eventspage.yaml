@@ -1,0 +1,7 @@
+/hst:hst/hst:configurations/channelpagesupdemo-fr/hst:pages/eventspage:
+  jcr:primaryType: hst:component
+  jcr:uuid: 23481461-3f50-4ce5-bf4c-62602624ec0b
+  hst:referencecomponent: hst:abstractpages/base
+  /main:
+    jcr:primaryType: hst:containercomponentreference
+    hst:referencecomponent: eventspage/main

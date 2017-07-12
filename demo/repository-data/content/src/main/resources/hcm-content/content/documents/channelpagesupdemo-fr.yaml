@@ -1,0 +1,7 @@
+/content/documents/channelpagesupdemo-fr:
+  jcr:primaryType: hippostd:folder
+  jcr:mixinTypes: ['hippotranslation:translated', 'mix:referenceable']
+  jcr:uuid: 9d8372d3-2ce8-4d23-bec4-46fbdb66c1cb
+  hippostd:foldertype: [new-translated-folder, new-document]
+  hippotranslation:id: 996bcac5-86cf-49b5-a7a3-16a74863e814
+  hippotranslation:locale: fr

@@ -1,0 +1,21 @@
+/hst:hst/hst:configurations/channelpagesupdemo-fr/hst:abstractpages/base:
+  jcr:primaryType: hst:component
+  jcr:uuid: b7335fdb-e4af-4f58-b72e-80061f73cbc4
+  hst:template: base-layout
+  /menu:
+    jcr:primaryType: hst:component
+    jcr:uuid: 32b0eb24-8d83-4481-88f1-82d8032b3606
+    hst:componentclassname: org.onehippo.cms7.essentials.components.EssentialsMenuComponent
+    hst:parameternames: [selectedMenu, level, menu]
+    hst:parametervalues: ['on', '1', main]
+    hst:template: base-top-menu
+  /top:
+    jcr:primaryType: hst:containercomponentreference
+    hst:referencecomponent: base/top
+  /footer:
+    jcr:primaryType: hst:component
+    jcr:uuid: 2967d3ba-3a9d-404f-8002-89f067e149b2
+    hst:template: base-footer
+    /container:
+      jcr:primaryType: hst:containercomponentreference
+      hst:referencecomponent: base/footer

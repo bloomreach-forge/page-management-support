@@ -1,0 +1,35 @@
+/hst:hst/hst:configurations/channelpagesupdemo-fr/hst:templates:
+  jcr:primaryType: hst:templates
+  jcr:uuid: 054a3245-640a-4f3a-b1ca-dfddd9b9776d
+  /base-layout:
+    jcr:primaryType: hst:template
+    jcr:uuid: beb4cd3c-9bd1-42eb-9e4c-821528e598d7
+    hst:renderpath: webfile:/freemarker/channelpagesupdemo/base-layout.ftl
+  /base-top-menu:
+    jcr:primaryType: hst:template
+    jcr:uuid: 899b12e5-d2cc-4034-a0fe-1537ee9ea161
+    hst:renderpath: webfile:/freemarker/channelpagesupdemo/base-top-menu.ftl
+  /base-footer:
+    jcr:primaryType: hst:template
+    jcr:uuid: ccad5899-fc9d-4996-af7b-7a3d4153bf76
+    hst:renderpath: webfile:/freemarker/channelpagesupdemo/base-footer.ftl
+  /homepage-main:
+    jcr:primaryType: hst:template
+    jcr:uuid: 24ba60d4-b14f-4833-a3bb-9a28be87496f
+    hst:renderpath: webfile:/freemarker/channelpagesupdemo/homepage-main.ftl
+  /pagenotfound-main:
+    jcr:primaryType: hst:template
+    jcr:uuid: e51d63de-35b8-42b2-8f15-77b2f6bc81b0
+    hst:renderpath: webfile:/freemarker/channelpagesupdemo/pagenotfound-main.ftl
+  /eventspage-main:
+    jcr:primaryType: hst:template
+    jcr:uuid: 7c74c9f6-c9df-4c09-bc82-cde0f68af0f2
+    hst:renderpath: webfile:/freemarker/hstdefault/eventspage-main.ftl
+  /newspage-main:
+    jcr:primaryType: hst:template
+    jcr:uuid: 9d8f73b0-250b-4e3e-86b7-2d43605ca261
+    hst:renderpath: webfile:/freemarker/hstdefault/newspage-main.ftl
+  /contentlist-main-contentlist:
+    jcr:primaryType: hst:template
+    jcr:uuid: 5e4e4b3b-7432-46a5-bdaa-70f6247fb15e
+    hst:renderpath: webfile:/freemarker/hstdefault/contentlist-main-contentlist.ftl

@@ -1,0 +1,11 @@
+/hst:hst/hst:configurations/channelpagesupdemo-fr/hst:pages/homepage:
+  jcr:primaryType: hst:component
+  jcr:uuid: 26f7472a-4949-42ee-94be-84f9e46e123e
+  hst:referencecomponent: hst:abstractpages/base
+  /main:
+    jcr:primaryType: hst:component
+    jcr:uuid: d75b70ef-87e7-4d92-b98f-747bb74349c2
+    hst:template: homepage-main
+    /container:
+      jcr:primaryType: hst:containercomponentreference
+      hst:referencecomponent: homepage/main
