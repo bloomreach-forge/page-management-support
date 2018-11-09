@@ -23,7 +23,7 @@
   <artifactId>channel-pagesup</artifactId>
   <version>3.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <url>https://github.com/onehippo-forge/page-management-support/</url>
+  <url>https://github.com/bloomreach-forge/page-management-support/</url>
 
   <properties>
 
@@ -87,9 +87,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:onehippo-forge/page-management-support.git</connection>
-    <developerConnection>scm:git:git@github.com:onehippo-forge/page-management-support.git</developerConnection>
-    <url>https://github.com/onehippo-forge/page-management-support.git</url>
+    <connection>scm:git:git@github.com:bloomreach-forge/page-management-support.git</connection>
+    <developerConnection>scm:git:git@github.com:bloomreach-forge/page-management-support.git</developerConnection>
+    <url>https://github.com/bloomreach-forge/page-management-support.git</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -109,7 +109,7 @@
 
   <ciManagement>
     <system>Travis CI</system>
-    <url>https://travis-ci.org/onehippo-forge/page-management-support</url>
+    <url>https://travis-ci.org/bloomreach-forge/page-management-support</url>
   </ciManagement>
 
   <repositories>
