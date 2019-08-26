@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2015 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2015-2019 Bloomreach B.V. (http://www.bloomreach.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,11 @@ package org.onehippo.forge.channelmanager.pagesupport.document.management;
 import javax.jcr.Session;
 
 import org.onehippo.cms7.services.HippoServiceRegistry;
-import org.onehippo.cms7.services.SingletonService;
 
 /**
  * Hippo CMS Document/Folder Workflow invocation service interface
  * to be reigstred in {@link HippoServiceRegistry}.
  */
-@SingletonService
 public interface DocumentManagementService extends DocumentManagementServiceMXBean {
 
     /**

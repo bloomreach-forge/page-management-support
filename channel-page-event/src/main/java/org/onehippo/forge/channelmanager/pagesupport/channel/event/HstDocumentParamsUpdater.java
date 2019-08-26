@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2017-2019 Bloomreach B.V. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,17 +62,12 @@ public class HstDocumentParamsUpdater {
                                                 final Node targetNode,
                                                 final HstRequestContext requestContext) {
         try {
-            final String componentClassName = source.getComponentClassName();
+            final Set<String> parameters = DocumentParamsScanner.getNames(source, DocumentCopyingPageCopyEventListener.class.getClassLoader());
+            log.debug("Got document parameters {} from component {}", parameters, source.getCanonicalStoredLocation());
 
-            if (StringUtils.isNotEmpty(componentClassName)) {
-
-                final Set<String> parameters = DocumentParamsScanner.getNames(componentClassName, DocumentCopyingPageCopyEventListener.class.getClassLoader());
-                log.debug("Got document parameters {} from component class {}", parameters, componentClassName);
-
-                if (!parameters.isEmpty()) {
-                    final Map<String, String> changeMap = getTargetDocumentPaths(sourceMount, source, targetMount, requestContext, parameters);
-                    replaceTargetParameterValues(targetNode, changeMap);
-                }
+            if (!parameters.isEmpty()) {
+                final Map<String, String> changeMap = getTargetDocumentPaths(sourceMount, source, targetMount, requestContext, parameters);
+                replaceTargetParameterValues(targetNode, changeMap);
             }
 
             // recursively update child nodes, based on the target node names because the source is merged configuration
@@ -176,9 +171,17 @@ public class HstDocumentParamsUpdater {
         final boolean isAbsolute = sourceDocumentPath.startsWith("/");
 
         final String sourceAbsolutePath = isAbsolute ? sourceDocumentPath : sourceMountContentPath + "/" + sourceDocumentPath;
+        ClassLoader currentCL = null ,objCL = null;
         try {
             Object obj = requestContext.getObjectBeanManager().getObject(sourceAbsolutePath);
-            if (obj instanceof HippoDocument) {
+            currentCL = Thread.currentThread().getContextClassLoader();
+            objCL = obj.getClass().getClassLoader();
+            Class<?> clazz = HippoDocument.class;
+            if( currentCL != objCL){
+                Thread.currentThread().setContextClassLoader(objCL);
+                clazz = Thread.currentThread().getContextClassLoader().loadClass(HippoDocument.class.getName());
+            }
+            if (obj.getClass().isAssignableFrom(clazz)) {
 
                 final HippoAvailableTranslationsBean<HippoDocumentBean> translations = ((HippoDocumentBean) obj).getAvailableTranslations();
                 for (final HippoDocumentBean bean : translations.getTranslations()) {
@@ -197,6 +200,12 @@ public class HstDocumentParamsUpdater {
             }
         } catch (ObjectBeanManagerException e) {
             log.error("Failed to get a bean from path " + sourceAbsolutePath, e);
+        } catch (ClassNotFoundException e) {
+            log.error("Error during reload of class HippoDocument due to different class loaders",e);
+        } finally {
+            if( currentCL != objCL) {
+                Thread.currentThread().setContextClassLoader(currentCL);
+            }
         }
 
         // fallback to source, may leave broken configuration paths
