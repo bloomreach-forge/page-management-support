@@ -1,7 +1,0 @@
-/hst:hst/hst:configurations/channelpagesupdemo-fr/hst:pages/newspage:
-  jcr:primaryType: hst:component
-  jcr:uuid: aa17131a-575f-46c4-bb19-eb8387e7924d
-  hst:referencecomponent: hst:abstractpages/base
-  /main:
-    jcr:primaryType: hst:containercomponentreference
-    hst:referencecomponent: newspage/main

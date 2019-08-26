@@ -3,14 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.onehippo.forge.channel-pagesup</groupId>
-    <artifactId>channel-pagesup-demo</artifactId>
+    <groupId>org.example</groupId>
+    <artifactId>myproject</artifactId>
     <version>3.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>channel-pagesup-demo-essentials</artifactId>
+  <artifactId>myproject-essentials</artifactId>
   <packaging>war</packaging>
-  <name>Channel Manager Page Support Demo Essentials</name>
-  <description>Channel Manager Page Support Demo Essentials</description>
+  <name>My Project Essentials</name>
+  <description>My Project Essentials</description>
   <dependencies>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>

@@ -3,19 +3,21 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.onehippo.forge.channel-pagesup</groupId>
-    <artifactId>channel-pagesup-demo</artifactId>
+    <groupId>org.example</groupId>
+    <artifactId>myproject</artifactId>
     <version>3.0.1-SNAPSHOT</version>
   </parent>
 
-  <name>Channel Manager Page Support Demo Repository Data</name>
-  <description>Channel Manager Page Support Demo Repository Data</description>
-  <artifactId>channel-pagesup-demo-repository-data</artifactId>
+  <name>My Project Repository Data</name>
+  <description>My Project Repository Data</description>
+  <artifactId>myproject-repository-data</artifactId>
   <packaging>pom</packaging>
 
   <modules>
-    <module>config</module>
-    <module>content</module>
+    <module>application</module>
+    <module>development</module>
+    <module>site</module>
+    <module>site-development</module>
     <module>webfiles</module>
   </modules>
 

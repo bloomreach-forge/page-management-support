@@ -1,7 +1,0 @@
-/hst:hst/hst:configurations/channelpagesupdemo-fr/hst:pages/eventslist:
-  jcr:primaryType: hst:component
-  jcr:uuid: 941056af-7f0e-4d60-82c9-96a1456c5367
-  hst:referencecomponent: hst:abstractpages/base
-  /main:
-    jcr:primaryType: hst:containercomponentreference
-    hst:referencecomponent: eventslist/main
