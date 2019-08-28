@@ -1,6 +1,0 @@
-/hst:hst/hst:hosts/dev-localhost/localhost/hst:root/fr:
-  jcr:primaryType: hst:mount
-  jcr:uuid: 96fa31e2-2fb1-460f-8b14-9ee650ed65e3
-  hst:homepage: root
-  hst:locale: fr_FR
-  hst:mountpoint: /hst:hst/hst:sites/channelpagesupdemo-fr

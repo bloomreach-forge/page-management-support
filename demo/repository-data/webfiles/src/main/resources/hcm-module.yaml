@@ -1,7 +1,5 @@
 group: 
-  name: channel-pagesup-demo
-  after: hippo-cms
-project: channel-pagesup-demo
-module: 
-  name: channel-pagesup-demo-repository-data-webfiles
-  after: channel-pagesup-demo-repository-data-config
+  name: myproject
+project: myproject
+module:
+  name: myproject-repository-data-webfiles

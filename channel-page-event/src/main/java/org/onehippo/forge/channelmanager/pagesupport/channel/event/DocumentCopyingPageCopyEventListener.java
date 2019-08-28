@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2015-2019 Bloomreach B.V. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package org.onehippo.forge.channelmanager.pagesupport.channel.event;
-
-import static org.hippoecm.hst.configuration.HstNodeTypes.COMPONENT_PROPERTY_REFERECENCECOMPONENT;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -39,11 +37,10 @@ import org.apache.commons.lang.StringUtils;
 import org.hippoecm.hst.configuration.components.HstComponentConfiguration;
 import org.hippoecm.hst.configuration.hosting.Mount;
 import org.hippoecm.hst.configuration.site.HstSite;
-import org.hippoecm.hst.core.container.ComponentManager;
-import org.hippoecm.hst.core.container.ComponentManagerAware;
 import org.hippoecm.hst.core.jcr.RuntimeRepositoryException;
 import org.hippoecm.hst.core.linking.DocumentParamsScanner;
 import org.hippoecm.hst.core.request.HstRequestContext;
+import org.hippoecm.hst.pagecomposer.jaxrs.api.ChannelEventListenerRegistry;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent;
 import org.hippoecm.hst.pagecomposer.jaxrs.services.exceptions.ClientError;
@@ -52,22 +49,22 @@ import org.hippoecm.repository.HippoStdNodeType;
 import org.hippoecm.repository.api.HippoNodeType;
 import org.hippoecm.repository.translation.HippoTranslationNodeType;
 import org.hippoecm.repository.util.JcrUtils;
+import org.onehippo.cms7.services.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
+import static org.hippoecm.hst.configuration.HstNodeTypes.COMPONENT_PROPERTY_REFERECENCECOMPONENT;
 
 /**
  * <code>org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent</code> event handler which is to be registered through
- * {@link ComponentManager#registerEventSubscriber(Object)} and unregistered through
- * {@link ComponentManager#unregisterEventSubscriber(Object)} during the HST-2 based web application lifecycle.
+ * {@link ChannelEventListenerRegistry#register(Object)} (Object)} and unregistered through
+ * {@link ChannelEventListenerRegistry#unregister(Object)} (Object)} during the HST-2 based web application lifecycle.
  * <P>
  * Basically this event handler scans all the linked documents in a page and its components
  * and copy each document from the source channel to the target channel if not existing in the target channel.
  * </P>
  */
-public class DocumentCopyingPageCopyEventListener implements ComponentManagerAware {
+public class DocumentCopyingPageCopyEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentCopyingPageCopyEventListener.class);
 
@@ -75,23 +72,16 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
 
     private static final String TRANSLATED_DOCUMENT_HANDLE_QUERY = "/jcr:root{0}//element(*,hippostdpubwf:document)[@hippotranslation:id=''{1}'']/..";
 
-    private ComponentManager componentManager;
-
     private DocumentManagementServiceClient documentManagementServiceClient;
 
     private boolean copyDocumentsLinkedBySourcePage;
 
-    @Override
-    public void setComponentManager(ComponentManager componentManager) {
-        this.componentManager = componentManager;
-    }
-
     public void init() {
-        componentManager.registerEventSubscriber(this);
+        ChannelEventListenerRegistry.get().register(this);
     }
 
     public void destroy() {
-        componentManager.unregisterEventSubscriber(this);
+        ChannelEventListenerRegistry.get().unregister(this);
     }
 
     public DocumentManagementServiceClient getDocumentManagementServiceClient() {
@@ -133,7 +123,6 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
     }
 
     @Subscribe
-    @AllowConcurrentEvents
     public void onPageCopyEvent(PageCopyEvent pageCopyEvent) {
         if (pageCopyEvent.getException() != null) {
             return;
@@ -314,8 +303,9 @@ public class DocumentCopyingPageCopyEventListener implements ComponentManagerAwa
                             targetFolderRelPath, targetTranslationLanguage);
                 }
 
-                getDocumentManagementServiceClient().translateDocument(sourceDocumentHandleNode.getPath(),
+                final String translateDocumentPath = getDocumentManagementServiceClient().translateDocument(sourceDocumentHandleNode.getPath(),
                         targetTranslationLanguage, sourceDocumentHandleNode.getName());
+                getDocumentManagementServiceClient().commitEditableDocument(translateDocumentPath);
             }
         } catch (ClientException e) {
             throw e;

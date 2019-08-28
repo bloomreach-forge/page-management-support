@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2015 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2015-2019 Bloomreach B.V. (http://www.bloomreach.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public class DocumentManagementServiceDaemonModule extends AbstractReconfigurabl
         } else {
             try {
                 documentManagementService = (DocumentManagementService) Class
-                        .forName(documentManagementServiceClassName).newInstance();
+                        .forName(documentManagementServiceClassName).getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 log.error("Failed to create document management service.", e);
             }
@@ -104,11 +104,11 @@ public class DocumentManagementServiceDaemonModule extends AbstractReconfigurabl
     }
 
     private void registerDocumentManagementServiceInHippoServiceRegistry() {
-        HippoServiceRegistry.registerService(documentManagementService, DocumentManagementService.class);
+        HippoServiceRegistry.register(documentManagementService, DocumentManagementService.class);
     }
 
     private void unregisterDocumentManagementServiceInHippoServiceRegistry() {
-        HippoServiceRegistry.unregisterService(documentManagementService, DocumentManagementService.class);
+        HippoServiceRegistry.unregister(documentManagementService, DocumentManagementService.class);
     }
 
     private void registerDocumentManagementServiceMBean() {
