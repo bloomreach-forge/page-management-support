@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  *
  * It scans HST configuration and fixes broken 'documentLink' and 'jcrPath' parameters that point to non-existing paths.
  */
-public class HstDocumentParamsUpdater {
+public final class HstDocumentParamsUpdater {
 
     private static Logger log = LoggerFactory.getLogger(HstDocumentParamsUpdater.class);
 
@@ -170,7 +170,7 @@ public class HstDocumentParamsUpdater {
 
         final boolean isAbsolute = sourceDocumentPath.startsWith("/");
 
-        final String sourceAbsolutePath = isAbsolute ? sourceDocumentPath : sourceMountContentPath + "/" + sourceDocumentPath;
+        final String sourceAbsolutePath = isAbsolute ? sourceDocumentPath : sourceMountContentPath + '/' + sourceDocumentPath;
         ClassLoader currentCL = null ,objCL = null;
         try {
             Object obj = requestContext.getObjectBeanManager().getObject(sourceAbsolutePath);
@@ -196,10 +196,10 @@ public class HstDocumentParamsUpdater {
                     }
                 }
             } else {
-                log.warn("Object for path {} is not a HippoDocument but {}", sourceAbsolutePath, (obj == null) ? "null" : obj.getClass().getName());
+                log.warn("Object for path {} is not a HippoDocument but {}", sourceAbsolutePath, obj.getClass().getName());
             }
         } catch (ObjectBeanManagerException e) {
-            log.error("Failed to get a bean from path " + sourceAbsolutePath, e);
+            log.error("Failed to get a bean from path {}", sourceAbsolutePath, e);
         } catch (ClassNotFoundException e) {
             log.error("Error during reload of class HippoDocument due to different class loaders",e);
         } finally {
