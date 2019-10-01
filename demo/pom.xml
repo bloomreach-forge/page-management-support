@@ -12,7 +12,7 @@
   <description>Channel Manager Page Support Demo</description>
   <groupId>org.onehippo.forge.channel-pagesup</groupId>
   <artifactId>channel-pagesup-demo</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <!-- 
