@@ -171,19 +171,24 @@ public final class HstDocumentParamsUpdater {
         final boolean isAbsolute = sourceDocumentPath.startsWith("/");
 
         final String sourceAbsolutePath = isAbsolute ? sourceDocumentPath : sourceMountContentPath + '/' + sourceDocumentPath;
-        ClassLoader currentCL = null ,objCL = null;
+        ClassLoader currentCL = null;
+        ClassLoader objCL = null;
         try {
-            Object obj = requestContext.getObjectBeanManager().getObject(sourceAbsolutePath);
-            currentCL = Thread.currentThread().getContextClassLoader();
+            final Object obj = requestContext.getObjectBeanManager().getObject(sourceAbsolutePath);
+            if (obj == null) {
+                log.warn("Object for path {} is not a HippoDocument but null", sourceAbsolutePath);
+                return sourceMountContentPath;
+            }
             objCL = obj.getClass().getClassLoader();
+            currentCL = Thread.currentThread().getContextClassLoader();
             Class<?> clazz = HippoDocument.class;
-            if( currentCL != objCL){
+            if (currentCL != objCL){
                 Thread.currentThread().setContextClassLoader(objCL);
                 clazz = Thread.currentThread().getContextClassLoader().loadClass(HippoDocument.class.getName());
             }
-            if (obj.getClass().isAssignableFrom(clazz)) {
+            if (clazz.isAssignableFrom(obj.getClass())) {
 
-                final HippoAvailableTranslationsBean<HippoDocumentBean> translations = ((HippoDocumentBean) obj).getAvailableTranslations();
+                final HippoAvailableTranslationsBean<HippoDocumentBean> translations = ((HippoDocument) obj).getAvailableTranslations();
                 for (final HippoDocumentBean bean : translations.getTranslations()) {
 
                     if (bean.getPath().startsWith(targetMountContentPath)) {
