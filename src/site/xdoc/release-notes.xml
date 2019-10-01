@@ -49,6 +49,13 @@
     </section>
     <section name="Release Notes">
       <subsection name="4.0.0">
+        <p class="smallinfo">Release Date: 1 October 2019</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-320">HIPFORGE-320</a><br/>>
+            Bugfix: switch object and parameter in the usage of isAssignableFrom.</li>
+        </ul>
+      </subsection>
+      <subsection name="4.0.0">
         <p class="smallinfo">Release Date: 28 August 2019</p>
         <ul>
           <li>Compliant with Hippo CMS 13.</li>
