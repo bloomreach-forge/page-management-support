@@ -188,7 +188,7 @@ public final class HstDocumentParamsUpdater {
             }
             if (clazz.isAssignableFrom(obj.getClass())) {
 
-                final HippoAvailableTranslationsBean<HippoDocumentBean> translations = ((HippoDocument) obj).getAvailableTranslations();
+                final HippoAvailableTranslationsBean<HippoDocumentBean> translations = ((HippoDocumentBean) obj).getAvailableTranslations();
                 for (final HippoDocumentBean bean : translations.getTranslations()) {
 
                     if (bean.getPath().startsWith(targetMountContentPath)) {
