@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Bloomreach B.V. (http://www.bloomreach.com)
+ * Copyright 2017-2020 Bloomreach B.V. (http://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import org.hippoecm.hst.configuration.components.HstComponentConfiguration;
 import org.hippoecm.hst.configuration.hosting.Mount;
 import org.hippoecm.hst.content.beans.ObjectBeanManagerException;
 import org.hippoecm.hst.content.beans.standard.HippoAvailableTranslationsBean;
-import org.hippoecm.hst.content.beans.standard.HippoDocument;
 import org.hippoecm.hst.content.beans.standard.HippoDocumentBean;
 import org.hippoecm.hst.core.linking.DocumentParamsScanner;
 import org.hippoecm.hst.core.request.HstRequestContext;
@@ -47,7 +46,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class HstDocumentParamsUpdater {
 
-    private static Logger log = LoggerFactory.getLogger(HstDocumentParamsUpdater.class);
+    private static final Logger log = LoggerFactory.getLogger(HstDocumentParamsUpdater.class);
 
     private HstDocumentParamsUpdater() {
     }
@@ -171,22 +170,15 @@ public final class HstDocumentParamsUpdater {
         final boolean isAbsolute = sourceDocumentPath.startsWith("/");
 
         final String sourceAbsolutePath = isAbsolute ? sourceDocumentPath : sourceMountContentPath + '/' + sourceDocumentPath;
-        ClassLoader currentCL = null;
-        ClassLoader objCL = null;
         try {
             final Object obj = requestContext.getObjectBeanManager().getObject(sourceAbsolutePath);
             if (obj == null) {
-                log.warn("Object for path {} is not a HippoDocument but null", sourceAbsolutePath);
+                log.warn("Object for path {} is not a {} but null. Check HST configuration for broken content link.",
+                        sourceAbsolutePath, HippoDocumentBean.class.getSimpleName());
                 return sourceMountContentPath;
             }
-            objCL = obj.getClass().getClassLoader();
-            currentCL = Thread.currentThread().getContextClassLoader();
-            Class<?> clazz = HippoDocument.class;
-            if (currentCL != objCL){
-                Thread.currentThread().setContextClassLoader(objCL);
-                clazz = Thread.currentThread().getContextClassLoader().loadClass(HippoDocument.class.getName());
-            }
-            if (clazz.isAssignableFrom(obj.getClass())) {
+
+            if (obj instanceof HippoDocumentBean) {
 
                 final HippoAvailableTranslationsBean<HippoDocumentBean> translations = ((HippoDocumentBean) obj).getAvailableTranslations();
                 for (final HippoDocumentBean bean : translations.getTranslations()) {
@@ -200,17 +192,13 @@ public final class HstDocumentParamsUpdater {
                         return targetDocumentPath;
                     }
                 }
-            } else {
-                log.warn("Object for path {} is not a HippoDocument but {}", sourceAbsolutePath, obj.getClass().getName());
+            }
+            else {
+                log.warn("Object for path {} is not a {} but {}. Check HST configuration for broken content link.",
+                        sourceAbsolutePath, HippoDocumentBean.class.getSimpleName(), obj.getClass().getName());
             }
         } catch (ObjectBeanManagerException e) {
             log.error("Failed to get a bean from path {}", sourceAbsolutePath, e);
-        } catch (ClassNotFoundException e) {
-            log.error("Error during reload of class HippoDocument due to different class loaders",e);
-        } finally {
-            if( currentCL != objCL) {
-                Thread.currentThread().setContextClassLoader(currentCL);
-            }
         }
 
         // fallback to source, may leave broken configuration paths
