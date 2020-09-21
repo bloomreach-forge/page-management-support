@@ -48,11 +48,19 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="4.0.2">
+        <p class="smallinfo">Release Date: 21 September 2020</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-362">HIPFORGE-362</a><br/>
+            Bugfix: the 4.0.1 fix wasn't good, now using instanceof HippoDocumentBean which is in the shared lib so no
+            more need for classloader switching.</li>
+        </ul>
+      </subsection>
       <subsection name="4.0.1">
         <p class="smallinfo">Release Date: 1 October 2019</p>
         <ul>
           <li><a href="https://issues.onehippo.com/browse/HIPFORGE-320">HIPFORGE-320</a><br/>
-            Bugfix: switch object and parameter in the usage of isAssignableFrom.</li>
+            Bugfix: switch object and parameter in the usage of isAssignableFrom in HstDocumentParamsUpdater.</li>
         </ul>
       </subsection>
       <subsection name="4.0.0">

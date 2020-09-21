@@ -51,10 +51,10 @@
     <plugin.javadoc.version>3.0.1</plugin.javadoc.version>
     <plugin.jxr.version>2.3</plugin.jxr.version>
     <plugin.pmd.version>3.1</plugin.pmd.version>
-    <plugin.project-info-reports.version>3.0.0</plugin.project-info-reports.version>
+    <plugin.project-info-reports.version>3.1.1</plugin.project-info-reports.version>
     <plugin.release.version>2.5.3</plugin.release.version>
     <plugin.resources.version>3.1.0</plugin.resources.version>
-    <plugin.site.version>3.6</plugin.site.version>
+    <plugin.site.version>3.9.1</plugin.site.version>
     <plugin.source.version>3.0.1</plugin.source.version>
     <plugin.surefire.version>3.0.0-M1</plugin.surefire.version>
     <plugin.surefire-report.version>3.0.0-M1</plugin.surefire-report.version>
