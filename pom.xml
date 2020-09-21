@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright 2015-2017 Hippo
+ Copyright 2015-2020 Hippo
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.javaVersion>1.8</project.build.javaVersion>
 
-    <!-- Hippo 11.2.0 versioning -->
     <jcr.version>2.0</jcr.version>
     <hippo.repository.version>13.2.0</hippo.repository.version>
     <hippo.services.version>13.2.0</hippo.services.version>
@@ -41,8 +40,8 @@
 
     <lib.junit.version>4.12</lib.junit.version>
     <lib.easymock.version>3.4</lib.easymock.version>
-    <lib.slf4j.version>1.7.25</lib.slf4j.version>
-    <lib.log4j2.version>2.8.2</lib.log4j2.version>
+    <lib.slf4j.version>1.7.30</lib.slf4j.version>
+    <lib.log4j2.version>2.13.3</lib.log4j2.version>
 
     <plugin.compiler.version>3.8.0</plugin.compiler.version>
     <plugin.clean.version>3.1.0</plugin.clean.version>
