@@ -30,6 +30,10 @@
           <th>Hippo CMS Release version</th>
         </tr>
         <tr>
+          <td>5.x</td>
+          <td>14.x</td>
+        </tr>
+        <tr>
           <td>4.x</td>
           <td>13.x</td>
         </tr>
@@ -48,6 +52,13 @@
       </table>
     </section>
     <section name="Release Notes">
+     <subsection name="5.0.0">
+        <p class="smallinfo">Release Date: 15 March 2021</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-358">HIPFORGE-358</a><br/>
+            Upgrade to Hippo CMS 14.</li>
+        </ul>
+      </subsection>
       <subsection name="4.0.2">
         <p class="smallinfo">Release Date: 21 September 2020</p>
         <ul>
