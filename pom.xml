@@ -31,9 +31,9 @@
     <project.build.javaVersion>1.8</project.build.javaVersion>
 
     <jcr.version>2.0</jcr.version>
-    <hippo.repository.version>13.2.0</hippo.repository.version>
-    <hippo.services.version>13.2.0</hippo.services.version>
-    <hippo.hst.version>13.2.0</hippo.hst.version>
+    <hippo.repository.version>14.4.0</hippo.repository.version>
+    <hippo.services.version>14.4.0</hippo.services.version>
+    <hippo.hst.version>14.4.0</hippo.hst.version>
 
     <guava.version>27.0-jre</guava.version>
     <commons-lang.version>2.6</commons-lang.version>
@@ -114,7 +114,7 @@
   <repositories>
 
     <repository>
-      <id>hippo</id>
+      <id>hippo-maven2</id>
       <name>Hippo maven 2 repository.</name>
       <url>http://maven.onehippo.com/maven2/</url>
     </repository>
