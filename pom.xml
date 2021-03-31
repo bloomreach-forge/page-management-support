@@ -35,7 +35,7 @@
     <hippo.services.version>14.4.0</hippo.services.version>
     <hippo.hst.version>14.4.0</hippo.hst.version>
 
-    <guava.version>27.0-jre</guava.version>
+    <guava.version>29.0-jre</guava.version>
     <commons-lang.version>2.6</commons-lang.version>
 
     <lib.junit.version>4.12</lib.junit.version>
