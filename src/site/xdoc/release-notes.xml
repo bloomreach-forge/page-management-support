@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright 2015-2017 Hippo B.V.
+    Copyright 2015-2021 Hippo B.V.
 
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -30,6 +30,10 @@
           <th>Hippo CMS Release version</th>
         </tr>
         <tr>
+          <td>5.x</td>
+          <td>14.x</td>
+        </tr>
+        <tr>
           <td>4.x</td>
           <td>13.x</td>
         </tr>
@@ -48,6 +52,13 @@
       </table>
     </section>
     <section name="Release Notes">
+     <subsection name="5.0.0">
+        <p class="smallinfo">Release Date: 12 April 2021</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/HIPFORGE-358">HIPFORGE-358</a><br/>
+            Upgrade to Bloomreach Experience Manager 14.</li>
+        </ul>
+      </subsection>
       <subsection name="4.0.2">
         <p class="smallinfo">Release Date: 21 September 2020</p>
         <ul>
@@ -66,13 +77,13 @@
       <subsection name="4.0.0">
         <p class="smallinfo">Release Date: 28 August 2019</p>
         <ul>
-          <li>Compliant with Hippo CMS 13.</li>
+          <li>Compliant with  Bloomreach Experience Manager 13.</li>
         </ul>
       </subsection>
       <subsection name="3.0.0">
         <p class="smallinfo">Release Date: 12 July 2017</p>
         <ul>
-          <li>Compliant with Hippo CMS 12.</li>
+          <li>Compliant with  Bloomreach Experience Manager 12.</li>
         </ul>
       </subsection>
       <subsection name="2.0.1">

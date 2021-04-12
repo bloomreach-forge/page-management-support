@@ -26,7 +26,7 @@ import org.hippoecm.hst.content.beans.standard.HippoBean;
 public class Banner extends BaseDocument {
 	@HippoEssentialsGenerated(internalName = "myproject:title")
 	public String getTitle() {
-		return getProperty("myproject:title");
+		return getSingleProperty("myproject:title");
 	}
 
 	@HippoEssentialsGenerated(internalName = "myproject:content")

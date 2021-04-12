@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright 2015-2020 Hippo
+ Copyright 2015-2021 Hippo
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
   <description>Hippo Channel Manager Page Management Support</description>
   <groupId>org.onehippo.forge.channel-pagesup</groupId>
   <artifactId>channel-pagesup</artifactId>
-  <version>4.0.2</version>
+  <version>5.0.0</version>
   <packaging>pom</packaging>
   <url>https://github.com/bloomreach-forge/page-management-support/</url>
 
@@ -31,14 +31,14 @@
     <project.build.javaVersion>1.8</project.build.javaVersion>
 
     <jcr.version>2.0</jcr.version>
-    <hippo.repository.version>13.2.0</hippo.repository.version>
-    <hippo.services.version>13.2.0</hippo.services.version>
-    <hippo.hst.version>13.2.0</hippo.hst.version>
+    <hippo.repository.version>14.5.0</hippo.repository.version>
+    <hippo.services.version>14.5.0</hippo.services.version>
+    <hippo.hst.version>14.5.0</hippo.hst.version>
 
-    <guava.version>27.0-jre</guava.version>
+    <guava.version>29.0-jre</guava.version>
     <commons-lang.version>2.6</commons-lang.version>
 
-    <lib.junit.version>4.12</lib.junit.version>
+    <lib.junit.version>4.13.1</lib.junit.version>
     <lib.easymock.version>3.4</lib.easymock.version>
     <lib.slf4j.version>1.7.30</lib.slf4j.version>
     <lib.log4j2.version>2.13.3</lib.log4j2.version>
@@ -114,7 +114,7 @@
   <repositories>
 
     <repository>
-      <id>hippo</id>
+      <id>hippo-maven2</id>
       <name>Hippo maven 2 repository.</name>
       <url>http://maven.onehippo.com/maven2/</url>
     </repository>

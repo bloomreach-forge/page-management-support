@@ -25,12 +25,12 @@ import org.onehippo.cms7.essentials.dashboard.annotations.HippoEssentialsGenerat
 public class ContentDocument extends BaseDocument {
     @HippoEssentialsGenerated(internalName = "myproject:introduction")
     public String getIntroduction() {
-        return getProperty("myproject:introduction");
+        return getSingleProperty("myproject:introduction");
     }
 
     @HippoEssentialsGenerated(internalName = "myproject:title")
     public String getTitle() {
-        return getProperty("myproject:title");
+        return getSingleProperty("myproject:title");
     }
 
     @HippoEssentialsGenerated(internalName = "myproject:content")
@@ -40,6 +40,6 @@ public class ContentDocument extends BaseDocument {
 
     @HippoEssentialsGenerated(internalName = "myproject:publicationdate")
     public Calendar getPublicationDate() {
-        return getProperty("myproject:publicationdate");
+        return getSingleProperty("myproject:publicationdate");
     }
 }
