@@ -124,6 +124,8 @@
 
     <!-- project logging -->
     <Logger name="org.example" level="debug"/>
+    <!-- forge logging -->
+    <Logger name="org.onehippo.forge.channelmanager.pagesupport.channel.event" level="debug"/>
 
     <Root level="warn">
       <AppenderRef ref="site"/>
