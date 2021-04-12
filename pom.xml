@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright 2015-2020 Hippo
+ Copyright 2015-2021 Hippo
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@
     <project.build.javaVersion>1.8</project.build.javaVersion>
 
     <jcr.version>2.0</jcr.version>
-    <hippo.repository.version>14.4.0</hippo.repository.version>
-    <hippo.services.version>14.4.0</hippo.services.version>
-    <hippo.hst.version>14.4.0</hippo.hst.version>
+    <hippo.repository.version>14.5.0</hippo.repository.version>
+    <hippo.services.version>14.5.0</hippo.services.version>
+    <hippo.hst.version>14.5.0</hippo.hst.version>
 
     <guava.version>29.0-jre</guava.version>
     <commons-lang.version>2.6</commons-lang.version>
