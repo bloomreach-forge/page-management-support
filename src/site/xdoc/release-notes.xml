@@ -30,6 +30,10 @@
           <th>Hippo CMS Release version</th>
         </tr>
         <tr>
+          <td>6.x</td>
+          <td>15.x</td>
+        </tr>
+        <tr>
           <td>5.x</td>
           <td>14.x</td>
         </tr>
@@ -52,6 +56,14 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="6.0.0">
+        <p class="smallinfo">Release date: 7 April 2023</p>
+        <ul>
+          <li><a href='https://issues.onehippo.com/browse/FORGE-430'>FORGE-430</a><br/>
+            Upgrade for Experience Manager 15 compatibility.
+          </li>
+        </ul>
+      </subsection>
      <subsection name="5.0.0">
         <p class="smallinfo">Release Date: 12 April 2021</p>
         <ul>
