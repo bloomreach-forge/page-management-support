@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Bloomreach B.V. (http://www.bloomreach.com)
+ * Copyright 2024 Bloomreach (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hippoecm.hst.configuration.components.HstComponentConfiguration;
 import org.hippoecm.hst.configuration.hosting.Mount;
 import org.hippoecm.hst.configuration.site.HstSite;
@@ -128,7 +128,7 @@ public class DocumentCopyingPageCopyEventListener {
             return;
         }
 
-        final PageCopyContext pageCopyContext = pageCopyEvent.getPageCopyContext();
+        final PageCopyContext pageCopyContext = pageCopyEvent.getPageActionContext();
         final HstRequestContext requestContext = pageCopyContext.getRequestContext();
         final Mount sourceMount = pageCopyContext.getEditingMount();
         final Mount targetMount = pageCopyContext.getTargetMount();
@@ -366,6 +366,7 @@ public class DocumentCopyingPageCopyEventListener {
      * @return translated folder node under {@code targetContentBaseNode} for the {@code sourceFolderNode}
      * @throws RepositoryException if repository exception occurs
      */
+    @SuppressWarnings("deprecation")
     private Node findTargetTranslatedFolderNode(final Node targetContentBaseNode, final Node sourceFolderNode)
             throws RepositoryException {
         if (!sourceFolderNode.isNodeType(HippoStdNodeType.NT_FOLDER)
@@ -415,6 +416,7 @@ public class DocumentCopyingPageCopyEventListener {
      * @return translated document handle node under {@code targetContentBaseNode} for the {@code sourceDocumentHandleNode}
      * @throws RepositoryException if repository exception occurs
      */
+    @SuppressWarnings("deprecation")
     private Node findTargetTranslatedDocumentHandleNode(final Node targetContentBaseNode, final Node sourceDocumentHandleNode)
             throws RepositoryException {
         if (!sourceDocumentHandleNode.isNodeType(HippoNodeType.NT_HANDLE)
@@ -533,10 +535,7 @@ public class DocumentCopyingPageCopyEventListener {
 
         @Override
         public boolean test(final HstComponentConfiguration sourceConfig) {
-            if (filteredConfigurationUUIDs.contains(sourceConfig.getCanonicalIdentifier())) {
-                return false;
-            }
-            return true;
+            return !filteredConfigurationUUIDs.contains(sourceConfig.getCanonicalIdentifier());
         }
     }
 

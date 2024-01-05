@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/bloomreach-forge/page-management-support.svg?branch=develop)](https://travis-ci.org/bloomreach-forge/page-management-support)
-
 # Page Management Support
 
 This project provides some add-on features like the following:
