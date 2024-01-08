@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2024 Bloomreach (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.BooleanUtils;
 
 /**
  * Internal <code>DocumentManagementService</code> client stub using JMX API.
@@ -64,24 +64,21 @@ class DocumentManagementServiceClient {
     }
 
     public String copyDocument(String sourceDocumentLocation, String targetFolderLocation, String targetDocumentName) throws Exception {
-        String ret = (String) invokeDocumentManagementServiceMBean("copyDocument",
+        return (String) invokeDocumentManagementServiceMBean("copyDocument",
                 new String[] { sourceDocumentLocation, targetFolderLocation, targetDocumentName },
                 new String[] { String.class.getName(), String.class.getName(), String.class.getName() });
-        return ret;
     }
 
     public String translateFolder(String sourceFolderLocation, String language, String name) throws Exception {
-        String ret = (String) invokeDocumentManagementServiceMBean("translateFolder",
+        return (String) invokeDocumentManagementServiceMBean("translateFolder",
                 new String[] { sourceFolderLocation, language, name },
                 new String[] { String.class.getName(), String.class.getName(), String.class.getName() });
-        return ret;
     }
 
     public String translateDocument(String sourceDocumentLocation, String language, String name) throws Exception {
-        String ret = (String) invokeDocumentManagementServiceMBean("translateDocument",
+        return (String) invokeDocumentManagementServiceMBean("translateDocument",
                 new String[] { sourceDocumentLocation, language, name },
                 new String[] { String.class.getName(), String.class.getName(), String.class.getName() });
-        return ret;
     }
 
     public ObjectName getMbeanName() {

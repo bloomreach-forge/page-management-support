@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright 2015-2021 Hippo B.V.
+    Copyright 2024 Bloomreach (https://www.bloomreach.com)
 
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -27,7 +27,11 @@
       <table>
         <tr>
           <th>Plugin version</th>
-          <th>Hippo CMS Release version</th>
+          <th>Bloomreach Experience Manager version</th>
+        </tr>
+        <tr>
+          <td>6.x</td>
+          <td>15.x</td>
         </tr>
         <tr>
           <td>5.x</td>
@@ -52,6 +56,13 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="6.0.0">
+        <p class="smallinfo">Release Date: 05 January 2024</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/FORGE-430">FORGE-430</a><br/>
+            Upgrade to Bloomreach Experience Manager 15.</li>
+        </ul>
+      </subsection>
      <subsection name="5.0.0">
         <p class="smallinfo">Release Date: 12 April 2021</p>
         <ul>

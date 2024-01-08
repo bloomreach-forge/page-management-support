@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2015 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2024 Bloomreach (https://www.bloomreach.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hippoecm.repository.HippoStdNodeType;
 import org.hippoecm.repository.api.Document;
 import org.hippoecm.repository.api.WorkflowException;
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DocumentWorkflowDocumentManagementService implements DocumentManagementService {
 
-    private static Logger log = LoggerFactory.getLogger(DocumentWorkflowDocumentManagementService.class);
+    private static final Logger log = LoggerFactory.getLogger(DocumentWorkflowDocumentManagementService.class);
 
     private Session session;
 

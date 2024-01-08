@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document PUBLIC
-  "-//Apache Software Foundation//DTD XDOC 1.0//EN"
-  "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <!--
-    Copyright 2015-2017 Hippo
+    Copyright 2024 Bloomreach (https://www.bloomreach.com)
 
     Licensed under the Apache License, Version 2.0 (the  "License");
     you may not use this file except in compliance with the License.
@@ -19,7 +16,7 @@
 -->
 <document>
   <properties>
-    <title>Installing Hippo Channel Manager Page Management Support</title>
+    <title>Installing Experience Manager Page Management Support</title>
   </properties>
   <body>
 
@@ -120,19 +117,11 @@ public class MyDocumentCopyingPageCopyEventListener extends DocumentCopyingPageC
         </p>
         <div class="brush: xml">
           <source><![CDATA[
-<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" sv:name="channel-pagesup-document-management-service-module">
-  <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>hipposys:module</sv:value>
-  </sv:property>
-  <sv:property sv:name="hipposys:className" sv:type="String">
-    <sv:value>org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentManagementServiceDaemonModule</sv:value>
-  </sv:property>
-  <sv:node sv:name="hippo:moduleconfig">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
-    </sv:property>
-  </sv:node>
-</sv:node>
+/channel-pagesup-document-management-service-module:
+  jcr:primaryType: hipposys:module
+  hipposys:className: org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentManagementServiceDaemonModule
+  /hippo:moduleconfig:
+    jcr:primaryType: nt:unstructured
     ]]></source>
         </div>
         <p>
@@ -146,22 +135,12 @@ public class MyDocumentCopyingPageCopyEventListener extends DocumentCopyingPageC
         </p>
         <div class="brush: xml">
           <source><![CDATA[
-<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" sv:name="channel-pagesup-document-management-service-module">
-  <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>hipposys:module</sv:value>
-  </sv:property>
-  <sv:property sv:name="hipposys:className" sv:type="String">
-    <sv:value>org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentManagementServiceDaemonModule</sv:value>
-  </sv:property>
-  <sv:node sv:name="hippo:moduleconfig">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>nt:unstructured</sv:value>
-    </sv:property>
-    <sv:property sv:name="document.management.service" sv:type="String" sv:multiple="false">
-      <sv:value>org.example.MyDocumentManagementService</sv:value>
-    </sv:property>
-  </sv:node>
-</sv:node>
+/channel-pagesup-document-management-service-module:
+  jcr:primaryType: hipposys:module
+  hipposys:className: org.onehippo.forge.channelmanager.pagesupport.document.management.impl.DocumentManagementServiceDaemonModule
+  /hippo:moduleconfig:
+    jcr:primaryType: nt:unstructured
+    document.management.service: org.example.MyDocumentManagementService
     ]]></source>
         </div>
       </subsection>

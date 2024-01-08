@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2024 Bloomreach (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class HippoFolderDocumentUtils {
 
-    private static Logger log = LoggerFactory.getLogger(HippoFolderDocumentUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(HippoFolderDocumentUtils.class);
 
     private HippoFolderDocumentUtils() {
     }
@@ -49,11 +49,7 @@ public final class HippoFolderDocumentUtils {
 
         final Node node = session.getNode(folderLocation);
 
-        if (NodeUtils.isNodeType(node, HippoStdNodeType.NT_FOLDER)) {
-            return true;
-        }
-
-        return false;
+        return NodeUtils.isNodeType(node, HippoStdNodeType.NT_FOLDER);
     }
 
     /**
@@ -76,9 +72,7 @@ public final class HippoFolderDocumentUtils {
             if (!session.getRootNode().isSame(node)) {
                 Node parentNode = node.getParent();
 
-                if (NodeUtils.isNodeType(parentNode, HippoNodeType.NT_HANDLE)) {
-                    return true;
-                }
+                return NodeUtils.isNodeType(parentNode, HippoNodeType.NT_HANDLE);
             }
         }
 

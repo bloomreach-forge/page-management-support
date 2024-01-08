@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Bloomreach B.V. (http://www.bloomreach.com)
+ * Copyright 2024 Bloomreach (https://www.bloomreach.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.hippoecm.hst.configuration.ConfigurationUtils;
 import org.hippoecm.hst.configuration.HstNodeTypes;
@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility inspired by {@link org.hippoecm.hst.core.linking.DocumentParamsScanner}.
- *
  * It scans HST configuration and fixes broken 'documentLink' and 'jcrPath' parameters that point to non-existing paths.
  */
 public final class HstDocumentParamsUpdater {

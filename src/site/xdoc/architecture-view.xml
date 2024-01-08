@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document PUBLIC
-  "-//Apache Software Foundation//DTD XDOC 1.0//EN"
-  "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <!--
-    Copyright 2015 Hippo
+    Copyright 2024 Bloomreach (https://www.bloomreach.com)
 
     Licensed under the Apache License, Version 2.0 (the  "License");
     you may not use this file except in compliance with the License.
@@ -19,7 +16,7 @@
 -->
 <document>
   <properties>
-    <title>Hippo Channel Manager Page Management Support</title>
+    <title>Experience Manager Page Management Support</title>
   </properties>
   <body>
     <section name="Architectural Views">
@@ -28,7 +25,7 @@
       </p>
       <p>
         <em>Note: </em> Elements in yellow color are provided by this forge module project
-        while the other elements are provided by Hippo CMS as built-in features.
+        while the other elements are provided by brXM as built-in features.
       </p>
       <img src="images/architectural-view1.png" alt="Architectural View" />
       <p>
@@ -38,7 +35,7 @@
         <li>
           <a href="apidocs/org/onehippo/forge/channelmanager/pagesupport/document/management/DocumentManagementService.html">
             <code>DocumentManagementService</code>
-          </a> is a service interface to invoke Hippo CMS Document/Folder
+          </a> is a service interface to invoke CMS Document/Folder
           Workflow operations more easily with simpler parameters.
         </li>
         <li>
@@ -69,7 +66,7 @@
             <code>DocumentCopyingPageCopyEventListener</code>
           </a> is an implementation to subscribe
           <code>org.hippoecm.hst.pagecomposer.jaxrs.api.PageCopyEvent</code> event
-          propagated by Hippo CMS Channel Manager through HST-2 Guave Event Bus.
+          propagated by CMS Experience Manager through HST-2 Guava Event Bus.
         </li>
         <li>
           <a href="apidocs/org/onehippo/forge/channelmanager/pagesupport/channel/event/DocumentCopyingPageCopyEventListener.html">
