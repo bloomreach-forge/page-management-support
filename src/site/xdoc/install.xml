@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document PUBLIC
-  "-//Apache Software Foundation//DTD XDOC 1.0//EN"
-  "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <!--
-    Copyright 2015 Hippo
+    Copyright 2024 Bloomreach (https://www.bloomreach.com)
 
     Licensed under the Apache License, Version 2.0 (the  "License");
     you may not use this file except in compliance with the License.
@@ -19,10 +16,10 @@
 -->
 <document>
   <properties>
-    <title>Installing Hippo Channel Manager Page Management Support</title>
+    <title>Installing Experience Manager Page Management Support</title>
   </properties>
   <body>
-    <section name="Installing Hippo Channel Manager Page Management Support">
+    <section name="Installing Experience Manager Page Management Support">
       <subsection name="Add Dependencies">
         <p>
           Make sure you have the Forge Maven 2 repository reference and dependency definition in the root pom.xml of your project.
@@ -36,7 +33,7 @@
       <repository>
         <id>hippo-maven2</id>
         <name>Hippo Maven 2 Repository</name>
-        <url>https://maven.onehippo.com/maven2/</url>
+        <url>https://maven.bloomreach.com/maven2/</url>
       </repository>
 
       <!-- SNIP -->
@@ -79,7 +76,7 @@
     ]]></source>
         </div>
         <p>
-          And add the following dependency reference into your Hippo CMS Web Application module subproject.
+          And add the following dependency reference into your CMS dependencies module pom.
         </p>
         <div class="brush: xml">
           <source><![CDATA[
@@ -99,7 +96,7 @@
     ]]></source>
         </div>
         <p>
-          And add the following dependency reference into your Hippo SITE Web Application module subproject.
+          And add the following dependency reference into your SITE components module pom.
         </p>
         <div class="brush: xml">
           <source><![CDATA[
