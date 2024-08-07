@@ -30,6 +30,10 @@
           <th>Bloomreach Experience Manager version</th>
         </tr>
         <tr>
+          <td>7.x</td>
+          <td>16.x</td>
+        </tr>
+        <tr>
           <td>6.x</td>
           <td>15.x</td>
         </tr>
@@ -56,6 +60,13 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="7.0.0">
+        <p class="smallinfo">Release Date: 07 August 2024</p>
+        <ul>
+          <li><a href="https://issues.onehippo.com/browse/FORGE-532">FORGE-532</a><br/>
+            Upgrade to Bloomreach Experience Manager 16, JDK 17</li>
+        </ul>
+      </subsection>
       <subsection name="6.0.0">
         <p class="smallinfo">Release Date: 05 January 2024</p>
         <ul>
