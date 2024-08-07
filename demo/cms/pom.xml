@@ -17,6 +17,7 @@
     <dependency>
       <groupId>org.onehippo.forge.channel-pagesup</groupId>
       <artifactId>channel-pagesup-document-management-service</artifactId>
+      <version>${project.version}</version>
     </dependency>
   
     <dependency>

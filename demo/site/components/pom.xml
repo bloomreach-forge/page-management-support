@@ -18,21 +18,22 @@
     <dependency>
       <groupId>org.onehippo.forge.channel-pagesup</groupId>
       <artifactId>channel-pagesup-channel-page-event</artifactId>
-    </dependency>
-  
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.taglibs</groupId>
-      <artifactId>taglibs-standard-spec</artifactId>
+      <groupId>jakarta.servlet.jsp</groupId>
+      <artifactId>jakarta.servlet.jsp-api</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.taglibs</groupId>
-      <artifactId>taglibs-standard-impl</artifactId>
+      <groupId>com.bloomreach.xm</groupId>
+      <artifactId>taglibs-standard-spec-jakarta</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.bloomreach.xm</groupId>
+      <artifactId>taglibs-standard-impl-jakarta</artifactId>
     </dependency>
 
     <dependency>

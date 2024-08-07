@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>15.4.0</version>
+    <version>16.0.0</version>
   </parent>
 
   <name>Hippo Channel Manager Page Management Support</name>
@@ -33,12 +33,7 @@
 
   <properties>
 
-    <project.build.javaVersion>11</project.build.javaVersion>
-
-    <hippo.repository.version>15.4.0</hippo.repository.version>
-    <hippo.services.version>15.4.0</hippo.services.version>
-    <hippo.hst.version>15.4.0</hippo.hst.version>
-
+    <project.build.javaVersion>17</project.build.javaVersion>
   </properties>
 
   <licenses>
@@ -108,42 +103,42 @@
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-repository-api</artifactId>
-        <version>${hippo.repository.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-repository-builtin</artifactId>
-        <version>${hippo.repository.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-services</artifactId>
-        <version>${hippo.services.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.onehippo.cms7.hst</groupId>
         <artifactId>hst-api</artifactId>
-        <version>${hippo.hst.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.onehippo.cms7.hst</groupId>
         <artifactId>hst-commons</artifactId>
-        <version>${hippo.hst.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.onehippo.cms7.hst.components</groupId>
         <artifactId>hst-core</artifactId>
-        <version>${hippo.hst.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
@@ -175,7 +170,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <release>11</release>
+          <release>17</release>
           <encoding>${project.build.sourceEncoding}</encoding>
           <skip>false</skip>
         </configuration>
@@ -205,29 +200,29 @@
   </modules>
 
   <build>
-
     <defaultGoal>package</defaultGoal>
-
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>${maven.plugin.site.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <inherited>true</inherited>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>${project.build.javaVersion}</source>
-          <target>${project.build.javaVersion}</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-install-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -236,33 +231,20 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
         <configuration>
-          <outputDirectory>docs</outputDirectory>
+          <forkMode>always</forkMode>
+          <workingDirectory>${project.build.directory}</workingDirectory>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
-
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
 </project>
