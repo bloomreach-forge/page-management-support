@@ -37,7 +37,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hippoecm.hst.configuration.components.HstComponentConfiguration;
 import org.hippoecm.hst.configuration.hosting.Mount;
 import org.hippoecm.hst.configuration.site.HstSite;
-import org.hippoecm.hst.core.jcr.RuntimeRepositoryException;
 import org.hippoecm.hst.core.linking.DocumentParamsScanner;
 import org.hippoecm.hst.core.request.HstRequestContext;
 import org.hippoecm.hst.pagecomposer.jaxrs.api.ChannelEventListenerRegistry;
@@ -518,7 +517,7 @@ public class DocumentCopyingPageCopyEventListener {
                     }
                 }
             } catch (RepositoryException e) {
-                throw new RuntimeRepositoryException(e);
+                throw new RuntimeException(e);
             }
             for (HstComponentConfiguration child : sourceConfig.getChildren().values()) {
                 populateSkipSet(child, sourceSite, targetSite, session, skipSet);

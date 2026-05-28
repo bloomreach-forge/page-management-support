@@ -81,6 +81,8 @@ public class DocumentManagementServiceDaemonModule extends AbstractReconfigurabl
 
             registerDocumentManagementServiceInHippoServiceRegistry();
             registerDocumentManagementServiceMBean();
+
+            log.info("DocumentManagementService initialized: {}", documentManagementService.getClass().getName());
         }
     }
 
