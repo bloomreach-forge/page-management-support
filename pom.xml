@@ -20,20 +20,20 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>16.0.0</version>
+    <version>17.0.0</version>
   </parent>
 
   <name>Hippo Channel Manager Page Management Support</name>
   <description>Hippo Channel Manager Page Management Support</description>
   <groupId>org.onehippo.forge.channel-pagesup</groupId>
   <artifactId>channel-pagesup</artifactId>
-  <version>7.0.1-SNAPSHOT</version>
+  <version>8.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>https://github.com/bloomreach-forge/page-management-support/</url>
 
   <properties>
 
-    <project.build.javaVersion>17</project.build.javaVersion>
+    <project.build.javaVersion>21</project.build.javaVersion>
   </properties>
 
   <licenses>
@@ -76,7 +76,7 @@
 
   <issueManagement>
     <system>JIRA</system>
-    <url>https://issues.onehippo.com/browse/FORGE</url>
+    <url>https://bloomreach.atlassian.net/browse/FORGE</url>
   </issueManagement>
 
   <repositories>
@@ -170,7 +170,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <release>17</release>
+          <release>21</release>
           <encoding>${project.build.sourceEncoding}</encoding>
           <skip>false</skip>
         </configuration>
